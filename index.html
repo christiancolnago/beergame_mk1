@@ -80,6 +80,8 @@ button:focus-visible, input:focus-visible { outline: 3px solid var(--amber); out
 #pour { width: 92px; height: 92px; border-radius: 50%; font-family: var(--display); font-size: 14px; letter-spacing: .05em; background: radial-gradient(circle at 35% 30%, #ffd978, #c68a1c 70%); color: #2a1a06; border: 4px solid #8a6a22; box-shadow: 0 5px 0 #5e4310, 0 8px 18px rgba(0,0,0,.5); touch-action: none; }
 #kegBtn{display:none;margin:0 auto;width:112px;height:112px;border-radius:50%;font-family:var(--display);font-size:18px;letter-spacing:.05em;background:radial-gradient(circle at 35% 30%,#ff9a85,#d02a1c 70%);color:#fff;border:4px solid #7a1208;box-shadow:0 5px 0 #4a0a04,0 8px 18px rgba(0,0,0,.5);touch-action:manipulation;animation:kegPulse .45s infinite alternate}
 @keyframes kegPulse{to{transform:scale(1.07);box-shadow:0 5px 0 #4a0a04,0 0 26px rgba(255,70,40,.85)}}
+#kegBtn.go{font-size:13px;letter-spacing:0;background:radial-gradient(circle at 35% 30%,#b4f7c4,#1f9a47 70%);border-color:#0f5a27;box-shadow:0 5px 0 #0a3d1a,0 8px 18px rgba(0,0,0,.5);animation:none}
+#kegBtn.hold{visibility:hidden}
 body.keg #kegBtn{display:block} body.keg #row,body.keg #picker,body.keg #tiltStrip{display:none !important}
 @media (max-height: 700px) { #kegBtn { width: 92px; height: 92px; font-size: 15px; } }
 #pour.on { transform: translateY(3px); box-shadow: 0 2px 0 #5e4310; background: radial-gradient(circle at 35% 30%, #fff0b0, #e8a62c 70%); }
@@ -87,7 +89,7 @@ body.keg #kegBtn{display:block} body.keg #row,body.keg #picker,body.keg #tiltStr
 #tiltStrip.off { pointer-events: none; }
 
 /* coda clienti */
-#queue { display: flex; gap: 6px; }
+#queue { display: flex; gap: 6px; } #queue[hidden] { display: none; }
 .qc { pointer-events: auto; flex: 1; min-width: 0; max-width: 118px; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 5px 5px 6px; background: rgba(0,0,0,.58); border: 1px solid var(--line); border-radius: 12px; font-family: var(--ui); font-weight: 700; font-size: 13px; letter-spacing: .03em; text-transform: uppercase; color: var(--ink); cursor: pointer; }
 .qc .top { display: flex; align-items: flex-end; gap: 8px; height: 31px; }
 .qc .av { position: relative; width: 26px; height: 30px; }
@@ -423,6 +425,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       'glass.biconico': 'Bicchiere biconico', 'glass.pint': 'Pinta americana', 'glass.belgian': 'Calice belga',
       'bar.info': 'Liv. {l} · {s}/{n}', 'lives.aria2': '{n} cuori', 'lives.aria3': ', un cliente perso su {k}',
       'hint.tap': 'Tocca un cliente per prendere l\'ordine', 'hint.wait': 'Aspetta il prossimo cliente…', 'hint.choose': 'Scegli il bicchiere giusto per: {s}',
+      'keg.cont': 'CONTINUA', 'keg.ready': 'Fusto collegato! Tocca CONTINUA per spillare',
       'keg.alert': 'FUSTO FINITO!', 'keg.empty': 'VUOTO', 'keg.swap': 'CAMBIA', 'keg.hint': 'Tocca CAMBIA velocemente!', 'keg.done': 'Fusto collegato!', 'keg.fast': 'Cambio rapido! +{n}',
       'hint.settle': 'La schiuma si assesta…', 'hint.close': 'Chiudi il rubinetto!', 'hint.spill': 'Sta traboccando! Raddrizza il bicchiere.', 'hint.waste': 'Troppo inclinato: la birra finisce fuori.',
       'hint.startTouch': 'Trascina a ~45° e tieni premuto {pour}', 'hint.startTilt': 'Inclina a ~45° e tieni premuto {pour}', 'hint.serve': 'Premi {serve} quando la schiuma è giusta',
@@ -476,6 +479,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       'glass.biconico': 'Biconical glass', 'glass.pint': 'American pint', 'glass.belgian': 'Belgian chalice',
       'bar.info': 'Lv. {l} · {s}/{n}', 'lives.aria2': '{n} hearts', 'lives.aria3': ', one customer lost out of {k}',
       'hint.tap': 'Tap a customer to take the order', 'hint.wait': 'Wait for the next customer…', 'hint.choose': 'Pick the right glass for: {s}',
+      'keg.cont': 'GO ON', 'keg.ready': 'Keg connected! Tap GO ON to pour',
       'keg.alert': 'KEG EMPTY!', 'keg.empty': 'EMPTY', 'keg.swap': 'SWAP', 'keg.hint': 'Tap SWAP quickly!', 'keg.done': 'Keg connected!', 'keg.fast': 'Quick swap! +{n}',
       'hint.settle': 'The foam is settling…', 'hint.close': 'Close the tap!', 'hint.spill': 'It\'s overflowing! Straighten the glass.', 'hint.waste': 'Tilted too far: the beer goes outside.',
       'hint.startTouch': 'Drag to ~45° and hold {pour}', 'hint.startTilt': 'Tilt to ~45° and hold {pour}', 'hint.serve': 'Press {serve} when the foam is right',
@@ -529,6 +533,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       'glass.biconico': 'Verre biconique', 'glass.pint': 'Pinte américaine', 'glass.belgian': 'Calice belge',
       'bar.info': 'Niv. {l} · {s}/{n}', 'lives.aria2': '{n} cœurs', 'lives.aria3': ', un client perdu sur {k}',
       'hint.tap': 'Touchez un client pour prendre la commande', 'hint.wait': 'Attendez le prochain client…', 'hint.choose': 'Choisissez le bon verre pour : {s}',
+      'keg.cont': 'CONTINUER', 'keg.ready': 'Fût branché ! Touchez CONTINUER pour tirer',
       'keg.alert': 'FÛT VIDE !', 'keg.empty': 'VIDE', 'keg.swap': 'CHANGER', 'keg.hint': 'Touchez CHANGER vite !', 'keg.done': 'Fût branché !', 'keg.fast': 'Changement rapide ! +{n}',
       'hint.settle': 'La mousse se stabilise…', 'hint.close': 'Fermez le robinet !', 'hint.spill': 'Ça déborde ! Redressez le verre.', 'hint.waste': 'Trop incliné : la bière tombe à côté.',
       'hint.startTouch': 'Glissez à ~45° et maintenez {pour}', 'hint.startTilt': 'Inclinez à ~45° et maintenez {pour}', 'hint.serve': 'Appuyez sur {serve} quand la mousse est bonne',
@@ -582,6 +587,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       'glass.biconico': 'Bikonisches Glas', 'glass.pint': 'Amerikanisches Pint', 'glass.belgian': 'Belgischer Kelch',
       'bar.info': 'Lv. {l} · {s}/{n}', 'lives.aria2': '{n} Herzen', 'lives.aria3': ', ein Kunde verloren von {k}',
       'hint.tap': 'Tippe auf einen Kunden, um die Bestellung aufzunehmen', 'hint.wait': 'Warte auf den nächsten Kunden …', 'hint.choose': 'Wähle das richtige Glas für: {s}',
+      'keg.cont': 'WEITER', 'keg.ready': 'Fass angeschlossen! Tippe auf WEITER zum Zapfen',
       'keg.alert': 'FASS LEER!', 'keg.empty': 'LEER', 'keg.swap': 'WECHSELN', 'keg.hint': 'Tippe schnell auf WECHSELN!', 'keg.done': 'Fass angeschlossen!', 'keg.fast': 'Schneller Wechsel! +{n}',
       'hint.settle': 'Der Schaum setzt sich …', 'hint.close': 'Hahn zu!', 'hint.spill': 'Es läuft über! Richte das Glas auf.', 'hint.waste': 'Zu schräg: Das Bier geht daneben.',
       'hint.startTouch': 'Zieh auf ~45° und halte {pour}', 'hint.startTilt': 'Neige auf ~45° und halte {pour}', 'hint.serve': 'Drücke {serve}, wenn der Schaum passt',
@@ -1811,7 +1817,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       this.rnd = BB.rng(((this.session.seed * 31 + this.session.level) >>> 0) || 1);
       this.order = null; this.chosenGlassId = null; this.wrongPicks = 0; this.model = null; this.result = null; this.settleLeft = 0;
       this.kegRnd = BB.rng(((this.session.seed * 17 + this.session.level * 5 + 3) >>> 0) || 1); // flusso casuale separato: non altera i clienti
-      this.keg = { empty: false, taps: 0, need: 15, t: 0 };
+      this.keg = { empty: false, wait: false, waitT: 0, taps: 0, need: 15, t: 0 };
       // piano fusto: solo i livelli pari (2, 4, 6...). Livello 2: dopo il secondo cliente servito. Gli altri: a caso durante il servizio, una volta sola
       const lv = this.session.level; this.kegUsed = !(lv >= 2 && lv % 2 === 0);
       this.kegPlan = lv === 2 ? 'after2' : 'random'; this.nextKeg = 10 + this.kegRnd() * 22; this.kegDelay = 0.8;
@@ -1879,24 +1885,27 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
     // ---------- imprevisto: il fusto finisce ----------
     _tickKeg(dt) {
       const k = this.keg; if (!k) return;
+      if (k.wait) { k.waitT += dt; return; }
       if (k.empty) { k.t += dt; return; }
       if (this.kegUsed) return;
       let go = false;
       if (this.kegPlan === 'after2') { if (this.session.idx >= 2 && this.state === 'select') { this.kegDelay -= dt; go = this.kegDelay <= 0; } }
       else { this.nextKeg -= dt; go = this.nextKeg <= 0 || (this.session.idx >= 3 && this.state === 'select'); }
-      if (go) { this.kegUsed = true; k.empty = true; k.taps = 0; k.t = 0; this.emit('kegEmpty'); }
+      if (go) { this.kegUsed = true; k.empty = true; k.taps = 0; k.t = 0; k.need = 15 + Math.floor(this.kegRnd() * 11); this.emit('kegEmpty'); } // 15-25 tap
     }
     kegTap() { // ogni tocco avvicina il fusto nuovo; al terzo è collegato
       const k = this.keg;
-      if (!k || !k.empty || this.state === 'paused') return false;
+      if (!k || !k.empty || k.wait || this.state === 'paused') return false;
       k.taps++;
       if (k.taps < k.need) { this.emit('kegTap', { p: k.taps / k.need }); return true; }
-      k.empty = false;
+      k.empty = false; k.wait = true; k.waitT = 0; // fusto collegato: si riparte solo con CONTINUA
       const fast = k.t <= 8, bonus = fast ? 5 : 0;
       if (bonus) { this.progress.coins += bonus; this.save.save(); }
       this.emit('kegDone', { time: k.t, fast, bonus });
       return true;
     }
+
+    kegContinue() { const k = this.keg; if (!k || !k.wait || k.waitT < 0.9) return false; k.wait = false; this.emit('kegResume'); return true; }
 
     // Il giocatore sceglie il bicchiere in base allo stile. Sbagliare costa punti.
     chooseGlass(id) {
@@ -1913,7 +1922,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
     update(dt, input) {
       if (this.state === 'select' || this.state === 'choose' || this.state === 'play') { this._tickQueue(dt); this._tickKeg(dt); }
       if (this.state === 'play') {
-        const open = !!input.open && !(this.keg && this.keg.empty); // fusto vuoto: la birra non scende
+        const open = !!input.open && !(this.keg && (this.keg.empty || this.keg.wait)); // fusto vuoto: la birra non scende
         this.model.step(dt, { tiltTarget: input.tilt, open });
         const m = this.model, cap = m.cap;
         if ((m.spilled + m.waste) / cap > 0.3) this.serve(false);
@@ -2347,6 +2356,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
     drawKegScene(game, dt) {
       const k = game.keg; if (!k) return;
       if (k.empty) { this.kegA = Math.min(1, this.kegA + dt * 4); this.kegT += dt; }
+      else if (k.wait) { this.kegTarget = 1; this.kegT += dt; this.kegA = Math.min(1, this.kegA + dt * 4); }
       else if (this.kegHold > 0) { this.kegHold -= dt; this.kegTarget = 1; this.kegA = Math.min(1, this.kegHold / 0.3); }
       else { this.kegA = 0; return; }
       if (this.kegA <= 0.003) return;
@@ -3148,6 +3158,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       $('barCoins').textContent = save.data.progress.coins + ' ◉';
     }
     function hintText() {
+      if (game.keg && game.keg.wait && (game.state === 'select' || game.state === 'choose' || game.state === 'play')) return [T('keg.ready'), ''];
       if (game.keg && game.keg.empty && (game.state === 'select' || game.state === 'choose' || game.state === 'play')) return [T('keg.hint'), 'bad'];
       if (game.state === 'select') return [T(game.queue.length ? 'hint.tap' : 'hint.wait'), ''];
       if (game.state === 'choose' && game.order) return [T('hint.choose', { s: kindOf(BB.STYLES[game.order.styleId]) }), ''];
@@ -3179,12 +3190,12 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
     game.on('state', (s) => {
       const live = s === 'select' || s === 'choose' || s === 'play' || s === 'settling';
       const playing = live || s === 'paused' || s === 'result' || s === 'levelfail' || s === 'victory';
-      document.body.classList.toggle('keg', !!(game.keg && game.keg.empty) && live);
+      document.body.classList.toggle('keg', !!(game.keg && (game.keg.empty || game.keg.wait)) && live);
       if (s === 'home') return;
       $('hud').hidden = !playing; $('controls').hidden = !live;
       $('tiltStrip').hidden = !(s === 'play' || s === 'settling');
       $('picker').hidden = s !== 'choose'; $('row').hidden = !(s === 'play' || s === 'settling');
-      $('order').hidden = !game.order; $('queue').hidden = !(live || s === 'paused');
+      $('order').hidden = !game.order; $('queue').hidden = !(((live) && s !== 'play' && s !== 'settling') || s === 'paused');
       if (s !== 'play') setOpen(false);
       if (s === 'select' || s === 'choose' || s === 'play') { hideAll(); updateBar(); layoutStrip(); renderQueue(); }
       if (s === 'victory') { $('controls').hidden = true; }
@@ -3213,17 +3224,19 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       updateBar();
       setTimeout(() => renderResult(r), r.ok ? 850 : 450);
     });
-    let kegAlarmT = 0;
+    let kegAlarmT = 0; const kb = $('kegBtn');
     game.on('kegEmpty', () => {
-      open = false; pourBtn.classList.remove('on'); document.body.classList.add('keg'); renderer.kegReset(); renderer.shake = 7;
+      open = false; pourBtn.classList.remove('on'); document.body.classList.add('keg'); renderer.kegReset();
+      kb.dataset.i = 'keg.swap'; kb.textContent = T('keg.swap'); kb.classList.remove('go', 'hold'); renderer.shake = 7;
       audio.setPour(0, 0, 0, 0); audio.sfx('alarm'); kegAlarmT = 2.2;
     });
     game.on('kegTap', (e) => { renderer.kegTarget = e.p * 0.62; renderer.shake = 3; audio.sfx('kegTap'); });
     game.on('kegDone', (e) => {
-      document.body.classList.remove('keg'); renderer.kegTarget = 1; renderer.kegHold = 1.1; renderer.kegFlash = 1; renderer.shake = 4; audio.sfx('kegDone');
+      renderer.kegTarget = 1; renderer.kegFlash = 1; kb.dataset.i = 'keg.cont'; kb.textContent = T('keg.cont'); kb.classList.add('go', 'hold'); setTimeout(() => kb.classList.remove('hold'), 1000); renderer.shake = 4; audio.sfx('kegDone');
       if (e.fast) { renderer.addText(T('keg.fast', { n: e.bonus }), renderer.W / 2, renderer.H * 0.42, '#ffd36a', 26); renderer.burstCoins(6, renderer.W / 2, renderer.H * 0.45); }
     });
-    $('kegBtn').addEventListener('pointerdown', (e) => { e.preventDefault(); audio.init(); game.kegTap(); });
+    game.on('kegResume', () => { document.body.classList.remove('keg'); renderer.kegHold = 0.3; audio.sfx('click'); });
+    kb.addEventListener('pointerdown', (e) => { e.preventDefault(); audio.init(); if (game.keg && game.keg.wait) game.kegContinue(); else game.kegTap(); });
     game.on('victory', (v) => { setTimeout(() => { renderVictory(v); audio.sfx(v.unlocks.styles.length ? 'unlock' : 'success'); }, 500); });
 
     function renderResult(r) {
