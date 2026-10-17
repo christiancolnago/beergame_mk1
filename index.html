@@ -1811,7 +1811,10 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       this.rnd = BB.rng(((this.session.seed * 31 + this.session.level) >>> 0) || 1);
       this.order = null; this.chosenGlassId = null; this.wrongPicks = 0; this.model = null; this.result = null; this.settleLeft = 0;
       this.kegRnd = BB.rng(((this.session.seed * 17 + this.session.level * 5 + 3) >>> 0) || 1); // flusso casuale separato: non altera i clienti
-      this.keg = { empty: false, taps: 0, need: 12, t: 0 }; this.nextKeg = (this.session.level <= 1 ? 45 : 30) + this.kegRnd() * 25;
+      this.keg = { empty: false, taps: 0, need: 15, t: 0 };
+      // piano fusto: solo i livelli pari (2, 4, 6...). Livello 2: dopo il secondo cliente servito. Gli altri: a caso durante il servizio, una volta sola
+      const lv = this.session.level; this.kegUsed = !(lv >= 2 && lv % 2 === 0);
+      this.kegPlan = lv === 2 ? 'after2' : 'random'; this.nextKeg = 10 + this.kegRnd() * 22; this.kegDelay = 0.8;
       const R = this.rules;
       for (let i = 0; i < R.startCount; i++) this._spawn();
       this.nextArrival = R.interval * 0.8;
@@ -1877,8 +1880,11 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
     _tickKeg(dt) {
       const k = this.keg; if (!k) return;
       if (k.empty) { k.t += dt; return; }
-      this.nextKeg -= dt;
-      if (this.nextKeg <= 0) { k.empty = true; k.taps = 0; k.t = 0; this.emit('kegEmpty'); }
+      if (this.kegUsed) return;
+      let go = false;
+      if (this.kegPlan === 'after2') { if (this.session.idx >= 2 && this.state === 'select') { this.kegDelay -= dt; go = this.kegDelay <= 0; } }
+      else { this.nextKeg -= dt; go = this.nextKeg <= 0 || (this.session.idx >= 3 && this.state === 'select'); }
+      if (go) { this.kegUsed = true; k.empty = true; k.taps = 0; k.t = 0; this.emit('kegEmpty'); }
     }
     kegTap() { // ogni tocco avvicina il fusto nuovo; al terzo è collegato
       const k = this.keg;
@@ -1886,9 +1892,8 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       k.taps++;
       if (k.taps < k.need) { this.emit('kegTap', { p: k.taps / k.need }); return true; }
       k.empty = false;
-      const fast = k.t <= 7, bonus = fast ? 5 : 0;
+      const fast = k.t <= 8, bonus = fast ? 5 : 0;
       if (bonus) { this.progress.coins += bonus; this.save.save(); }
-      this.nextKeg = 35 + this.kegRnd() * 40;
       this.emit('kegDone', { time: k.t, fast, bonus });
       return true;
     }
