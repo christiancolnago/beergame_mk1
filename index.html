@@ -78,6 +78,24 @@ button:focus-visible, input:focus-visible { outline: 3px solid var(--amber); out
 .btn.ghost { background: transparent; }
 .btn[disabled] { opacity: .4; pointer-events: none; }
 #pour { width: 92px; height: 92px; border-radius: 50%; font-family: var(--display); font-size: 14px; letter-spacing: .05em; background: radial-gradient(circle at 35% 30%, #ffd978, #c68a1c 70%); color: #2a1a06; border: 4px solid #8a6a22; box-shadow: 0 5px 0 #5e4310, 0 8px 18px rgba(0,0,0,.5); touch-action: none; }
+#rot{display:none;position:fixed;inset:0;z-index:99999;background:#0f1613;color:#f4ecd8;font:700 22px/1.3 var(--ui,sans-serif);text-align:center;align-items:center;justify-content:center;padding:24px}
+@media (orientation: landscape) and (pointer: coarse) { #rot { display: flex; } }
+.tutL{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
+.tutL li{display:flex;gap:10px;align-items:flex-start;line-height:1.3;font-size:15px}
+.tutL .ti{flex:none;min-width:34px;height:30px;padding:0 6px;border-radius:9px;background:rgba(0,0,0,.45);border:1px solid var(--line);display:grid;place-items:center;font-family:var(--ui);font-weight:700;font-size:14px;color:var(--amber)}
+.tutG{display:flex;gap:10px;align-items:center}
+.tutG .gs{flex:none;width:52px;height:60px}.tutG .gs svg{width:100%;height:100%}
+.tutG b{font-family:var(--ui);font-size:18px;display:block}.tutG small{color:var(--ink-dim);font-size:14px;line-height:1.3;display:block}
+.tutG small i{font-style:normal;color:var(--amber);font-size:12px;border:1px solid var(--brass-dark);border-radius:6px;padding:0 4px;margin-left:2px}
+.tdots{display:flex;gap:6px;justify-content:center}.tdots u{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.2)}.tdots u.on{background:var(--amber)}
+.tbtn{display:flex;gap:8px}.tbtn .btn{flex:1}
+.shrow .pips{align-items:center}.shrow .pips small{font-size:12px;margin-left:4px;color:var(--amber)}
+.zim{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;max-width:340px}
+.zim svg,.zim img{width:210px;height:210px;filter:drop-shadow(0 8px 18px rgba(0,0,0,.55))}
+.zim .zt{font-family:var(--display);font-size:30px;color:#f3d36a;line-height:1.1}
+.zim .zs{font-family:var(--ui);font-size:18px;font-weight:600;color:var(--ink)}
+.zim .zw{font-family:var(--ui);font-size:17px;color:var(--ink-dim)}
+.zim .zb{width:200px;height:6px;border-radius:3px;background:rgba(255,255,255,.14);overflow:hidden;margin-top:8px}.zim .zb i{display:block;height:100%;width:0;background:var(--amber);transition:width 4s linear}
 #kegBtn{display:none;margin:0 auto;width:112px;height:112px;border-radius:50%;font-family:var(--display);font-size:18px;letter-spacing:.05em;background:radial-gradient(circle at 35% 30%,#ff9a85,#d02a1c 70%);color:#fff;border:4px solid #7a1208;box-shadow:0 5px 0 #4a0a04,0 8px 18px rgba(0,0,0,.5);touch-action:manipulation;animation:kegPulse .45s infinite alternate}
 @keyframes kegPulse{to{transform:scale(1.07);box-shadow:0 5px 0 #4a0a04,0 0 26px rgba(255,70,40,.85)}}
 #kegBtn.go{font-size:13px;letter-spacing:0;background:radial-gradient(circle at 35% 30%,#b4f7c4,#1f9a47 70%);border-color:#0f5a27;box-shadow:0 5px 0 #0a3d1a,0 8px 18px rgba(0,0,0,.5);animation:none}
@@ -213,6 +231,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
 </head>
 <body>
 <div id="app"><noscript style="color:#fff;padding:20px;display:block">Serve JavaScript attivo per giocare.</noscript>
+  <div id="rot" data-i="rot.msg">Ruota il telefono in verticale</div>
   <canvas id="cv" data-iaria="cv.aria" aria-label="Bancone con il bicchiere da riempire"></canvas>
 
   <div id="hud" hidden>
@@ -267,6 +286,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
     <div class="panel">
       <h2 data-i="settings">Impostazioni</h2>
       <button class="btn" id="btnAvatarSet" data-i="set.avatar">Avatar e nome</button>
+      <button class="btn" id="btnTutorial" data-i="set.tutorial">Rivedi il tutorial</button>
       <div class="stack"><div class="lab" style="font-family:var(--ui);font-size:18px;font-weight:600" data-i="set.lang">Lingua</div><div class="seg langSeg" id="langSet"></div></div>
       <div class="set"><div class="lab" data-i="set.sfx">Effetti sonori</div><button class="switch" id="swSfx" role="switch" aria-checked="true" aria-label="SFX"></button></div>
       <div class="set"><div class="lab" data-i="set.music">Musica</div><button class="switch" id="swMusic" role="switch" aria-checked="true" aria-label="Music"></button></div>
@@ -336,6 +356,12 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
   <div class="screen" id="scrDialog" hidden style="z-index:40">
     <div class="panel" id="dialogPanel"></div>
   </div>
+
+  <!-- TUTORIAL -->
+  <div class="screen" id="scrTut" hidden style="z-index:41"><div class="panel" id="tutPanel"></div></div>
+
+  <!-- BANNER ZIMURGO -->
+  <div class="screen" id="scrZim" hidden style="z-index:46;background:radial-gradient(120% 80% at 50% 20%,#24402f,#0b120e 70%)"><div class="zim" id="zimBox"></div></div>
 
   <!-- ANNUNCIO DI PROVA -->
   <div class="screen" id="scrAd" hidden style="z-index:45">
@@ -426,7 +452,10 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       'bar.info': 'Liv. {l} · {s}/{n}', 'lives.aria2': '{n} cuori', 'lives.aria3': ', un cliente perso su {k}',
       'hint.tap': 'Tocca un cliente per prendere l\'ordine', 'hint.wait': 'Aspetta il prossimo cliente…', 'hint.choose': 'Scegli il bicchiere giusto per: {s}',
       'keg.cont': 'CONTINUA', 'keg.ready': 'Fusto collegato! Tocca CONTINUA per spillare',
-      'keg.alert': 'FUSTO FINITO!', 'keg.empty': 'VUOTO', 'keg.swap': 'CAMBIA', 'keg.hint': 'Tocca CAMBIA velocemente!', 'keg.done': 'Fusto collegato!', 'keg.fast': 'Cambio rapido! +{n}',
+      'keg.alert': 'FUSTO {s} FINITO!', 'keg.empty': 'VUOTO', 'keg.swap': 'CAMBIA', 'keg.hint': 'Tocca CAMBIA velocemente!', 'keg.done': 'Fusto {s} collegato!', 'keg.fast': 'Cambio rapido! +{n}',
+      'keg.style': 'Nuovo fusto: i clienti hanno cambiato ordine!', 'rot.msg': 'Ruota il telefono in verticale',
+      'ach.fam.served': 'Barista', 'ach.fam.perfect': 'Mano d\'artista', 'ach.fam.combo': 'Ritmo', 'ach.fam.level': 'Carriera', 'ach.fam.star3': 'Tre stelle', 'ach.fam.streak': 'Cliente fisso', 'ach.fam.keg': 'Cambio fusto', 'ach.fam.kegFast': 'Cambio lampo', 'ach.fam.spent': 'Spendaccione',
+      'ach.d.keg': 'Cambia {n} fusti', 'ach.d.kegFast': 'Fai {n} cambi fusto rapidi', 'ach.d.spent': 'Spendi {n} monete nel negozio',
       'hint.settle': 'La schiuma si assesta…', 'hint.close': 'Chiudi il rubinetto!', 'hint.spill': 'Sta traboccando! Raddrizza il bicchiere.', 'hint.waste': 'Troppo inclinato: la birra finisce fuori.',
       'hint.startTouch': 'Trascina a ~45° e tieni premuto {pour}', 'hint.startTilt': 'Inclina a ~45° e tieni premuto {pour}', 'hint.serve': 'Premi {serve} quando la schiuma è giusta',
       'hint.closedKeep': 'Rubinetto chiuso: continua o servi', 'hint.good': 'Bene, mantieni così', 'hint.straighten': 'Raddrizza un po\'', 'hint.tiltMore': 'Inclina di più',
@@ -480,7 +509,10 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       'bar.info': 'Lv. {l} · {s}/{n}', 'lives.aria2': '{n} hearts', 'lives.aria3': ', one customer lost out of {k}',
       'hint.tap': 'Tap a customer to take the order', 'hint.wait': 'Wait for the next customer…', 'hint.choose': 'Pick the right glass for: {s}',
       'keg.cont': 'GO ON', 'keg.ready': 'Keg connected! Tap GO ON to pour',
-      'keg.alert': 'KEG EMPTY!', 'keg.empty': 'EMPTY', 'keg.swap': 'SWAP', 'keg.hint': 'Tap SWAP quickly!', 'keg.done': 'Keg connected!', 'keg.fast': 'Quick swap! +{n}',
+      'keg.alert': '{s} KEG EMPTY!', 'keg.empty': 'EMPTY', 'keg.swap': 'SWAP', 'keg.hint': 'Tap SWAP quickly!', 'keg.done': '{s} keg connected!', 'keg.fast': 'Quick swap! +{n}',
+      'keg.style': 'New keg: customers changed their orders!', 'rot.msg': 'Turn your phone upright',
+      'ach.fam.served': 'Bartender', 'ach.fam.perfect': 'Artist\'s hand', 'ach.fam.combo': 'Rhythm', 'ach.fam.level': 'Career', 'ach.fam.star3': 'Three stars', 'ach.fam.streak': 'Regular', 'ach.fam.keg': 'Keg swap', 'ach.fam.kegFast': 'Lightning swap', 'ach.fam.spent': 'Big spender',
+      'ach.d.keg': 'Swap {n} kegs', 'ach.d.kegFast': 'Make {n} quick keg swaps', 'ach.d.spent': 'Spend {n} coins in the shop',
       'hint.settle': 'The foam is settling…', 'hint.close': 'Close the tap!', 'hint.spill': 'It\'s overflowing! Straighten the glass.', 'hint.waste': 'Tilted too far: the beer goes outside.',
       'hint.startTouch': 'Drag to ~45° and hold {pour}', 'hint.startTilt': 'Tilt to ~45° and hold {pour}', 'hint.serve': 'Press {serve} when the foam is right',
       'hint.closedKeep': 'Tap closed: keep pouring or serve', 'hint.good': 'Good, keep it up', 'hint.straighten': 'Straighten a little', 'hint.tiltMore': 'Tilt more',
@@ -534,7 +566,10 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       'bar.info': 'Niv. {l} · {s}/{n}', 'lives.aria2': '{n} cœurs', 'lives.aria3': ', un client perdu sur {k}',
       'hint.tap': 'Touchez un client pour prendre la commande', 'hint.wait': 'Attendez le prochain client…', 'hint.choose': 'Choisissez le bon verre pour : {s}',
       'keg.cont': 'CONTINUER', 'keg.ready': 'Fût branché ! Touchez CONTINUER pour tirer',
-      'keg.alert': 'FÛT VIDE !', 'keg.empty': 'VIDE', 'keg.swap': 'CHANGER', 'keg.hint': 'Touchez CHANGER vite !', 'keg.done': 'Fût branché !', 'keg.fast': 'Changement rapide ! +{n}',
+      'keg.alert': 'FÛT {s} VIDE !', 'keg.empty': 'VIDE', 'keg.swap': 'CHANGER', 'keg.hint': 'Touchez CHANGER vite !', 'keg.done': 'Fût {s} branché !', 'keg.fast': 'Changement rapide ! +{n}',
+      'keg.style': 'Nouveau fût : les clients ont changé de commande !', 'rot.msg': 'Tenez le téléphone à la verticale',
+      'ach.fam.served': 'Barman', 'ach.fam.perfect': 'Main d\'artiste', 'ach.fam.combo': 'Rythme', 'ach.fam.level': 'Carrière', 'ach.fam.star3': 'Trois étoiles', 'ach.fam.streak': 'Habitué', 'ach.fam.keg': 'Changement de fût', 'ach.fam.kegFast': 'Changement éclair', 'ach.fam.spent': 'Dépensier',
+      'ach.d.keg': 'Changez {n} fûts', 'ach.d.kegFast': 'Faites {n} changements de fût rapides', 'ach.d.spent': 'Dépensez {n} pièces à la boutique',
       'hint.settle': 'La mousse se stabilise…', 'hint.close': 'Fermez le robinet !', 'hint.spill': 'Ça déborde ! Redressez le verre.', 'hint.waste': 'Trop incliné : la bière tombe à côté.',
       'hint.startTouch': 'Glissez à ~45° et maintenez {pour}', 'hint.startTilt': 'Inclinez à ~45° et maintenez {pour}', 'hint.serve': 'Appuyez sur {serve} quand la mousse est bonne',
       'hint.closedKeep': 'Robinet fermé : continuez ou servez', 'hint.good': 'Bien, continuez ainsi', 'hint.straighten': 'Redressez un peu', 'hint.tiltMore': 'Inclinez plus',
@@ -588,7 +623,10 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       'bar.info': 'Lv. {l} · {s}/{n}', 'lives.aria2': '{n} Herzen', 'lives.aria3': ', ein Kunde verloren von {k}',
       'hint.tap': 'Tippe auf einen Kunden, um die Bestellung aufzunehmen', 'hint.wait': 'Warte auf den nächsten Kunden …', 'hint.choose': 'Wähle das richtige Glas für: {s}',
       'keg.cont': 'WEITER', 'keg.ready': 'Fass angeschlossen! Tippe auf WEITER zum Zapfen',
-      'keg.alert': 'FASS LEER!', 'keg.empty': 'LEER', 'keg.swap': 'WECHSELN', 'keg.hint': 'Tippe schnell auf WECHSELN!', 'keg.done': 'Fass angeschlossen!', 'keg.fast': 'Schneller Wechsel! +{n}',
+      'keg.alert': 'FASS {s} LEER!', 'keg.empty': 'LEER', 'keg.swap': 'WECHSELN', 'keg.hint': 'Tippe schnell auf WECHSELN!', 'keg.done': 'Fass {s} angeschlossen!', 'keg.fast': 'Schneller Wechsel! +{n}',
+      'keg.style': 'Neues Fass: die Kunden haben ihre Bestellung geändert!', 'rot.msg': 'Handy bitte hochkant halten',
+      'ach.fam.served': 'Barkeeper', 'ach.fam.perfect': 'Künstlerhand', 'ach.fam.combo': 'Rhythmus', 'ach.fam.level': 'Karriere', 'ach.fam.star3': 'Drei Sterne', 'ach.fam.streak': 'Stammgast', 'ach.fam.keg': 'Fasswechsel', 'ach.fam.kegFast': 'Blitzwechsel', 'ach.fam.spent': 'Großzügig',
+      'ach.d.keg': 'Wechsle {n} Fässer', 'ach.d.kegFast': 'Schaffe {n} schnelle Fasswechsel', 'ach.d.spent': 'Gib {n} Münzen im Shop aus',
       'hint.settle': 'Der Schaum setzt sich …', 'hint.close': 'Hahn zu!', 'hint.spill': 'Es läuft über! Richte das Glas auf.', 'hint.waste': 'Zu schräg: Das Bier geht daneben.',
       'hint.startTouch': 'Zieh auf ~45° und halte {pour}', 'hint.startTilt': 'Neige auf ~45° und halte {pour}', 'hint.serve': 'Drücke {serve}, wenn der Schaum passt',
       'hint.closedKeep': 'Hahn zu: weiterzapfen oder servieren', 'hint.good': 'Gut, so weitermachen', 'hint.straighten': 'Etwas aufrichten', 'hint.tiltMore': 'Mehr neigen',
@@ -649,7 +687,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
 })(typeof globalThis !== 'undefined' ? globalThis : this);
 
 /* ---- avatar.js ---- */
-/* Avatar del giocatore: disegno su canvas (busto con grembiule) e descrizione delle parti modificabili. */
+/* Avatar: disegno su canvas (busto con grembiule), parti modificabili, aspetto di giocatore e clienti (maschi e femmine). */
 (function (g) {
   'use strict';
   const BB = (g.BB = g.BB || {});
@@ -657,50 +695,76 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
   const HAIRC = ['#1e140e', '#4a2e1a', '#8a5a2b', '#c98f3e', '#e2c26a', '#b8452d', '#8d8d92', '#e9e9ea'];
   const SHIRTC = ['#c0463a', '#3f7fbf', '#4aa56a', '#d9a238', '#8b5cc0', '#2f3a44', '#d8d8d0', '#e07aa0'];
   const APRONC = ['#3a2a1c', '#1d2a3a', '#2c3b2a', '#6a2a2a', '#2b2b2b', '#c9b48a'];
+  const LIPC = ['', '#e58fa0', '#c9242f', '#7a2a54'];
+  // genere: 0 = uomo, 1 = donna. Le liste dicono quali capelli/barba si usano a caso per i clienti.
+  const HAIR_M = [0, 1, 1, 3, 5, 9], HAIR_F = [2, 2, 3, 4, 6, 7, 8];
   const PARTS = [
+    { k: 'gender', type: 'ar', n: 2, label: 'av.gender', names: 'av.genderS' },
     { k: 'skin', type: 'sw', n: SKINC.length, label: 'av.skin', col: SKINC },
-    { k: 'hairStyle', type: 'ar', n: 6, label: 'av.hair', names: 'av.hairS' },
+    { k: 'hairStyle', type: 'ar', n: 10, label: 'av.hair', names: 'av.hairS' },
     { k: 'hair', type: 'sw', n: HAIRC.length, label: 'av.hairColor', col: HAIRC },
-    { k: 'beard', type: 'ar', n: 4, label: 'av.beard', names: 'av.beardS' },
-    { k: 'glasses', type: 'ar', n: 4, label: 'av.glasses', names: 'av.glassesS' },
+    { k: 'beard', type: 'ar', n: 6, label: 'av.beard', names: 'av.beardS' },
+    { k: 'glasses', type: 'ar', n: 5, label: 'av.glasses', names: 'av.glassesS' },
+    { k: 'earring', type: 'ar', n: 4, label: 'av.earring', names: 'av.earringS' },
+    { k: 'lips', type: 'ar', n: 4, label: 'av.lips', names: 'av.lipsS' },
+    { k: 'face', type: 'ar', n: 4, label: 'av.face', names: 'av.faceS' },
+    { k: 'neck', type: 'ar', n: 4, label: 'av.neck', names: 'av.neckS' },
     { k: 'hat', type: 'ar', n: 5, label: 'av.hat', names: 'av.hatS' },
     { k: 'shirt', type: 'sw', n: SHIRTC.length, label: 'av.shirt', col: SHIRTC },
     { k: 'apron', type: 'sw', n: APRONC.length, label: 'av.apron', col: APRONC },
   ];
-  const DEFAULT = { skin: 1, hairStyle: 1, hair: 1, beard: 0, glasses: 0, hat: 0, shirt: 1, apron: 0 };
+  const DEFAULT = { gender: 0, skin: 1, hairStyle: 1, hair: 1, beard: 0, glasses: 0, earring: 0, lips: 0, face: 0, neck: 0, hat: 0, shirt: 1, apron: 0 };
 
   function sanitize(look) {
     const out = {};
     PARTS.forEach((p) => { const v = look && Number(look[p.k]); out[p.k] = Number.isFinite(v) ? ((Math.floor(v) % p.n) + p.n) % p.n : DEFAULT[p.k]; });
     return out;
   }
-  function random(rnd) {
-    rnd = rnd || Math.random; const out = {};
-    PARTS.forEach((p) => { out[p.k] = Math.floor(rnd() * p.n); });
-    if (rnd() < 0.55) out.hat = 0; if (rnd() < 0.5) out.glasses = 0;
+  const pk = (rnd, a) => a[Math.floor(rnd() * a.length)];
+  // aspetto casuale coerente con il genere (cappelli: solo quelli gratuiti, 0-2)
+  function random(rnd, gender) {
+    rnd = rnd || Math.random;
+    const f = gender == null ? (rnd() < 0.5 ? 1 : 0) : gender ? 1 : 0, out = Object.assign({}, DEFAULT);
+    out.gender = f; out.skin = Math.floor(rnd() * SKINC.length); out.hair = Math.floor(rnd() * HAIRC.length);
+    out.shirt = Math.floor(rnd() * SHIRTC.length); out.apron = Math.floor(rnd() * APRONC.length);
+    out.hairStyle = pk(rnd, f ? HAIR_F : HAIR_M);
+    out.beard = f ? 0 : (rnd() < 0.5 ? 1 + Math.floor(rnd() * 5) : 0);
+    out.glasses = rnd() < 0.5 ? 0 : (f && rnd() < 0.5 ? 4 : 1 + Math.floor(rnd() * 3));
+    out.earring = f ? (rnd() < 0.65 ? 1 + Math.floor(rnd() * 3) : 0) : (rnd() < 0.1 ? 1 : 0);
+    out.lips = f ? (rnd() < 0.7 ? 1 + Math.floor(rnd() * 3) : 0) : 0;
+    out.face = rnd() < 0.3 ? 1 + Math.floor(rnd() * 3) : 0;
+    out.neck = rnd() < 0.25 ? 1 + Math.floor(rnd() * 3) : 0;
+    out.hat = rnd() < 0.5 ? 0 : 1 + Math.floor(rnd() * 2);
+    if (out.hat && (out.hairStyle === 4 || out.hairStyle === 5 || out.hairStyle === 9 || out.hairStyle === 7)) out.hat = 0; // niente cappello sopra chignon, cresta, ciuffo, coda
     return out;
   }
 
   // Disegna testa e busto. (x, y) = centro della testa, R = raggio della testa.
   function draw(c, look, x, y, R, mood, t, opts) {
-    const L = sanitize(look), sk = SKINC[L.skin], hc = HAIRC[L.hair], shirt = SHIRTC[L.shirt], apr = APRONC[L.apron];
-    const bob = Math.sin((t || 0) * 2) * R * 0.03, TAU = Math.PI * 2;
+    const L = sanitize(look), sk = SKINC[L.skin], hc = HAIRC[L.hair], shirt = SHIRTC[L.shirt], apr = APRONC[L.apron], F = L.gender === 1;
+    const bob = Math.sin((t || 0) * 2) * R * 0.03, TAU = Math.PI * 2, sw = F ? 1.36 : 1.55;
     c.save(); c.translate(x, y + bob); c.lineJoin = 'round'; c.lineCap = 'round';
-    // capelli lunghi dietro
+    // capelli dietro la testa
     if (L.hairStyle === 2) { c.fillStyle = hc; c.beginPath(); c.ellipse(0, R * 0.4, R * 1.12, R * 1.4, 0, 0, TAU); c.fill(); }
-    // chignon
     if (L.hairStyle === 4) { c.fillStyle = hc; c.beginPath(); c.arc(0, -R * 1.12, R * 0.4, 0, TAU); c.fill(); }
+    if (L.hairStyle === 7) { c.fillStyle = hc; c.beginPath(); c.ellipse(R * 1.08, R * 0.55, R * 0.3, R * 0.85, -0.25, 0, TAU); c.fill(); }
+    if (L.hairStyle === 8) { c.fillStyle = hc; [-1, 1].forEach((d) => { c.beginPath(); c.ellipse(d * R * 1.1, R * 0.62, R * 0.24, R * 0.72, d * 0.18, 0, TAU); c.fill(); }); }
     // busto: maglia + grembiule con bretelle
-    c.fillStyle = shirt; c.beginPath(); c.moveTo(-R * 1.55, R * 2.8); c.quadraticCurveTo(-R * 1.55, R * 0.95, 0, R * 0.95); c.quadraticCurveTo(R * 1.55, R * 0.95, R * 1.55, R * 2.8); c.fill();
+    c.fillStyle = shirt; c.beginPath(); c.moveTo(-R * sw, R * 2.8); c.quadraticCurveTo(-R * sw, R * 0.95, 0, R * 0.95); c.quadraticCurveTo(R * sw, R * 0.95, R * sw, R * 2.8); c.fill();
     if (!(opts && opts.noApron)) { c.fillStyle = apr; c.beginPath(); c.moveTo(-R * 0.6, R * 1.02); c.lineTo(R * 0.6, R * 1.02); c.lineTo(R * 0.86, R * 2.8); c.lineTo(-R * 0.86, R * 2.8); c.closePath(); c.fill();
     c.strokeStyle = apr; c.lineWidth = R * 0.14; c.beginPath(); c.moveTo(-R * 0.5, R * 1.04); c.lineTo(-R * 0.82, R * 1.12); c.moveTo(R * 0.5, R * 1.04); c.lineTo(R * 0.82, R * 1.12); c.stroke();
     c.fillStyle = 'rgba(255,255,255,0.16)'; c.fillRect(-R * 0.3, R * 1.55, R * 0.6, R * 0.5); } // tasca
     // collo e orecchie
-    c.fillStyle = sk; c.fillRect(-R * 0.3, R * 0.55, R * 0.6, R * 0.6);
+    c.fillStyle = sk; c.fillRect(-R * (F ? 0.25 : 0.3), R * 0.55, R * (F ? 0.5 : 0.6), R * 0.6);
+    if (F) { c.beginPath(); c.ellipse(0, R * 1.04, R * 0.46, R * 0.3, 0, 0, TAU); c.fill(); } // scollo
     c.beginPath(); c.arc(-R * 0.98, R * 0.05, R * 0.2, 0, TAU); c.arc(R * 0.98, R * 0.05, R * 0.2, 0, TAU); c.fill();
     // testa
     c.beginPath(); c.arc(0, 0, R, 0, TAU); c.fill();
-    c.fillStyle = 'rgba(230,100,90,0.16)'; c.beginPath(); c.arc(-R * 0.6, R * 0.3, R * 0.2, 0, TAU); c.arc(R * 0.6, R * 0.3, R * 0.2, 0, TAU); c.fill();
+    c.fillStyle = 'rgba(230,100,90,' + (F ? 0.22 : 0.14) + ')'; c.beginPath(); c.arc(-R * 0.6, R * 0.3, R * 0.2, 0, TAU); c.arc(R * 0.6, R * 0.3, R * 0.2, 0, TAU); c.fill();
+    // segni del viso
+    if (L.face === 1) { c.fillStyle = 'rgba(120,70,40,0.65)'; [[-0.5, 0.22], [-0.36, 0.3], [-0.62, 0.34], [0.5, 0.22], [0.36, 0.3], [0.62, 0.34], [-0.4, 0.14], [0.4, 0.14]].forEach((p) => { c.beginPath(); c.arc(p[0] * R, p[1] * R, R * 0.035, 0, TAU); c.fill(); }); }
+    if (L.face === 2) { c.fillStyle = '#3a2418'; c.beginPath(); c.arc(R * 0.42, R * 0.42, R * 0.045, 0, TAU); c.fill(); }
+    if (L.face === 3) { c.strokeStyle = 'rgba(150,60,50,0.8)'; c.lineWidth = R * 0.05; c.beginPath(); c.moveTo(-R * 0.62, -R * 0.12); c.lineTo(-R * 0.34, R * 0.38); c.stroke(); c.strokeStyle = 'rgba(255,230,220,0.5)'; c.lineWidth = R * 0.02; for (let i = 0; i < 3; i++) { c.beginPath(); c.moveTo(-R * (0.58 - i * 0.09), R * (0.02 + i * 0.12)); c.lineTo(-R * (0.46 - i * 0.09), R * (0.08 + i * 0.12)); c.stroke(); } }
     // capelli
     c.fillStyle = hc;
     const cap = () => { c.beginPath(); c.arc(0, -R * 0.15, R * 1.05, Math.PI * 1.02, Math.PI * 1.98); c.fill(); };
@@ -708,31 +772,62 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
     if (L.hairStyle === 2) { cap(); c.fillRect(-R * 1.05, -R * 0.2, R * 0.22, R * 1.3); c.fillRect(R * 0.83, -R * 0.2, R * 0.22, R * 1.3); }
     if (L.hairStyle === 3) { for (let i = 0; i < 9; i++) { const a = Math.PI * (1.02 + 0.96 * i / 8); c.beginPath(); c.arc(Math.cos(a) * R * 0.98, -R * 0.12 + Math.sin(a) * R * 0.98, R * 0.3, 0, TAU); c.fill(); } cap(); }
     if (L.hairStyle === 5) { c.beginPath(); c.moveTo(-R * 0.2, -R * 0.75); c.quadraticCurveTo(0, -R * 1.75, R * 0.2, -R * 0.75); c.lineTo(R * 0.18, -R * 0.35); c.lineTo(-R * 0.18, -R * 0.35); c.closePath(); c.fill(); }
-    // occhi e bocca
+    if (L.hairStyle === 6) { cap(); c.beginPath(); c.moveTo(-R * 1.06, -R * 0.2); c.lineTo(-R * 0.8, -R * 0.2); c.lineTo(-R * 0.74, R * 0.72); c.quadraticCurveTo(-R * 0.98, R * 0.8, -R * 1.08, R * 0.55); c.closePath(); c.fill(); c.beginPath(); c.moveTo(R * 1.06, -R * 0.2); c.lineTo(R * 0.8, -R * 0.2); c.lineTo(R * 0.74, R * 0.72); c.quadraticCurveTo(R * 0.98, R * 0.8, R * 1.08, R * 0.55); c.closePath(); c.fill(); c.beginPath(); c.ellipse(-R * 0.1, -R * 0.62, R * 0.8, R * 0.3, 0.12, Math.PI, 0); c.fill(); }
+    if (L.hairStyle === 7 || L.hairStyle === 8) { cap(); c.beginPath(); c.ellipse(-R * 0.15, -R * 0.62, R * 0.8, R * 0.28, 0.1, Math.PI, 0); c.fill(); if (L.hairStyle === 8) { c.fillStyle = shirt; [-1, 1].forEach((d) => { c.beginPath(); c.arc(d * R * 1.1, R * 0.28, R * 0.1, 0, TAU); c.fill(); }); } else { c.fillStyle = shirt; c.beginPath(); c.arc(R * 1.02, R * 0.12, R * 0.1, 0, TAU); c.fill(); } }
+    if (L.hairStyle === 9) { cap(); c.beginPath(); c.ellipse(R * 0.12, -R * 1.02, R * 0.72, R * 0.36, -0.12, 0, TAU); c.fill(); }
+    // sopracciglia, occhi e bocca
     const ey = -R * 0.05; c.fillStyle = '#1b1b1b'; c.strokeStyle = '#1b1b1b'; c.lineWidth = Math.max(1.5, R * 0.07);
+    if (mood !== 'angry') {
+      c.save(); c.strokeStyle = (L.hairStyle === 0 || L.hair > 5) ? '#6b625a' : hc; c.lineWidth = Math.max(1.2, R * (F ? 0.05 : 0.1));
+      [-1, 1].forEach((d) => { c.beginPath(); c.moveTo(d * R * 0.62, ey - R * (F ? 0.3 : 0.32)); c.quadraticCurveTo(d * R * 0.4, ey - R * (F ? 0.46 : 0.38), d * R * 0.16, ey - R * 0.31); c.stroke(); });
+      c.restore();
+    }
     if (mood === 'angry') {
       c.fillRect(-R * 0.55, ey, R * 0.3, R * 0.13); c.fillRect(R * 0.25, ey, R * 0.3, R * 0.13);
       c.beginPath(); c.moveTo(-R * 0.65, ey - R * 0.3); c.lineTo(-R * 0.2, ey - R * 0.14); c.moveTo(R * 0.65, ey - R * 0.3); c.lineTo(R * 0.2, ey - R * 0.14); c.stroke();
     } else if (mood === 'happy') {
       c.beginPath(); c.arc(-R * 0.35, ey + R * 0.06, R * 0.14, Math.PI * 1.1, Math.PI * 1.9); c.moveTo(R * 0.49, ey + R * 0.06); c.arc(R * 0.35, ey + R * 0.06, R * 0.14, Math.PI * 1.1, Math.PI * 1.9); c.stroke();
     } else { c.beginPath(); c.arc(-R * 0.35, ey, R * 0.11, 0, TAU); c.arc(R * 0.35, ey, R * 0.11, 0, TAU); c.fill(); }
+    if (F) { // ciglia
+      c.lineWidth = Math.max(1, R * 0.045); c.beginPath();
+      [-1, 1].forEach((d) => { const ox = d * R * (mood === 'angry' ? 0.56 : 0.48); for (let i = 0; i < 3; i++) { c.moveTo(ox, ey - R * 0.04 + i * R * 0.0); c.lineTo(ox + d * R * (0.13 + i * 0.02), ey - R * (0.1 + i * 0.1)); } });
+      c.stroke();
+    }
     // barba (dietro bocca)
     c.fillStyle = hc;
-    if (L.beard === 2) { c.beginPath(); c.moveTo(-R * 0.97, R * 0.1); c.quadraticCurveTo(-R * 0.95, R * 1.15, 0, R * 1.18); c.quadraticCurveTo(R * 0.95, R * 1.15, R * 0.97, R * 0.1); c.quadraticCurveTo(R * 0.6, R * 0.42, 0, R * 0.4); c.quadraticCurveTo(-R * 0.6, R * 0.42, -R * 0.97, R * 0.1); c.fill(); }
+    const fullBeard = () => { c.beginPath(); c.moveTo(-R * 0.97, R * 0.1); c.quadraticCurveTo(-R * 0.95, R * 1.15, 0, R * 1.18); c.quadraticCurveTo(R * 0.95, R * 1.15, R * 0.97, R * 0.1); c.quadraticCurveTo(R * 0.6, R * 0.42, 0, R * 0.4); c.quadraticCurveTo(-R * 0.6, R * 0.42, -R * 0.97, R * 0.1); c.fill(); };
+    if (L.beard === 2) fullBeard();
+    if (L.beard === 4) { c.save(); c.globalAlpha = 0.3; fullBeard(); c.restore(); }
     if (L.beard === 3) { c.beginPath(); c.ellipse(0, R * 0.88, R * 0.24, R * 0.3, 0, 0, TAU); c.fill(); }
     if (L.beard === 1 || L.beard === 3) { c.beginPath(); c.ellipse(-R * 0.2, R * 0.38, R * 0.24, R * 0.1, -0.25, 0, TAU); c.ellipse(R * 0.2, R * 0.38, R * 0.24, R * 0.1, 0.25, 0, TAU); c.fill(); }
+    if (L.beard === 5) { c.strokeStyle = hc; c.lineWidth = R * 0.11; c.beginPath(); c.moveTo(0, R * 0.38); c.quadraticCurveTo(-R * 0.45, R * 0.46, -R * 0.62, R * 0.28); c.quadraticCurveTo(-R * 0.66, R * 0.2, -R * 0.58, R * 0.16); c.moveTo(0, R * 0.38); c.quadraticCurveTo(R * 0.45, R * 0.46, R * 0.62, R * 0.28); c.quadraticCurveTo(R * 0.66, R * 0.2, R * 0.58, R * 0.16); c.stroke(); }
     c.strokeStyle = L.beard === 2 ? '#f3d9c4' : '#1b1b1b'; c.lineWidth = Math.max(1.5, R * 0.07); c.beginPath();
     if (mood === 'happy') c.arc(0, R * 0.46, R * 0.3, 0.2, Math.PI - 0.2);
     else if (mood === 'angry') c.arc(0, R * 0.78, R * 0.26, Math.PI * 1.15, Math.PI * 1.85);
     else { c.moveTo(-R * 0.24, R * 0.56); c.lineTo(R * 0.24, R * 0.56); }
+    if (L.lips) { c.strokeStyle = LIPC[L.lips]; c.lineWidth = R * 0.17; c.stroke(); c.strokeStyle = 'rgba(60,10,20,0.75)'; c.lineWidth = Math.max(1, R * 0.035); }
     c.stroke();
     // occhiali
     if (L.glasses) {
       c.strokeStyle = '#222'; c.lineWidth = R * 0.07;
       if (L.glasses === 1) { c.beginPath(); c.arc(-R * 0.38, ey, R * 0.28, 0, TAU); c.moveTo(R * 0.66, ey); c.arc(R * 0.38, ey, R * 0.28, 0, TAU); c.moveTo(-R * 0.1, ey); c.lineTo(R * 0.1, ey); c.stroke(); }
       else if (L.glasses === 2) { c.strokeRect(-R * 0.68, ey - R * 0.2, R * 0.58, R * 0.4); c.strokeRect(R * 0.1, ey - R * 0.2, R * 0.58, R * 0.4); c.beginPath(); c.moveTo(-R * 0.1, ey); c.lineTo(R * 0.1, ey); c.stroke(); }
+      else if (L.glasses === 4) { c.strokeStyle = '#7a2a54'; c.beginPath(); [-1, 1].forEach((d) => { c.moveTo(d * R * 0.1, ey - R * 0.02); c.lineTo(d * R * 0.76, ey - R * 0.26); c.lineTo(d * R * 0.66, ey + R * 0.2); c.lineTo(d * R * 0.14, ey + R * 0.18); c.closePath(); }); c.stroke(); }
       else { c.fillStyle = '#111'; c.beginPath(); c.roundRect ? c.roundRect(-R * 0.72, ey - R * 0.22, R * 0.62, R * 0.4, R * 0.1) : c.rect(-R * 0.72, ey - R * 0.22, R * 0.62, R * 0.4); c.roundRect ? c.roundRect(R * 0.1, ey - R * 0.22, R * 0.62, R * 0.4, R * 0.1) : c.rect(R * 0.1, ey - R * 0.22, R * 0.62, R * 0.4); c.fill(); c.beginPath(); c.moveTo(-R * 0.1, ey - R * 0.1); c.lineTo(R * 0.1, ey - R * 0.1); c.stroke(); }
     }
+    // orecchini
+    if (L.earring) {
+      [-1, 1].forEach((d) => {
+        const ex = d * R * 0.98, ey2 = R * 0.24; c.fillStyle = '#f0c548'; c.strokeStyle = '#d9a82a';
+        if (L.earring === 1) { c.beginPath(); c.arc(ex, ey2, R * 0.085, 0, TAU); c.fill(); }
+        else if (L.earring === 2) { c.lineWidth = R * 0.05; c.beginPath(); c.arc(ex, ey2 + R * 0.12, R * 0.15, 0, TAU); c.stroke(); }
+        else { c.lineWidth = R * 0.04; c.beginPath(); c.moveTo(ex, ey2); c.lineTo(ex, ey2 + R * 0.2); c.stroke(); c.fillStyle = '#5fd0e0'; c.beginPath(); c.arc(ex, ey2 + R * 0.28, R * 0.1, 0, TAU); c.fill(); }
+      });
+    }
+    // sciarpa / papillon / collana
+    if (L.neck === 1) { c.fillStyle = '#d94f3a'; c.beginPath(); c.moveTo(-R * 0.5, R * 0.92); c.quadraticCurveTo(0, R * 1.18, R * 0.5, R * 0.92); c.lineTo(R * 0.46, R * 1.12); c.quadraticCurveTo(0, R * 1.38, -R * 0.46, R * 1.12); c.closePath(); c.fill(); c.fillRect(R * 0.12, R * 1.1, R * 0.26, R * 0.5); c.fillStyle = 'rgba(255,255,255,0.28)'; c.fillRect(R * 0.12, R * 1.32, R * 0.26, R * 0.07); }
+    if (L.neck === 2) { c.fillStyle = '#2a2a35'; c.beginPath(); c.moveTo(0, R * 1.08); c.lineTo(-R * 0.34, R * 0.92); c.lineTo(-R * 0.34, R * 1.24); c.closePath(); c.moveTo(0, R * 1.08); c.lineTo(R * 0.34, R * 0.92); c.lineTo(R * 0.34, R * 1.24); c.closePath(); c.fill(); c.fillStyle = '#c0463a'; c.beginPath(); c.arc(0, R * 1.08, R * 0.07, 0, TAU); c.fill(); }
+    if (L.neck === 3) { c.strokeStyle = '#f0c548'; c.lineWidth = R * 0.05; c.beginPath(); c.arc(0, R * 0.7, R * 0.44, Math.PI * 0.12, Math.PI * 0.88); c.stroke(); c.fillStyle = '#e05a7a'; c.beginPath(); c.arc(0, R * 1.14, R * 0.09, 0, TAU); c.fill(); }
     // cappelli
     if (L.hat) {
       const hcol = shirt; c.fillStyle = hcol;
@@ -753,12 +848,20 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
   }
 
   function hashStr(s) { let x = 2166136261; for (let i = 0; i < s.length; i++) { x ^= s.charCodeAt(i); x = Math.imul(x, 16777619); } return (x >>> 0) || 1; }
-  // aspetto stabile di un cliente (derivato dal suo id), con le stesse parti dell'editor
+  function genderOf(c) {
+    if (c.gender != null) return c.gender ? 1 : 0;
+    return (BB.NAMES_F || []).indexOf(c.name) >= 0 ? 1 : 0;
+  }
+  // aspetto stabile di un cliente (derivato dal suo id): il genere segue il nome
   function forCustomer(c) {
-    if (!c._av) { const r = BB.rng(hashStr(String(c.id) + String(c.name))); const L = random(r); if (c.type === 'expert' && !L.beard) L.beard = 1; c._av = sanitize(L); }
+    if (!c._av) {
+      const r = BB.rng(hashStr(String(c.id) + String(c.name))), f = genderOf(c), L = random(r, f);
+      if (c.type === 'expert' && !f && !L.beard) L.beard = 1 + Math.floor(r() * 2);
+      c._av = sanitize(L);
+    }
     return c._av;
   }
-  BB.Avatar = { PARTS, DEFAULT, SKINC, HAIRC, SHIRTC, APRONC, sanitize, random, draw, forCustomer };
+  BB.Avatar = { PARTS, DEFAULT, SKINC, HAIRC, SHIRTC, APRONC, sanitize, random, draw, forCustomer, genderOf };
 })(typeof globalThis !== 'undefined' ? globalThis : this);
 
 /* ---- data.js ---- */
@@ -871,7 +974,9 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
     grumpy:   { id: 'grumpy', label: 'Scontroso', tol: 0.9, patience: 0.85 },
     expert:   { id: 'expert', label: 'Intenditore', tol: 0.85, patience: 1.0 },
   };
-  BB.CUSTOMER_NAMES = ['Marco', 'Lucia', 'Otto', 'Greta', 'Sean', 'Ines', 'Piero', 'Hana', 'Dario', 'Mila', 'Jonas', 'Rita', 'Tom', 'Elsa', 'Nico', 'Vera'];
+  BB.NAMES_M = ['Marco', 'Otto', 'Sean', 'Piero', 'Dario', 'Jonas', 'Tom', 'Nico', 'Luca', 'Hans', 'Enzo', 'Pierre'];
+  BB.NAMES_F = ['Lucia', 'Greta', 'Ines', 'Hana', 'Mila', 'Rita', 'Elsa', 'Vera', 'Giulia', 'Anna', 'Chloé', 'Sofia'];
+  BB.CUSTOMER_NAMES = BB.NAMES_M.concat(BB.NAMES_F);
 
   BB.VENUES = [
     { id: 'bar', name: 'Bar di quartiere', fromLevel: 1, wall: ['#2a3b36', '#16231f'], accent: '#e8b04a', counter: ['#6b4423', '#3f2713'] },
@@ -985,6 +1090,20 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       c = clipBelow(geo.poly, nx, ny, d);
       return { poly: c.poly, cuts: c.cuts, d, nx, ny };
     },
+
+    // Frazione di volume che il bicchiere (ruotato di tiltDeg) può contenere prima di strabordare dal punto più basso del bordo
+    capacityFrac(geo, tiltDeg) {
+      geo._cap = geo._cap || {};
+      const k = Math.round(BB.clamp(tiltDeg, 0, 95) * 2);
+      if (geo._cap[k] != null) return geo._cap[k];
+      const phi = (k / 2) * Math.PI / 180, nx = -Math.sin(phi), ny = -Math.cos(phi);
+      const a = geo.poly[N], b = geo.poly[N + 1];
+      const d = Math.min(nx * a.x + ny * a.y, nx * b.x + ny * b.y);
+      const af = polyArea(clipBelow(geo.poly, nx, ny, d).poly) / geo.area;
+      let lo = 0, hi = 1;
+      for (let i = 0; i < 30; i++) { const mid = (lo + hi) / 2; if (BB.Glass.areaFracAt(geo, BB.Glass.heightFor(geo, mid)) < af) lo = mid; else hi = mid; }
+      return (geo._cap[k] = BB.clamp(lo, 0, 1));
+    },
   };
 
   function Glass_areaTarget(geo, vfrac) {
@@ -1005,10 +1124,15 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
   const SLOSH_THRESHOLD = 100;      // °/s oltre cui il movimento è "brusco"
 
   // Inclinazione ideale in funzione della frazione di ordine versata
-  function idealTilt(style, fillFrac) { return BB.piecewise(style.technique.pts, clamp(fillFrac, 0, 1)); }
+  function idealTilt(style, fillFrac, geo) {
+    const f = clamp(fillFrac, 0, 1); let t = BB.piecewise(style.technique.pts, f);
+    if (geo) while (t > 0 && BB.Glass.capacityFrac(geo, t) < f + (BB.Pour.margin == null ? 0.06 : BB.Pour.margin)) t -= 1; // un bicchiere inclinato trabocca: si raddrizza man mano che si riempie
+    return Math.max(0, t);
+  }
 
   // capacità efficace: un bicchiere inclinato trabocca prima
-  function effectiveCapacity(cap, tiltDeg) {
+  function effectiveCapacity(cap, tiltDeg, geo) {
+    if (geo) return cap * BB.Glass.capacityFrac(geo, tiltDeg);
     const k = clamp(tiltDeg / 90, 0, 1.2);
     return cap * (1 - 0.55 * k * k);
   }
@@ -1016,6 +1140,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
   class PourModel {
     constructor(glassDef, style, order) {
       this.cap = glassDef.capacity;
+      this.geo = BB.Glass.build(glassDef);
       this.style = style;
       this.targetVol = order.qty * this.cap;
       this.tilt = 0; this.omega = 0;
@@ -1031,7 +1156,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
 
     get total() { return this.beer + this.foam; }
     get foamPct() { return this.total > 1e-6 ? this.foam / this.total : 0; }
-    get effCap() { return effectiveCapacity(this.cap, this.tilt); }
+    get effCap() { return effectiveCapacity(this.cap, this.tilt, this.geo); }
 
     step(dt, input) {
       const n = Math.max(1, Math.ceil(dt / (1 / 60)));
@@ -1072,7 +1197,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
         this.poured += dv;
         this.turbulence = tau;
         this.turbSum += tau * dv;
-        const ideal = idealTilt(style, this.total / this.targetVol);
+        const ideal = idealTilt(style, this.total / this.targetVol, this.geo);
         this.techErr += Math.abs(this.tilt - ideal) * dv; this.techW += dv;
       }
 
@@ -1198,7 +1323,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
   const LevelManager = {
     // Coda in tempo reale: capienza, ritmo degli arrivi (s) e pazienza base (s) dipendono dal livello.
     rules(level) {
-      return { maxQueue: level < 3 ? 3 : 4, interval: Math.max(6, 15 - 0.9 * (level - 1)), patience: Math.max(24, 70 - 4 * (level - 1)), startCount: 2 };
+      return { maxQueue: level < 3 ? 3 : 4, interval: Math.max(9, 21 - 1.0 * (level - 1)), patience: Math.max(28, 80 - 4 * (level - 1)), startCount: 2 };
     },
     unlockedStyles(level) { return BB.STYLE_ORDER.filter((id) => BB.STYLES[id].unlockLevel <= level); },
     unlockedGlasses(level) {
@@ -1251,12 +1376,12 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
         const glassId = BB.pick(rnd, style.glasses);
         const glass = BB.GLASSES[glassId];
         const type = BB.CUSTOMER_TYPES[BB.pick(rnd, types)];
-        const qty = 1;
+        const qty = 1, gender = rnd() < 0.5 ? 1 : 0;
         const foamChoices = level < 3 ? [0] : level < 6 ? [0, 0, -0.04, 0.04] : [0, -0.05, 0.05];
         const foamTarget = clamp(style.foamTarget + BB.pick(rnd, foamChoices), style.foamRange[0], style.foamRange[1]);
         out.push({
           id: level + ':' + i,
-          name: BB.CUSTOMER_NAMES[Math.floor(rnd() * BB.CUSTOMER_NAMES.length)],
+          gender: gender, name: BB.pick(rnd, gender ? BB.NAMES_F : BB.NAMES_M),
           type: type.id, typeLabel: type.label,
           look: { skin: Math.floor(rnd() * 5), hair: Math.floor(rnd() * 5), hat: rnd() < 0.3 ? 1 : 0, shirt: Math.floor(rnd() * 6) },
           styleId, glassId, qty, foamTarget,
@@ -1284,11 +1409,11 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       v: VERSION,
       progress: { level: 1, bestLevel: 0, stars: {}, coins: 0, unlocked: { styles: ['pils', 'ipa', 'tripel'], glasses: ['biconico', 'pint', 'belgian'] }, played: false },
       session: null, // { level, seed, idx, lives, results:[] }
-      settings: { sfx: true, music: true, sens: 1.0, axis: 'auto', hints: true, lang: '', neutral: { roll: 0, pitch: 0, tilt: 0, calibrated: false } },
+      settings: { sfx: true, music: true, sens: 1.0, axis: 'roll', axisV: 1, tutDone: 0, hints: true, lang: '', neutral: { roll: 0, pitch: 0, tilt: 0, calibrated: false } },
       player: { name: '', set: false, look: { skin: 1, hairStyle: 1, hair: 1, beard: 0, glasses: 0, hat: 0, shirt: 1, apron: 0 } },
       purchases: { adsRemoved: false },
       meta: { upg: { pat: 0, heart: 0, tip: 0 }, taps: [], tap: 'brass', hats: [], ach: [], daily: { last: '', streak: 0, best: 0 },
-              stats: { served: 0, perfect: 0, bestCombo: 0, bonusDone: 0, threeStar: 0, spent: 0, lost: 0 } },
+              stats: { served: 0, perfect: 0, bestCombo: 0, bonusDone: 0, threeStar: 0, spent: 0, lost: 0, keg: 0, kegFast: 0 } },
     };
   }
 
@@ -1477,7 +1602,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       this.mode = 'unknown';                        // 'gyro' | 'touch' | 'unknown'
       this.raw = { roll: 0, pitch: 0, tilt: 0 };
       this.smooth = { roll: 0, pitch: 0, tilt: 0 };
-      this.hasSignal = false; this.touchTilt = 0; this.touchSign = 1;
+      this.hasSignal = false; this.touchTilt = 0; this.touchSign = 1; this.lastEvt = 0; this.onMode = null;
       this._handler = (e) => this._onEvent(e);
       this.permission = 'n/a';
     }
@@ -1490,7 +1615,13 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       const tilt = Math.asin(clamp(-Math.cos(rb) * Math.sin(rg), -1, 1)) * 180 / Math.PI;
       this.raw.roll = e.gamma; this.raw.pitch = e.beta; this.raw.tilt = tilt;
       if (!this.hasSignal) { this.smooth.roll = e.gamma; this.smooth.pitch = e.beta; this.smooth.tilt = tilt; }
-      this.hasSignal = true;
+      this.hasSignal = true; this.lastEvt = Date.now();
+      if (this.mode !== 'gyro' && this.permission !== 'denied') { this.mode = 'gyro'; if (this.onMode) this.onMode('gyro'); } // il segnale è arrivato in ritardo: si passa al giroscopio
+    }
+    stale(ms) { return this.mode === 'gyro' && Date.now() - this.lastEvt > ms; }
+    rearm() { // riattacca l'ascolto (dopo un rientro nella pagina)
+      if (!this.win || !this.win.addEventListener || this.permission === 'denied') return;
+      try { this.win.removeEventListener('deviceorientation', this._handler); this.win.addEventListener('deviceorientation', this._handler); } catch (e) {}
     }
 
     // Va chiamato da un gesto dell'utente (iOS richiede il permesso). Risolve in 'gyro' o 'touch'.
@@ -1504,14 +1635,14 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
         }
       } catch (e) { this.permission = 'denied'; this.mode = 'touch'; return this.mode; }
       if (!this.win || !this.win.addEventListener) { this.mode = 'touch'; return this.mode; }
-      this.win.addEventListener('deviceorientation', this._handler);
+      this.hasSignal = false;
+      this.win.removeEventListener('deviceorientation', this._handler); this.win.addEventListener('deviceorientation', this._handler);
       await new Promise((res) => {
         const t0 = Date.now();
         const poll = () => { if (this.hasSignal || Date.now() - t0 >= timeoutMs) res(); else setTimeout(poll, 40); };
         poll();
       });
-      this.mode = this.hasSignal ? 'gyro' : 'touch';
-      if (this.mode === 'touch') this.win.removeEventListener('deviceorientation', this._handler);
+      this.mode = this.hasSignal ? 'gyro' : 'touch'; // se il segnale arriva dopo, _onEvent passa da solo a 'gyro'
       return this.mode;
     }
 
@@ -1549,9 +1680,9 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
   const BB = (g.BB = g.BB || {});
 
   const UPG = {
-    pat:   { max: 5, cost: [60, 120, 220, 360, 560], icon: '⏳' },   // pazienza clienti +8% a livello
-    heart: { max: 2, cost: [300, 800], icon: '♥' },                 // cuori di scorta
-    tip:   { max: 5, cost: [80, 160, 280, 440, 650], icon: '💰' }, // monete +10% a livello
+    pat:   { max: Infinity, cost: [60, 120, 220, 360, 560], icon: '⏳' },   // pazienza clienti +8% a livello
+    heart: { max: Infinity, cost: [300, 800], icon: '♥' },                 // cuori di scorta
+    tip:   { max: Infinity, cost: [80, 160, 280, 440, 650], icon: '💰' }, // monete +10% a livello
   };
   const TAPS = [
     { id: 'brass',  cost: 0,   c: ['#9a7a2c', '#f3d36a', '#8a6a22'], knob: '#c9a24a' },
@@ -1562,19 +1693,20 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
   const HATS = { 3: { cost: 150 }, 4: { cost: 250 } };
   const DAILY = [20, 30, 40, 60, 80, 100, 200];
 
-  const ACH = [
-    { id: 'first',  icon: '🍺', stat: 'served',    goal: 1,  reward: 10,  d: 'served' },
-    { id: 's25',    icon: '🍻', stat: 'served',    goal: 25, reward: 40,  d: 'served' },
-    { id: 's100',   icon: '🏅', stat: 'served',    goal: 100, reward: 150, d: 'served' },
-    { id: 'p1',     icon: '✨', stat: 'perfect',   goal: 1,  reward: 20,  d: 'perfect' },
-    { id: 'p10',    icon: '💎', stat: 'perfect',   goal: 10, reward: 80,  d: 'perfect' },
-    { id: 'c3',     icon: '🔥', stat: 'bestCombo', goal: 3,  reward: 30,  d: 'combo' },
-    { id: 'c6',     icon: '⚡', stat: 'bestCombo', goal: 6,  reward: 100, d: 'combo' },
-    { id: 'l3',     icon: '🏠', stat: 'level',     goal: 3,  reward: 50,  d: 'level' },
-    { id: 'l6',     icon: '🏰', stat: 'level',     goal: 6,  reward: 120, d: 'level' },
-    { id: 'star3',  icon: '⭐', stat: 'threeStar', goal: 1,  reward: 60,  d: 'star3' },
-    { id: 'streak', icon: '📅', stat: 'bestStreak', goal: 7, reward: 150, d: 'streak' },
+  // 9 famiglie x vari traguardi = 57 obiettivi. id = famiglia_traguardo; il nome è "famiglia + numero romano"
+  const FAMS = [
+    ['served',  '🍺', 'served',     [1, 10, 25, 50, 100, 200, 400, 700, 1000], [3, 6, 10, 15, 25, 40, 60, 90, 150]],
+    ['perfect', '✨', 'perfect',    [1, 5, 10, 25, 50, 100, 200],               [4, 8, 12, 20, 35, 60, 100]],
+    ['combo',   '🔥', 'bestCombo',  [3, 4, 5, 6, 8, 10, 12],                    [4, 6, 10, 15, 25, 40, 70]],
+    ['level',   '🏠', 'level',      [2, 3, 4, 5, 6, 8, 10, 12, 15, 20],         [3, 5, 8, 10, 14, 20, 30, 45, 70, 120]],
+    ['star3',   '⭐', 'threeStar',  [1, 3, 5, 10, 20],                          [5, 10, 15, 30, 60]],
+    ['streak',  '📅', 'bestStreak', [2, 3, 5, 7, 14, 30],                       [4, 8, 12, 20, 50, 150]],
+    ['keg',     '🛢', 'keg',        [1, 3, 5, 10, 20],                          [5, 10, 15, 30, 60]],
+    ['kegFast', '⚡', 'kegFast',    [1, 3, 5, 10],                              [6, 12, 20, 40]],
+    ['spent',   '💸', 'spent',      [100, 300, 600, 1000],                      [5, 10, 20, 40]],
   ];
+  const ACH = [];
+  FAMS.forEach((f) => f[3].forEach((goal, i) => ACH.push({ id: f[0] + '_' + goal, fam: f[0], tier: i, icon: f[1], stat: f[2], goal, reward: f[4][i], d: f[0] })));
 
   const pad = (n) => (n < 10 ? '0' : '') + n;
   const dayKey = (d) => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
@@ -1583,9 +1715,10 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
     UPG, TAPS, HATS, DAILY, ACH,
     m(save) { return save.data.meta; },
     stats(save) { return save.data.meta.stats; },
-    upgLevel(save, k) { return Math.min(UPG[k].max, Math.max(0, save.data.meta.upg[k] | 0)); },
-    patMult(save) { return 1 + 0.08 * this.upgLevel(save, 'pat'); },
-    tipMult(save) { return 1 + 0.10 * this.upgLevel(save, 'tip'); },
+    upgLevel(save, k) { return Math.max(0, save.data.meta.upg[k] | 0); },
+    upgCost(k, lv) { const c = UPG[k].cost; return lv < c.length ? c[lv] : Math.round(c[c.length - 1] * Math.pow(1.45, lv - c.length + 1)); }, // nessun tetto: il prezzo cresce
+    patMult(save) { const l = this.upgLevel(save, 'pat'); return 1 + 0.08 * Math.min(l, 5) + 0.03 * Math.max(0, l - 5); },
+    tipMult(save) { const l = this.upgLevel(save, 'tip'); return 1 + 0.10 * Math.min(l, 5) + 0.05 * Math.max(0, l - 5); },
     extraLives(save) { return this.upgLevel(save, 'heart'); },
     tap(save) { return TAPS.find((t) => t.id === save.data.meta.tap) || TAPS[0]; },
     ownsHat(save, i) { return i < 3 || save.data.meta.hats.indexOf(i) >= 0; },
@@ -1597,8 +1730,8 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       p.coins -= cost; save.data.meta.stats.spent += cost; return { ok: true };
     },
     buyUpg(save, k) {
-      const lv = this.upgLevel(save, k); if (lv >= UPG[k].max) return { ok: false, reason: 'max' };
-      const r = this._pay(save, UPG[k].cost[lv]); if (!r.ok) return r;
+      const lv = this.upgLevel(save, k);
+      const r = this._pay(save, this.upgCost(k, lv)); if (!r.ok) return r;
       save.data.meta.upg[k] = lv + 1; save.save(); return { ok: true };
     },
     buyTap(save, id) {
@@ -1733,6 +1866,8 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
     },
   };
   Object.keys(S).forEach((l) => Object.assign(BB.I18n.dict[l], S[l]));
+  const S2 = {"it": {"av.gender": "Sesso", "av.genderS.0": "Uomo", "av.genderS.1": "Donna", "av.earring": "Orecchini", "av.earringS.0": "Nessuno", "av.earringS.1": "Perla", "av.earringS.2": "Cerchio", "av.earringS.3": "Pendente", "av.lips": "Rossetto", "av.lipsS.0": "Nessuno", "av.lipsS.1": "Rosa", "av.lipsS.2": "Rosso", "av.lipsS.3": "Prugna", "av.face": "Viso", "av.faceS.0": "Pulito", "av.faceS.1": "Lentiggini", "av.faceS.2": "Neo", "av.faceS.3": "Cicatrice", "av.neck": "Collo", "av.neckS.0": "Nessuno", "av.neckS.1": "Sciarpa", "av.neckS.2": "Papillon", "av.neckS.3": "Collana", "av.hairS.6": "Caschetto", "av.hairS.7": "Coda", "av.hairS.8": "Trecce", "av.hairS.9": "Ciuffo", "av.beardS.4": "Barba corta", "av.beardS.5": "Baffi a manubrio", "av.glassesS.4": "Occhi di gatto", "tut.how": "Tutorial", "tut.next": "Avanti", "tut.back": "Indietro", "tut.skip": "Salta", "tut.start": "Inizia a spillare!", "tut.hud.t": "Lo schermo di gioco", "tut.hud.pause": "Pausa: ferma tutto, anche i clienti.", "tut.hud.lvl": "Liv. 4 · 0/4 — livello e clienti serviti. Ne servi 4 e passi al livello dopo.", "tut.hud.lives": "Cuori: ogni 2 clienti persi ne perdi uno. Il ½ ti dice che ne hai già perso uno.", "tut.hud.coins": "Monete: le guadagni spillando bene e le spendi nel negozio.", "tut.hud.queue": "Coda clienti: tocca un cliente per prendere l'ordine. La barra è la sua pazienza: se finisce, se ne va!", "tut.hud.order": "Banner dell'ordine: nome, birra richiesta e schiuma giusta.", "tut.how.t": "Come si spilla", "tut.how1": "Tocca un cliente della coda.", "tut.how2": "Scegli il bicchiere giusto per quello stile: sbagliare costa punti.", "tut.how3": "Tieni premuto SPILLA e inclina il telefono: parti inclinato e raddrizza man mano che si riempie. Troppo inclinato e la birra trabocca!", "tut.how4": "A sinistra vedi l'inclinazione (zona verde = giusta), a destra quanta birra e schiuma c'è nel bicchiere.", "tut.how5": "Premi SERVI quando livello e schiuma sono giusti. Se il telefono non è dritto usa CALIBRA.", "tut.how6": "Imprevisto: se finisce il fusto, tocca CAMBIA più veloce che puoi e poi CONTINUA.", "tut.styles.t": "Stili e bicchieri", "tut.styles.d": "Ogni stile va nel suo bicchiere. Salendo di livello se ne sbloccano di nuovi.", "tut.unlock": "dal liv. {n}", "tut.coin.t": "Monete e bonus", "tut.coin1": "Spilla bene per guadagnare monete: i PERFETTI e le combo ne danno di più.", "tut.coin2": "Spendile nel negozio: pazienza, cuori extra, mance, rubinetti e cappelli, senza limiti.", "tut.coin3": "I bonus sono utilissimi: ritira ogni giorno il bonus giornaliero e completa gli obiettivi!", "tut.coin4": "A fine livello guarda il video per RADDOPPIARE le monete guadagnate.", "tut.rot.t": "Tieni lo schermo in verticale", "tut.rot.b": "Si gioca in verticale. Su iPhone attiva il Blocco orientamento verticale: apri il Centro di Controllo (scorri dall'angolo in alto a destra) e tocca l'icona del lucchetto con la freccia. Così lo schermo non ruota quando inclini il telefono. Su Android disattiva la rotazione automatica.", "toast.gyroStale": "Il sensore non risponde. Riattivalo da Impostazioni.", "zim.tag": "Vieni a trovarci!", "zim.sub": "Birra artigianale e vino · sfuso e in bottiglia", "zim.where": "Via Varesina 22 · Jerago con Orago (VA)", "set.tutorial": "Rivedi il tutorial"}, "en": {"av.gender": "Gender", "av.genderS.0": "Man", "av.genderS.1": "Woman", "av.earring": "Earrings", "av.earringS.0": "None", "av.earringS.1": "Stud", "av.earringS.2": "Hoop", "av.earringS.3": "Drop", "av.lips": "Lipstick", "av.lipsS.0": "None", "av.lipsS.1": "Pink", "av.lipsS.2": "Red", "av.lipsS.3": "Plum", "av.face": "Face", "av.faceS.0": "Clean", "av.faceS.1": "Freckles", "av.faceS.2": "Mole", "av.faceS.3": "Scar", "av.neck": "Neck", "av.neckS.0": "None", "av.neckS.1": "Scarf", "av.neckS.2": "Bow tie", "av.neckS.3": "Necklace", "av.hairS.6": "Bob", "av.hairS.7": "Ponytail", "av.hairS.8": "Pigtails", "av.hairS.9": "Quiff", "av.beardS.4": "Stubble", "av.beardS.5": "Handlebar", "av.glassesS.4": "Cat-eye", "tut.how": "Tutorial", "tut.next": "Next", "tut.back": "Back", "tut.skip": "Skip", "tut.start": "Start pouring!", "tut.hud.t": "The game screen", "tut.hud.pause": "Pause: stops everything, customers too.", "tut.hud.lvl": "Lv. 4 · 0/4 — level and customers served. Serve 4 to reach the next level.", "tut.hud.lives": "Hearts: every 2 lost customers you lose one. The ½ means you already lost one.", "tut.hud.coins": "Coins: earned by pouring well, spent in the shop.", "tut.hud.queue": "Customer queue: tap a customer to take the order. The bar is their patience: when it runs out they leave!", "tut.hud.order": "Order banner: name, requested beer and the right foam.", "tut.how.t": "How to pour", "tut.how1": "Tap a customer in the queue.", "tut.how2": "Pick the right glass for that style: a wrong pick costs points.", "tut.how3": "Hold POUR and tilt the phone: start tilted and straighten as it fills. Stay too tilted and the beer overflows!", "tut.how4": "On the left you see the tilt (green zone = right), on the right how much beer and foam is in the glass.", "tut.how5": "Press SERVE when level and foam are right. If the phone isn't level use CALIBRATE.", "tut.how6": "Surprise: if the keg runs out, tap SWAP as fast as you can, then GO ON.", "tut.styles.t": "Styles and glasses", "tut.styles.d": "Each style goes in its own glass. New ones unlock as you level up.", "tut.unlock": "from lv. {n}", "tut.coin.t": "Coins and bonuses", "tut.coin1": "Pour well to earn coins: PERFECT pours and combos pay more.", "tut.coin2": "Spend them in the shop: patience, extra hearts, tips, taps and hats, with no limit.", "tut.coin3": "Bonuses are really useful: claim the daily bonus every day and complete the goals!", "tut.coin4": "At the end of a level watch the video to DOUBLE the coins you earned.", "tut.rot.t": "Keep the screen upright", "tut.rot.b": "You play upright. On iPhone turn on Portrait Orientation Lock: open Control Center (swipe down from the top-right corner) and tap the lock-with-arrow icon. The screen then won't rotate when you tilt the phone. On Android turn off auto-rotate.", "toast.gyroStale": "The sensor isn't responding. Re-enable it in Settings.", "zim.tag": "Come and visit us!", "zim.sub": "Craft beer and wine · on tap and bottled", "zim.where": "Via Varesina 22 · Jerago con Orago (VA), Italy", "set.tutorial": "Replay tutorial"}, "fr": {"av.gender": "Sexe", "av.genderS.0": "Homme", "av.genderS.1": "Femme", "av.earring": "Boucles d'oreilles", "av.earringS.0": "Aucune", "av.earringS.1": "Perle", "av.earringS.2": "Créole", "av.earringS.3": "Pendante", "av.lips": "Rouge à lèvres", "av.lipsS.0": "Aucun", "av.lipsS.1": "Rose", "av.lipsS.2": "Rouge", "av.lipsS.3": "Prune", "av.face": "Visage", "av.faceS.0": "Net", "av.faceS.1": "Taches de rousseur", "av.faceS.2": "Grain de beauté", "av.faceS.3": "Cicatrice", "av.neck": "Cou", "av.neckS.0": "Aucun", "av.neckS.1": "Écharpe", "av.neckS.2": "Nœud papillon", "av.neckS.3": "Collier", "av.hairS.6": "Carré", "av.hairS.7": "Queue de cheval", "av.hairS.8": "Couettes", "av.hairS.9": "Banane", "av.beardS.4": "Barbe de 3 jours", "av.beardS.5": "Moustache à guidon", "av.glassesS.4": "Papillon", "tut.how": "Tutoriel", "tut.next": "Suivant", "tut.back": "Retour", "tut.skip": "Passer", "tut.start": "On tire !", "tut.hud.t": "L'écran de jeu", "tut.hud.pause": "Pause : tout s'arrête, les clients aussi.", "tut.hud.lvl": "Niv. 4 · 0/4 — niveau et clients servis. Servez-en 4 pour passer au suivant.", "tut.hud.lives": "Cœurs : tous les 2 clients perdus, vous en perdez un. Le ½ indique que vous en avez déjà perdu un.", "tut.hud.coins": "Pièces : gagnées en tirant bien, dépensées à la boutique.", "tut.hud.queue": "File de clients : touchez un client pour prendre la commande. La barre est sa patience : à zéro, il s'en va !", "tut.hud.order": "Bandeau de commande : nom, bière demandée et bonne mousse.", "tut.how.t": "Comment tirer", "tut.how1": "Touchez un client dans la file.", "tut.how2": "Choisissez le bon verre pour ce style : se tromper coûte des points.", "tut.how3": "Maintenez TIRER et inclinez le téléphone : commencez incliné et redressez au fur et à mesure. Trop incliné, la bière déborde !", "tut.how4": "À gauche l'inclinaison (zone verte = bonne), à droite la quantité de bière et de mousse dans le verre.", "tut.how5": "Appuyez sur SERVIR quand niveau et mousse sont bons. Si le téléphone n'est pas droit, utilisez CALIBRER.", "tut.how6": "Imprévu : si le fût est vide, touchez CHANGER le plus vite possible, puis CONTINUER.", "tut.styles.t": "Styles et verres", "tut.styles.d": "Chaque style va dans son verre. De nouveaux se débloquent en montant de niveau.", "tut.unlock": "dès le niv. {n}", "tut.coin.t": "Pièces et bonus", "tut.coin1": "Tirez bien pour gagner des pièces : les PARFAITS et les combos rapportent plus.", "tut.coin2": "Dépensez-les à la boutique : patience, cœurs en plus, pourboires, robinets et chapeaux, sans limite.", "tut.coin3": "Les bonus sont très utiles : récupérez le bonus quotidien chaque jour et remplissez les objectifs !", "tut.coin4": "À la fin d'un niveau, regardez la vidéo pour DOUBLER les pièces gagnées.", "tut.rot.t": "Gardez l'écran à la verticale", "tut.rot.b": "On joue à la verticale. Sur iPhone, activez le verrouillage de l'orientation portrait : ouvrez le Centre de contrôle (balayez depuis le coin supérieur droit) et touchez l'icône du cadenas avec la flèche. L'écran ne pivotera plus quand vous inclinez le téléphone. Sur Android, désactivez la rotation automatique.", "toast.gyroStale": "Le capteur ne répond pas. Réactivez-le dans les Réglages.", "zim.tag": "Venez nous voir !", "zim.sub": "Bière artisanale et vin · à la pression et en bouteille", "zim.where": "Via Varesina 22 · Jerago con Orago (VA), Italie", "set.tutorial": "Revoir le tutoriel"}, "de": {"av.gender": "Geschlecht", "av.genderS.0": "Mann", "av.genderS.1": "Frau", "av.earring": "Ohrringe", "av.earringS.0": "Keine", "av.earringS.1": "Stecker", "av.earringS.2": "Creole", "av.earringS.3": "Anhänger", "av.lips": "Lippenstift", "av.lipsS.0": "Keiner", "av.lipsS.1": "Rosa", "av.lipsS.2": "Rot", "av.lipsS.3": "Pflaume", "av.face": "Gesicht", "av.faceS.0": "Glatt", "av.faceS.1": "Sommersprossen", "av.faceS.2": "Leberfleck", "av.faceS.3": "Narbe", "av.neck": "Hals", "av.neckS.0": "Keiner", "av.neckS.1": "Schal", "av.neckS.2": "Fliege", "av.neckS.3": "Kette", "av.hairS.6": "Bob", "av.hairS.7": "Pferdeschwanz", "av.hairS.8": "Zöpfe", "av.hairS.9": "Tolle", "av.beardS.4": "Dreitagebart", "av.beardS.5": "Zwirbelbart", "av.glassesS.4": "Katzenaugen", "tut.how": "Tutorial", "tut.next": "Weiter", "tut.back": "Zurück", "tut.skip": "Überspringen", "tut.start": "Los geht's!", "tut.hud.t": "Der Spielbildschirm", "tut.hud.pause": "Pause: alles steht still, auch die Gäste.", "tut.hud.lvl": "Lvl. 4 · 0/4 — Level und bediente Gäste. Bediene 4, um ins nächste Level zu kommen.", "tut.hud.lives": "Herzen: alle 2 verlorenen Gäste verlierst du eins. Das ½ zeigt, dass du schon einen verloren hast.", "tut.hud.coins": "Münzen: verdienst du mit gutem Zapfen, ausgegeben im Shop.", "tut.hud.queue": "Warteschlange: tippe einen Gast an, um die Bestellung aufzunehmen. Der Balken ist seine Geduld: ist er leer, geht er!", "tut.hud.order": "Bestellbanner: Name, gewünschtes Bier und die richtige Schaumkrone.", "tut.how.t": "So wird gezapft", "tut.how1": "Tippe einen Gast in der Schlange an.", "tut.how2": "Wähle das richtige Glas für den Stil: ein falsches kostet Punkte.", "tut.how3": "Halte ZAPFEN gedrückt und neige das Handy: starte geneigt und richte dich beim Füllen auf. Zu schräg und das Bier läuft über!", "tut.how4": "Links siehst du die Neigung (grüne Zone = richtig), rechts wie viel Bier und Schaum im Glas sind.", "tut.how5": "Drücke SERVIEREN, wenn Füllstand und Schaum stimmen. Ist das Handy nicht gerade, nutze KALIBRIEREN.", "tut.how6": "Überraschung: Ist das Fass leer, tippe so schnell du kannst auf WECHSELN, dann auf WEITER.", "tut.styles.t": "Stile und Gläser", "tut.styles.d": "Jeder Stil kommt in sein eigenes Glas. Neue schaltest du mit höheren Leveln frei.", "tut.unlock": "ab Lvl. {n}", "tut.coin.t": "Münzen und Boni", "tut.coin1": "Zapfe gut, um Münzen zu verdienen: PERFEKTE Zapfungen und Combos bringen mehr.", "tut.coin2": "Gib sie im Shop aus: Geduld, Extraherzen, Trinkgeld, Zapfhähne und Hüte, ohne Limit.", "tut.coin3": "Boni sind sehr nützlich: hole jeden Tag den Tagesbonus ab und erfülle die Ziele!", "tut.coin4": "Schau dir am Levelende das Video an und VERDOPPLE deine verdienten Münzen.", "tut.rot.t": "Bildschirm hochkant halten", "tut.rot.b": "Gespielt wird hochkant. Aktiviere am iPhone die Hochformat-Sperre: Öffne das Kontrollzentrum (von oben rechts nach unten wischen) und tippe auf das Schloss-Symbol mit Pfeil. Dann dreht sich der Bildschirm beim Neigen nicht. Schalte bei Android die automatische Drehung aus.", "toast.gyroStale": "Der Sensor reagiert nicht. Aktiviere ihn in den Einstellungen neu.", "zim.tag": "Besuch uns!", "zim.sub": "Craft-Bier und Wein · vom Fass und in der Flasche", "zim.where": "Via Varesina 22 · Jerago con Orago (VA), Italien", "set.tutorial": "Tutorial wiederholen"}};
+  Object.keys(S2).forEach((l) => Object.assign(BB.I18n.dict[l], S2[l]));
 })(typeof globalThis !== 'undefined' ? globalThis : this);
 
 /* ---- game.js ---- */
@@ -1820,7 +1955,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       this.keg = { empty: false, wait: false, waitT: 0, taps: 0, need: 15, t: 0 };
       // piano fusto: solo i livelli pari (2, 4, 6...). Livello 2: dopo il secondo cliente servito. Gli altri: a caso durante il servizio, una volta sola
       const lv = this.session.level; this.kegUsed = !(lv >= 2 && lv % 2 === 0);
-      this.kegPlan = lv === 2 ? 'after2' : 'random'; this.nextKeg = 10 + this.kegRnd() * 22; this.kegDelay = 0.8;
+      this.kegAtPour = lv === 2 ? 3 : 2 + Math.floor(this.kegRnd() * 3); this.kegArm = -1; this.pourCount = 0; this.levelCoins = 0; // scatta entro 1 s dall'inizio di una spillatura
       const R = this.rules;
       for (let i = 0; i < R.startCount; i++) this._spawn();
       this.nextArrival = R.interval * 0.8;
@@ -1837,7 +1972,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
     }
     _tickQueue(dt) {
       const R = this.rules;
-      if (this.queue.length === 0) this.nextArrival = Math.min(this.nextArrival, 1.5); // coda vuota: il prossimo arriva presto
+      if (this.queue.length === 0) this.nextArrival = Math.min(this.nextArrival, 2.5); // coda vuota: il prossimo arriva presto
       this.nextArrival -= dt;
       if (this.nextArrival <= 0) {
         if (this.queue.length < R.maxQueue) { this._spawn(); this.nextArrival = R.interval * (0.8 + 0.4 * this.rnd()); }
@@ -1887,11 +2022,15 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       const k = this.keg; if (!k) return;
       if (k.wait) { k.waitT += dt; return; }
       if (k.empty) { k.t += dt; return; }
-      if (this.kegUsed) return;
-      let go = false;
-      if (this.kegPlan === 'after2') { if (this.session.idx >= 2 && this.state === 'select') { this.kegDelay -= dt; go = this.kegDelay <= 0; } }
-      else { this.nextKeg -= dt; go = this.nextKeg <= 0 || (this.session.idx >= 3 && this.state === 'select'); }
-      if (go) { this.kegUsed = true; k.empty = true; k.taps = 0; k.t = 0; k.need = 15 + Math.floor(this.kegRnd() * 11); this.emit('kegEmpty'); } // 15-25 tap
+      if (this.kegUsed || this.state !== 'play' || !this.model || !this.order) return;
+      if (this.pourCount < this.kegAtPour || this.model.openTime < 0.05) return;
+      if (this.kegArm < 0) this.kegArm = 0.2 + this.kegRnd() * 0.7;   // massimo ~1 s dall'inizio della spillatura
+      this.kegArm -= dt;
+      if (this.kegArm <= 0) {
+        this.kegUsed = true; k.empty = true; k.taps = 0; k.t = 0; k.need = 15 + Math.floor(this.kegRnd() * 11); // 15-25 tap
+        k.styleId = this.order.styleId; // finisce il fusto della birra che si sta spillando
+        this.emit('kegEmpty', { styleId: k.styleId });
+      }
     }
     kegTap() { // ogni tocco avvicina il fusto nuovo; al terzo è collegato
       const k = this.keg;
@@ -1900,18 +2039,22 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       if (k.taps < k.need) { this.emit('kegTap', { p: k.taps / k.need }); return true; }
       k.empty = false; k.wait = true; k.waitT = 0; // fusto collegato: si riparte solo con CONTINUA
       const fast = k.t <= 8, bonus = fast ? 5 : 0;
-      if (bonus) { this.progress.coins += bonus; this.save.save(); }
-      this.emit('kegDone', { time: k.t, fast, bonus });
+      if (bonus) { this.progress.coins += bonus; this.levelCoins += bonus; this.save.save(); }
+      const st = BB.Meta.stats(this.save); st.keg = (st.keg | 0) + 1; if (fast) st.kegFast = (st.kegFast | 0) + 1; this.save.save();
+      this.emit('kegDone', { time: k.t, fast, bonus, styleId: k.styleId }); this._announce();
       return true;
     }
 
-    kegContinue() { const k = this.keg; if (!k || !k.wait || k.waitT < 0.9) return false; k.wait = false; this.emit('kegResume'); return true; }
+    kegContinue() {
+      const k = this.keg; if (!k || !k.wait || k.waitT < 0.9) return false;
+      k.wait = false; this.emit('kegResume'); return true;
+    }
 
     // Il giocatore sceglie il bicchiere in base allo stile. Sbagliare costa punti.
     chooseGlass(id) {
       if (this.state !== 'choose' || !this.order || !BB.GLASSES[id]) return false;
       if (id !== this.order.glassId) { this.wrongPicks++; this.order.wrongPicks = this.wrongPicks; this.emit('wrongGlass', { id, count: this.wrongPicks }); return false; }
-      this.chosenGlassId = id;
+      this.chosenGlassId = id; this.pourCount = (this.pourCount | 0) + 1;
       this.model = new BB.PourModel(this.glass, this.style, this.order);
       this.setState('play');
       this.emit('glass', id);
@@ -1972,7 +2115,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       const base = Math.round(res.score / 10), pb = res.perfect ? 5 : 0, cb = this.combo >= 2 ? Math.min(this.combo, 6) * 2 : 0;
       res.coinsPerfect = pb; res.coinsCombo = cb;
       res.coins = Math.round((base + pb + cb) * M.tipMult(this.save));
-      this.progress.coins += res.coins;
+      this.progress.coins += res.coins; this.levelCoins = (this.levelCoins | 0) + res.coins;
       st.served++; if (res.perfect) st.perfect++; st.bestCombo = Math.max(st.bestCombo, this.combo);
     }
     _announce() { BB.Meta.checkAch(this.save).forEach((a) => this.emit('achieve', a)); }
@@ -1993,7 +2136,8 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       if (s.bonus) { // livello bonus: solo monete, nessun avanzamento. Si torna al livello normale che era in attesa.
         const coins = Math.round(BB.LevelManager.reward(lvl, stars, true) * BB.Meta.tipMult(this.save)); BB.Meta.stats(this.save).bonusDone++;
         p.coins += coins;
-        this.victory = { level: lvl, bonus: true, avgScore: Math.round(avg), stars, coins, unlocks: { styles: [], glasses: [], venue: null }, results: s.results.slice(), doubled: false };
+        this.victory = { level: lvl, bonus: true, avgScore: Math.round(avg), stars, coins, earned: this.levelCoins | 0, unlocks: { styles: [], glasses: [], venue: null }, results: s.results.slice(), doubled: false };
+        this.victory.dbl = this.victory.coins + this.victory.earned;
         this._createSession(lvl, false);
         this.queue = [];
         this.setState('victory');
@@ -2006,7 +2150,8 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       p.coins += coins;
       p.level = lvl + 1;
       const unlocks = BB.LevelManager.newUnlocks(lvl + 1);
-      this.victory = { level: lvl, avgScore: Math.round(avg), stars, coins, unlocks, results: s.results.slice(), doubled: false };
+      this.victory = { level: lvl, avgScore: Math.round(avg), stars, coins, earned: this.levelCoins | 0, unlocks, results: s.results.slice(), doubled: false };
+      this.victory.dbl = this.victory.coins + this.victory.earned;
       // il livello successivo è già pronto e salvato (dopo certi livelli arriva prima il bonus Due Tocchi)
       this._createSession(lvl + 1, BB.LevelManager.bonusAfter(lvl));
       this.queue = [];
@@ -2020,7 +2165,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
     async doubleReward() {
       if (this.state !== 'victory' || !this.victory || this.victory.doubled) return { granted: false, status: 'blocked' };
       const r = await this.monet.rewardedAttempt(this.isPouring);
-      if (r.granted) { this.progress.coins += this.victory.coins; this.victory.doubled = true; this.save.save(); }
+      if (r.granted && !this.victory.doubled) { this.victory.doubled = true; this.progress.coins += this.victory.dbl; this.save.save(); r.added = this.victory.dbl; }
       return r;
     }
 
@@ -2081,11 +2226,20 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       this.settings = settings; this.ctx = null; this.pour = null; this.musicTimer = null; this.step = 0;
       this.lastT = 0; this.fl = 1; this.flT = 0; this.openAmt = 0;
     }
-    init() { // da chiamare dentro un gesto utente
-      if (this.ctx) { if (this.ctx.state === 'suspended') this.ctx.resume(); return; }
+    init() { // da chiamare dentro un gesto utente (anche a ogni tocco: Safari sospende l'audio quando si esce dalla pagina)
+      if (this.ctx) {
+        if (this.ctx.state === 'closed') this._drop();
+        else if (this.ctx.state === 'running') return;
+        else { // 'suspended' o 'interrupted' (iOS): si riprende; se non riparte si ricrea il contesto
+          try { const p = this.ctx.resume(); if (p && p.catch) p.catch(() => {}); } catch (e) {}
+          clearTimeout(this._rt); this._rt = setTimeout(() => { if (this.ctx && this.ctx.state !== 'running') { this._drop(); this.init(); } }, 900);
+          return;
+        }
+      }
       const AC = g.AudioContext || g.webkitAudioContext; if (!AC) return;
       try { this._build(new AC()); } catch (e) { this.ctx = null; }
     }
+    _drop() { this.stopAmbience(); this.stopMusic(); try { if (this.ctx) this.ctx.close(); } catch (e) {} this.ctx = null; this.pour = null; this.amb = null; }
     _build(ctx) {
       this.ctx = ctx; const sr = ctx.sampleRate;
       // bus: effetti -> compressore -> uscita; musica a parte; un po' di riverbero da locale
@@ -2144,11 +2298,13 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       this.sfxGain.gain.value = this.settings.sfx ? 0.95 : 0;
       this.musicGain.gain.value = this.settings.music ? 0.5 : 0;
       if (this.settings.music) this.startMusic(); else this.stopMusic();
+      this.startAmbience();
     }
     // ---- mattoni ----
     _tone(freq, dur, type, vol, when, slideTo, atk) {
       if (!this.ctx || !this.settings.sfx) return;
-      const t = this.ctx.currentTime + (when || 0), o = this.ctx.createOscillator(), gn = this.ctx.createGain(), a = atk || 0.008;
+      const t = this.ctx.currentTime + (when || 0), o = this.ctx.createOscillator(), gn = this.ctx.createGain(), a = atk || 0.008; gn.gain.value = 0.0001;
+      const j = this.jit || 1; freq *= j; if (slideTo) slideTo *= j;
       o.type = type || 'sine'; o.frequency.setValueAtTime(freq, t);
       if (slideTo) o.frequency.exponentialRampToValueAtTime(slideTo, t + dur);
       gn.gain.setValueAtTime(0.0001, t); gn.gain.exponentialRampToValueAtTime(vol || 0.2, t + a); gn.gain.exponentialRampToValueAtTime(0.0001, t + dur);
@@ -2157,7 +2313,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
     // colpo di rumore filtrato: fa, fb = frequenza di filtro iniziale e finale
     _noise(when, dur, type, fa, fb, vol, q, buf) {
       if (!this.ctx || !this.settings.sfx) return;
-      const c = this.ctx, t = c.currentTime + (when || 0), s = c.createBufferSource(), f = c.createBiquadFilter(), gn = c.createGain();
+      const c = this.ctx, t = c.currentTime + (when || 0), s = c.createBufferSource(), f = c.createBiquadFilter(), gn = c.createGain(); gn.gain.value = 0.0001;
       s.buffer = buf || this.noise; f.type = type; f.Q.value = q || 0.8; f.frequency.setValueAtTime(fa, t);
       if (fb && fb !== fa) f.frequency.exponentialRampToValueAtTime(fb, t + dur);
       gn.gain.setValueAtTime(0.0001, t); gn.gain.exponentialRampToValueAtTime(vol, t + Math.min(0.012, dur * 0.3)); gn.gain.exponentialRampToValueAtTime(0.0001, t + dur);
@@ -2166,50 +2322,96 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
     // una bolla/goccia isolata: sinusoide che sale di tono (Minnaert)
     _bubble(when, f, dur, vol) {
       if (!this.ctx || !this.settings.sfx) return;
-      const c = this.ctx, t = c.currentTime + (when || 0), o = c.createOscillator(), gn = c.createGain();
+      const c = this.ctx, t = c.currentTime + (when || 0), o = c.createOscillator(), gn = c.createGain(); gn.gain.value = 0.0001;
       o.type = 'sine'; o.frequency.setValueAtTime(f, t); o.frequency.exponentialRampToValueAtTime(f * 1.8, t + dur);
       gn.gain.setValueAtTime(0.0001, t); gn.gain.exponentialRampToValueAtTime(vol, t + 0.003); gn.gain.exponentialRampToValueAtTime(0.0001, t + dur);
       o.connect(gn); gn.connect(this.sfxGain); o.start(t); o.stop(t + dur + 0.02);
     }
     // vetro: parziali inarmoniche, quelle alte si spengono prima
     _glass(base, vol, when, tail) {
-      const k = tail || 1;
-      [[1, 1, 0.9], [2.32, 0.55, 0.5], [4.25, 0.32, 0.28], [6.63, 0.18, 0.16], [9.1, 0.1, 0.09]].forEach(([m, a, d]) => this._tone(base * m, d * k, 'sine', vol * a, when, 0, 0.0015));
+      const k = tail || 1, w = when || 0;
+      const modes = [[1, 1, 1.0], [2.32, 0.6, 0.6], [4.25, 0.36, 0.4], [6.63, 0.2, 0.25], [9.38, 0.12, 0.15], [12.5, 0.07, 0.1]];
+      modes.forEach(([m, a, d]) => { // ogni modo ha un gemello leggermente scordato: il vetro "vibra"
+        if (base * m > 15000) return; // niente parziali oltre l'udibile (evita aliasing)
+        this._tone(base * m, d * k, 'sine', vol * a * 0.6, w, 0, 0.001);
+        this._tone(base * m * (1.004 + 0.002 * m * 0.1), d * k * 0.9, 'sine', vol * a * 0.4, w, 0, 0.001);
+      });
+      this._noise(w, 0.012, 'highpass', 4500, 4500, vol * 1.6, 0.5); // il "tic" dell'urto
     }
+    // legno: colpo sordo con risonanza
+    _wood(when, vol) {
+      this._tone(170, 0.09, 'sine', vol, when, 85); this._tone(430, 0.05, 'sine', vol * 0.4, when, 300);
+      this._noise(when, 0.04, 'lowpass', 1400, 400, vol * 0.8, 0.7);
+    }
+    // metallo (fusto): parziali di una lamiera cilindrica
+    _metal(when, vol, base) {
+      const b = base || 180;
+      [[1, 1, 0.5], [2.3, 0.7, 0.4], [4.1, 0.45, 0.28], [6.2, 0.3, 0.2], [8.9, 0.2, 0.12]].forEach(([m, a, d]) => this._tone(b * m, d, 'sine', vol * a, when, 0, 0.001));
+      this._noise(when, 0.02, 'bandpass', 2500, 1500, vol * 0.9, 1.2);
+    }
+    // voce: sega -> due formanti (vocale). forms = [[freq, Q, gain], ...]
+    _voice(when, f0, f1, dur, forms, vol, breath) {
+      if (!this.ctx || !this.settings.sfx) return;
+      const c = this.ctx, t = c.currentTime + (when || 0), j = this.jit || 1;
+      const o = c.createOscillator(); o.type = 'sawtooth'; o.frequency.setValueAtTime(f0 * j, t); o.frequency.linearRampToValueAtTime(f1 * j, t + dur);
+      const vib = c.createOscillator(), vg = c.createGain(); vib.frequency.value = 5.2; vg.gain.value = f0 * 0.012; vib.connect(vg); vg.connect(o.frequency);
+      const gn = c.createGain(); gn.gain.value = 0.0001; gn.gain.setValueAtTime(0.0001, t); gn.gain.exponentialRampToValueAtTime(vol, t + 0.06); gn.gain.setValueAtTime(vol, t + dur * 0.55); gn.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      forms.forEach(([f, q, gg]) => { const b = c.createBiquadFilter(); b.type = 'bandpass'; b.frequency.value = f; b.Q.value = q; const fg = c.createGain(); fg.gain.value = gg; o.connect(b); b.connect(fg); fg.connect(gn); });
+      gn.connect(this.sfxGain); o.start(t); vib.start(t); o.stop(t + dur + 0.05); vib.stop(t + dur + 0.05);
+      if (breath) this._noise(when || 0, dur, 'bandpass', forms[0][0] * 1.5, forms[1][0], breath, 1.5);
+    }
+    // brusio del locale: voci lontane (rumore modulato a ritmo di parlato) + qualche tintinnio
+    startAmbience() {
+      if (!this.ctx || this.amb) return;
+      const c = this.ctx, src = c.createBufferSource(); src.buffer = this.pink; src.loop = true;
+      const f1 = c.createBiquadFilter(); f1.type = 'bandpass'; f1.frequency.value = 480; f1.Q.value = 0.9;
+      const f2 = c.createBiquadFilter(); f2.type = 'bandpass'; f2.frequency.value = 1500; f2.Q.value = 1.3;
+      const gn = c.createGain(); gn.gain.value = 0; src.connect(f1); src.connect(f2); f1.connect(gn); f2.connect(gn); gn.connect(this.sfxGain); src.start(0, Math.random() * 2);
+      this.amb = { gn, timer: setInterval(() => {
+        if (!this.ctx) return; const t = c.currentTime;
+        if (!this.settings.sfx) { gn.gain.setTargetAtTime(0, t, 0.2); return; }
+        gn.gain.setTargetAtTime(0.022 + 0.05 * Math.random() * Math.random() * 2, t, 0.09);
+        f1.frequency.setTargetAtTime(350 + Math.random() * 300, t, 0.15); f2.frequency.setTargetAtTime(900 + Math.random() * 1300, t, 0.15);
+        if (Math.random() < 0.012) this._glass(2000 + Math.random() * 1800, 0.008, 0, 0.45); // tintinnio lontano
+      }, 170) };
+    }
+    stopAmbience() { if (this.amb) { clearInterval(this.amb.timer); try { this.amb.gn.gain.value = 0; } catch (e) {} this.amb = null; } }
     sfx(name) {
       if (!this.ctx) return;
+      this.jit = 1 + (Math.random() * 2 - 1) * 0.035; // ogni suono è un po' diverso dal precedente
       switch (name) {
-        case 'tapOpen': // clac della leva, soffio di gas, poi parte il liquido
-          this._tone(95, 0.07, 'sine', 0.3, 0, 48); this._noise(0, 0.02, 'bandpass', 2600, 1800, 0.22, 1.2);
+        case 'tapOpen': // clac della leva, sbuffo d'aria nel tubo, poi parte il liquido
+          this._tone(95, 0.07, 'sine', 0.3, 0, 48); this._noise(0, 0.02, 'bandpass', 2600, 1800, 0.22, 1.2); this._metal(0, 0.05, 520);
           this._noise(0.015, 0.05, 'lowpass', 1000, 400, 0.2);
-          this._noise(0.04, 0.22, 'bandpass', 4200, 2000, 0.13, 0.8); break;
+          [0.04, 0.1, 0.17].forEach((d, i) => this._noise(d, 0.05 + 0.02 * i, 'bandpass', 1500 - i * 250, 700, 0.12 - i * 0.02, 1.0)); // sputi d'aria
+          this._noise(0.04, 0.22, 'bandpass', 4200, 2000, 0.12, 0.8); break;
         case 'tapClose': // chiusura secca e gocce residue
           this._tone(85, 0.08, 'sine', 0.28, 0, 42); this._noise(0, 0.02, 'bandpass', 2200, 1500, 0.2, 1.2); this._noise(0, 0.04, 'lowpass', 900, 350, 0.17);
           [0.14, 0.31, 0.58, 0.95].forEach((d, i) => this._bubble(d, 700 + Math.random() * 600, 0.04 + 0.02 * Math.random(), 0.08 / (1 + i * 0.6))); break;
         case 'serve': // il bicchiere scivola sul legno e si appoggia
-          this._noise(0, 0.2, 'bandpass', 900, 480, 0.06, 1.2, this.pink);
-          this._tone(190, 0.06, 'sine', 0.3, 0.19, 90); this._noise(0.19, 0.035, 'lowpass', 1400, 500, 0.24); this._noise(0.19, 0.012, 'highpass', 2800, 2800, 0.1);
-          this._glass(2150, 0.02, 0.195, 0.5); break;
-        case 'success': // brindisi: due tintinnii di vetro
-          this._glass(2700, 0.06, 0, 1); this._glass(3250, 0.045, 0.11, 0.8);
-          [523, 659, 784, 1047].forEach((f, i) => this._tone(f, 0.22, 'triangle', 0.07, 0.12 + i * 0.08)); break;
+          this._noise(0, 0.22, 'bandpass', 900, 480, 0.07, 1.2, this.pink); this._noise(0.02, 0.18, 'highpass', 3200, 2600, 0.025, 0.5);
+          this._wood(0.21, 0.2); this._glass(2150, 0.02, 0.215, 0.5); this._noise(0.215, 0.012, 'highpass', 2800, 2800, 0.1); break;
+        case 'success': // brindisi: due tintinnii di vetro e un "ahh" di approvazione
+          this._glass(2700, 0.07, 0, 1); this._glass(3250, 0.05, 0.12, 0.8);
+          this._voice(0.28, 190, 150, 0.45, [[780, 7, 1], [1200, 8, 0.8]], 0.5, 0.012); break;
         case 'alarm': // allarme: tre beep secchi
           [0, 0.2, 0.4].forEach((d) => { this._tone(1000, 0.11, 'square', 0.09, d); this._tone(500, 0.11, 'sawtooth', 0.05, d); }); break;
-        case 'kegTap': // colpo metallico del fusto
-          this._tone(140, 0.12, 'sine', 0.35, 0, 70); this._noise(0, 0.05, 'bandpass', 1800, 900, 0.2, 1.5); this._glass(1300, 0.04, 0, 0.5); break;
+        case 'kegTap': // colpo metallico sulla lamiera del fusto
+          this._metal(0, 0.09, 150 + Math.random() * 40); this._tone(110, 0.14, 'sine', 0.3, 0, 60); break;
         case 'kegDone': // clack del raccordo, sbuffo di gas, tintinnio
-          this._tone(220, 0.08, 'square', 0.16, 0, 110); this._noise(0.02, 0.04, 'highpass', 2500, 2500, 0.22);
-          this._noise(0.1, 0.35, 'bandpass', 4500, 2500, 0.14, 0.8); this._glass(2900, 0.05, 0.28, 1); [523, 784].forEach((f, i) => this._tone(f, 0.2, 'triangle', 0.08, 0.3 + i * 0.1)); break;
+          this._metal(0, 0.08, 300); this._tone(220, 0.08, 'square', 0.12, 0, 110); this._noise(0.02, 0.04, 'highpass', 2500, 2500, 0.22);
+          this._noise(0.1, 0.5, 'bandpass', 4500, 2200, 0.16, 0.8); this._noise(0.12, 0.45, 'highpass', 5000, 3500, 0.05, 0.5);
+          this._glass(2900, 0.05, 0.3, 1); break;
         case 'error': // sbrodolata sul bancone
           this._noise(0, 0.28, 'bandpass', 1800, 350, 0.28, 0.7, this.pink); this._noise(0, 0.12, 'highpass', 3000, 3000, 0.12);
           [0.05, 0.11, 0.2].forEach((d) => this._bubble(d, 300 + Math.random() * 400, 0.05, 0.08)); this._tone(140, 0.22, 'sine', 0.14, 0, 70); break;
-        case 'happy': this._tone(660, 0.1, 'sine', 0.12); this._tone(990, 0.16, 'sine', 0.1, 0.09); break;
-        case 'meh': this._tone(440, 0.14, 'sine', 0.1); this._tone(392, 0.2, 'sine', 0.09, 0.12); break;
-        case 'angry': this._tone(120, 0.32, 'sawtooth', 0.06, 0, 85); this._noise(0, 0.25, 'lowpass', 500, 200, 0.1, 0.6, this.pink); break;
+        case 'happy': this._voice(0, 230, 170, 0.34, [[800, 7, 1], [1250, 8, 0.8]], 0.5, 0.01); break; // "ahh!" soddisfatto
+        case 'meh': this._voice(0, 170, 125, 0.4, [[420, 6, 1], [1000, 7, 0.5]], 0.5, 0.008); break; // "mah..." 
+        case 'angry': this._voice(0, 130, 78, 0.5, [[520, 6, 1], [900, 7, 0.9]], 0.55, 0.02); this._noise(0, 0.25, 'lowpass', 500, 200, 0.06, 0.6, this.pink); break; // "bah!" 
         case 'unlock': this._glass(2900, 0.05, 0, 1.2); [392, 523, 659, 784, 1047, 1319].forEach((f, i) => this._tone(f, 0.24, 'triangle', 0.09, 0.05 + i * 0.09)); break;
         case 'coin': [1319, 1568, 1976].forEach((f, i) => { this._tone(f, 0.1, 'triangle', 0.06, i * 0.07); this._glass(3200 + i * 300, 0.025, i * 0.07, 0.4); }); break;
         case 'click': this._tone(1250, 0.03, 'triangle', 0.05, 0, 800); this._noise(0, 0.012, 'highpass', 2500, 2500, 0.04); break;
-        case 'pick': this._glass(1900, 0.03, 0, 0.35); this._tone(150, 0.04, 'sine', 0.12, 0, 90); break; // bicchiere sul legno
+        case 'pick': this._glass(1900, 0.03, 0, 0.35); this._wood(0.005, 0.18); break; // bicchiere sul legno
         default: break;
       }
     }
@@ -2389,11 +2591,11 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       if (k.empty) {
         const blink = Math.sin(this.kegT * 9) > -0.3;
         c.font = '800 ' + Math.round(Math.min(40, W * 0.1)) + 'px ' + FONT; c.fillStyle = blink ? '#ff5a45' : '#a52a1e'; c.strokeStyle = 'rgba(0,0,0,0.7)'; c.lineWidth = 5;
-        const msg = BB.I18n.t('keg.alert'), my = H * 0.32; c.strokeText(msg, W / 2, my); c.fillText(msg, W / 2, my);
+        const msg = BB.I18n.t('keg.alert', { s: (BB.STYLES[k.styleId] || {}).name || '' }), my = H * 0.32; c.strokeText(msg, W / 2, my); c.fillText(msg, W / 2, my);
         const bw = Math.min(W * 0.6, 240), by = cy + kh / 2 + 30; c.fillStyle = 'rgba(255,255,255,0.22)'; this._rr(W / 2 - bw / 2, by, bw, 12, 6); c.fill(); if (k.taps > 0) { c.fillStyle = '#ffd36a'; this._rr(W / 2 - bw / 2, by, Math.max(12, bw * k.taps / k.need), 12, 6); c.fill(); }
       } else {
         c.font = '800 ' + Math.round(Math.min(34, W * 0.085)) + 'px ' + FONT; c.fillStyle = '#7dffa8'; c.strokeStyle = 'rgba(0,0,0,0.7)'; c.lineWidth = 5;
-        const msg = BB.I18n.t('keg.done'), my = H * 0.32; c.strokeText(msg, W / 2, my); c.fillText(msg, W / 2, my);
+        const msg = BB.I18n.t('keg.done', { s: (BB.STYLES[k.styleId] || {}).name || '' }), my = H * 0.32; c.strokeText(msg, W / 2, my); c.fillText(msg, W / 2, my);
       }
       c.restore();
     }
@@ -2499,16 +2701,25 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
     }
 
     drawTap(open, flowLevel) {
-      const c = this.ctx, W = this.W, H = this.H, x = W / 2, y = H * 0.305;
-      const gx = c.createLinearGradient(x - 14, 0, x + 14, 0); const sk = this.tapSkin || BB.Meta.TAPS[0]; gx.addColorStop(0, sk.c[0]); gx.addColorStop(0.5, sk.c[1]); gx.addColorStop(1, sk.c[2]);
-      c.fillStyle = gx;
-      const colTop = Math.max(y - H * 0.1, (this.topInset || 0) + 18);
-      c.fillRect(x + 26, colTop, 12, y - colTop + 10);              // colonna
-      c.fillRect(x - 12, y - 8, 56, 14);                            // braccio
-      c.beginPath(); c.moveTo(x - 9, y + 6); c.lineTo(x + 9, y + 6); c.lineTo(x + 5, y + 20); c.lineTo(x - 5, y + 20); c.fill(); // beccuccio
-      c.save(); c.translate(x + 32, colTop - 6); c.rotate(open ? 0.7 : 0);
-      c.fillStyle = '#2a1a10'; c.fillRect(-4, -34, 8, 40); c.fillStyle = sk.knob; c.beginPath(); c.arc(0, -36, 8, 0, 7); c.fill(); c.restore();
-      this.spout = { x, y: y + 20 };
+      const c = this.ctx, W = this.W, H = this.H, x = W / 2, y = H * 0.305, K = 1.7;
+      const sk = this.tapSkin || BB.Meta.TAPS[0];
+      const colTopAbs = Math.max(y - H * 0.1, (this.topInset || 0) + 18), colTop = (colTopAbs - y) / K;
+      // alone caldo dietro il rubinetto per staccarlo dallo sfondo
+      const gl = c.createRadialGradient(x + 10, y, 4, x + 10, y, 90); gl.addColorStop(0, 'rgba(255,214,120,0.34)'); gl.addColorStop(1, 'rgba(255,214,120,0)');
+      c.fillStyle = gl; c.fillRect(x - 100, y - 100, 220, 200);
+      c.save(); c.translate(x, y); c.scale(K, K);
+      const gx = c.createLinearGradient(-14, 0, 40, 0); gx.addColorStop(0, sk.c[0]); gx.addColorStop(0.45, sk.c[1]); gx.addColorStop(1, sk.c[2]);
+      c.fillStyle = gx; c.strokeStyle = '#1a1208'; c.lineWidth = 1.6; c.lineJoin = 'round';
+      c.fillRect(26, colTop, 12, -colTop + 10); c.strokeRect(26, colTop, 12, -colTop + 10);        // colonna
+      c.beginPath(); c.rect(-12, -8, 56, 14); c.fill(); c.stroke();                                // braccio
+      c.beginPath(); c.moveTo(-9, 6); c.lineTo(9, 6); c.lineTo(5, 20); c.lineTo(-5, 20); c.closePath(); c.fill(); c.stroke(); // beccuccio
+      c.fillStyle = 'rgba(255,255,255,0.55)'; c.fillRect(-10, -6, 52, 3); c.fillRect(28, colTop + 2, 3, -colTop + 4); // riflessi
+      c.save(); c.translate(32, colTop - 6); c.rotate(open ? 0.7 : 0);
+      c.fillStyle = '#2a1a10'; c.strokeStyle = '#0d0803'; c.fillRect(-4, -34, 8, 40); c.strokeRect(-4, -34, 8, 40);
+      c.fillStyle = sk.knob; c.beginPath(); c.arc(0, -36, 9, 0, 7); c.fill(); c.stroke();
+      c.fillStyle = 'rgba(255,255,255,0.5)'; c.beginPath(); c.arc(-3, -39, 3, 0, 7); c.fill(); c.restore();
+      c.restore();
+      this.spout = { x, y: y + 20 * K };
     }
 
     // ---------- bicchiere ----------
@@ -2727,7 +2938,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       c.fillStyle = 'rgba(0,0,0,0.45)'; this._rr(lx, top, w, h, 8); c.fill();
       const yOf = (deg) => bot - (deg / 90) * h;
       if (view.hints) {
-        const ideal = BB.Pour.idealTilt(game.style, m.total / m.targetVol);
+        const ideal = BB.Pour.idealTilt(game.style, m.total / m.targetVol, m.geo);
         c.fillStyle = 'rgba(110,220,140,0.35)'; c.fillRect(lx, yOf(Math.min(90, ideal + 9)), w, yOf(Math.max(0, ideal - 9)) - yOf(Math.min(90, ideal + 9)));
         c.strokeStyle = '#6fe08e'; c.lineWidth = 2; c.beginPath(); c.moveTo(lx - 4, yOf(ideal)); c.lineTo(lx + w + 4, yOf(ideal)); c.stroke();
       }
@@ -2799,7 +3010,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
     let open = false, sensorsStarted = false, hudTimer = 0, lastT = performance.now(), prevOpen = false;
 
     // ---------- helpers UI ----------
-    const screens = ['scrShop', 'scrAch', 'scrDaily', 'scrHome', 'scrAvatar', 'scrSettings', 'scrPause', 'scrResult', 'scrVictory', 'scrFail', 'scrDialog', 'scrAd'];
+    const screens = ['scrTut', 'scrShop', 'scrAch', 'scrDaily', 'scrHome', 'scrAvatar', 'scrSettings', 'scrPause', 'scrResult', 'scrVictory', 'scrFail', 'scrDialog', 'scrAd'];
     function show(id) { screens.forEach((s) => { $(s).hidden = s !== id; }); }
     function hideAll() { screens.forEach((s) => { $(s).hidden = true; }); }
     let toastT = 0;
@@ -2818,10 +3029,22 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       try { if (navigator.wakeLock && !wake) { wake = await navigator.wakeLock.request('screen'); wake.addEventListener('release', () => { wake = null; }); } } catch (e) { wake = null; }
     }
     document.addEventListener('visibilitychange', () => { if (!document.hidden && game.state !== 'home') keepAwake(); });
+    // audio e sensore ripartono quando si torna nella pagina (Safari li ferma quando si esce)
+    const wakeAll = () => { audio.init(); try { sensors.rearm(); } catch (e) {} };
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) wakeAll(); });
+    g.addEventListener('pageshow', wakeAll); g.addEventListener('focus', wakeAll);
+    let reviveAt = 0;
+    function revive() { // da un gesto: riprende audio e, se il sensore è muto, lo riattiva (iOS vuole di nuovo il permesso)
+      audio.init();
+      const now = Date.now(); if (now < reviveAt || sensors.permission === 'denied') return;
+      if (sensors.mode === 'gyro' && !sensors.stale(1500)) return;
+      reviveAt = now + 4000; sensors.start(900).then(() => applyMode()).catch(() => {});
+    }
+    ['pointerdown', 'touchend', 'click', 'keydown'].forEach((ev) => document.addEventListener(ev, revive, { capture: true, passive: true }));
 
     async function ensureSensors(fromGesture) {
       audio.init(); keepAwake();
-      if (sensorsStarted && sensors.mode !== 'unknown') return sensors.mode;
+      if (sensorsStarted && sensors.mode === 'gyro' && !sensors.stale(2000)) return sensors.mode;
       const mode = await sensors.start(1300);
       sensorsStarted = true;
       applyMode();
@@ -2833,6 +3056,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       }
       return mode;
     }
+    sensors.onMode = () => { applyMode(); if (!settings.neutral.calibrated) { sensors.calibrate(); save.save(); } toast(T('toast.gyroOn')); };
     function applyMode() {
       const touch = sensors.mode !== 'gyro';
       $('tiltStrip').classList.toggle('off', !touch);
@@ -2847,6 +3071,8 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
     // ---------- Lingua e avatar ----------
     const AV = BB.Avatar;
     renderer.player = player;
+    if (player.look && !BB.Meta.ownsHat(save, player.look.hat)) { player.look.hat = 0; save.save(); } // niente cappelli non acquistati
+    if (!settings.axisV) { settings.axis = 'roll'; settings.axisV = 1; save.save(); } // inclinazione laterale di default
     function buildLangSegs() {
       document.querySelectorAll('.langSeg').forEach((box) => {
         box.innerHTML = BB.I18n.langs.map((l) => '<button data-lang="' + l + '" title="' + BB.I18n.names[l] + '" aria-label="' + BB.I18n.names[l] + '" aria-pressed="' + (l === BB.I18n.lang) + '">' + l.toUpperCase() + '</button>').join('');
@@ -2938,7 +3164,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
     game.on('achieve', (a) => { achQ.push(a); clearTimeout(achT); achT = setTimeout(flushAch, 700); });
     function flushAch() {
       if (!achQ.length) return;
-      audio.sfx('unlock'); toast(achQ.map((a) => T('ach.toast', { n: T('ach.' + a.id + '.n'), r: a.reward })).join('\n'), 3600); achQ = [];
+      audio.sfx('unlock'); toast(achQ.map((a) => T('ach.toast', { n: achName(a), r: a.reward })).join('\n'), 3600); achQ = [];
       if (game.session && game.state !== 'home') updateBar();
     }
     function openShop(from) { shopFrom = from; renderShop(); show('scrShop'); }
@@ -2947,8 +3173,8 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       const M = BB.Meta, coins = save.data.progress.coins;
       let s = '<h2>🛒 ' + T('shop.title') + '</h2><div class="coins">' + T('shop.balance', { c: coins }) + ' ◉</div><div class="shsec">' + T('shop.upg') + '</div>';
       Object.keys(M.UPG).forEach((k) => {
-        const u = M.UPG[k], lv = M.upgLevel(save, k), max = lv >= u.max, cost = max ? 0 : u.cost[lv];
-        let pips = ''; for (let i = 0; i < u.max; i++) pips += '<u' + (i < lv ? ' class="on"' : '') + '></u>';
+        const u = M.UPG[k], lv = M.upgLevel(save, k), max = false, cost = M.upgCost(k, lv);
+        let pips = ''; for (let i = 0; i < Math.min(lv, 8); i++) pips += '<u class="on"></u>'; pips += ' <small>Lv ' + lv + '</small>';
         s += '<div class="shrow"><div class="shi">' + u.icon + '</div><div class="sht"><b>' + T('upg.' + k + '.n') + '</b><small>' + T('upg.' + k + '.d') + '</small><span class="pips">' + pips + '</span></div>' +
           (max ? '<span class="shmax">' + T('shop.max') + '</span>' : '<button class="btn primary shb" data-act="upg" data-k="' + k + '"' + (coins < cost ? ' disabled' : '') + '>' + cost + ' ◉</button>') + '</div>';
       });
@@ -2981,12 +3207,14 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       else { audio.sfx('error'); toast(T('shop.noCoins'), 1500); }
       renderShop();
     });
+    const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
+    const achName = (a) => T('ach.fam.' + a.fam) + ' ' + ROMAN[a.tier];
     function renderAch() {
       const M = BB.Meta, done = save.data.meta.ach;
       let s = '<h2>🏆 ' + T('ach.title') + '</h2><div class="coins">' + T('ach.sum', { a: done.length, b: M.ACH.length }) + '</div>';
       M.ACH.forEach((a) => {
         const dn = done.indexOf(a.id) >= 0, pr = M.achProgress(save, a);
-        s += '<div class="achrow' + (dn ? ' done' : '') + '"><div class="shi">' + a.icon + '</div><div class="sht"><b>' + T('ach.' + a.id + '.n') + '</b><small>' + T('ach.d.' + a.d, { n: a.goal }) + '</small>' +
+        s += '<div class="achrow' + (dn ? ' done' : '') + '"><div class="shi">' + a.icon + '</div><div class="sht"><b>' + achName(a) + '</b><small>' + T('ach.d.' + a.d, { n: a.goal }) + '</small>' +
           (dn ? '' : '<div class="pb"><i style="width:' + Math.round(pr / a.goal * 100) + '%"></i></div>') + '</div><div class="rw">' + (dn ? '✓' : '+' + a.reward + ' ◉') + '</div></div>';
       });
       s += '<button class="btn" id="achBack">' + T('done') + '</button>';
@@ -3005,14 +3233,62 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
         M.checkAch(save).forEach((a) => game.emit('achieve', a));
       };
     }
+    // ---------- Tutorial (stili e bicchieri si generano dai dati: nuovi stili/bicchieri compaiono da soli) ----------
+    const TUT = ['hud', 'how', 'styles', 'coins', 'rot'];
+    function tutorial(done) {
+      let i = 0;
+      const li = (icon, txt) => '<li><span class="ti">' + icon + '</span><span>' + esc(txt) + '</span></li>';
+      const render = () => {
+        const id = TUT[i], last = i === TUT.length - 1; let h = '';
+        if (id === 'hud') h = '<h2>' + T('tut.hud.t') + '</h2><ul class="tutL">' + li('❚❚', T('tut.hud.pause')) + li('Liv', T('tut.hud.lvl')) + li('♥', T('tut.hud.lives')) + li('◉', T('tut.hud.coins')) + li('👥', T('tut.hud.queue')) + li('🧾', T('tut.hud.order')) + '</ul>';
+        else if (id === 'how') h = '<h2>' + T('tut.how.t') + '</h2><ul class="tutL">' + li('1', T('tut.how1')) + li('2', T('tut.how2')) + li('3', T('tut.how3')) + li('📏', T('tut.how4')) + li('4', T('tut.how5')) + li('🛢', T('tut.how6')) + '</ul>';
+        else if (id === 'styles') {
+          const ids = (BB.STYLE_ORDER || Object.keys(BB.STYLES)).filter((x) => BB.STYLES[x] && !BB.STYLES[x].bonus);
+          h = '<h2>' + T('tut.styles.t') + '</h2><p>' + T('tut.styles.d') + '</p><div class="stack" style="gap:10px">' + BB.GLASS_ORDER.map((gid) => {
+            const names = ids.filter((x) => BB.STYLES[x].glasses.indexOf(gid) >= 0).map((x) => { const st = BB.STYLES[x]; return esc(st.name) + (st.unlockLevel > 1 ? ' <i>' + esc(T('tut.unlock', { n: st.unlockLevel })) + '</i>' : ''); });
+            return '<div class="tutG"><div class="gs">' + glassSvg(BB.GLASSES[gid]) + '</div><div><b>' + esc(T('glass.' + gid)) + '</b><small>' + names.join(' · ') + '</small></div></div>';
+          }).join('') + '</div>';
+        }
+        else if (id === 'coins') h = '<h2>' + T('tut.coin.t') + '</h2><ul class="tutL">' + li('◉', T('tut.coin1')) + li('🛒', T('tut.coin2')) + li('🎁', T('tut.coin3')) + li('📺', T('tut.coin4')) + '</ul>';
+        else h = '<h2>🔒 ' + T('tut.rot.t') + '</h2><p>' + esc(T('tut.rot.b')) + '</p>';
+        h += '<div class="tdots">' + TUT.map((_, k) => '<u' + (k === i ? ' class="on"' : '') + '></u>').join('') + '</div><div class="tbtn">' + (i > 0 ? '<button class="btn" id="tBack">' + T('tut.back') + '</button>' : (last ? '' : '<button class="btn ghost" id="tSkip">' + T('tut.skip') + '</button>')) + '<button class="btn primary" id="tNext">' + T(last ? 'tut.start' : 'tut.next') + '</button></div>';
+        $('tutPanel').innerHTML = h;
+        $('tNext').onclick = () => { click(); if (last) finish(); else { i++; render(); } };
+        if ($('tBack')) $('tBack').onclick = () => { click(); i--; render(); };
+        if ($('tSkip')) $('tSkip').onclick = () => { click(); finish(); };
+      };
+      const finish = () => { settings.tutDone = 1; save.save(); $('scrTut').hidden = true; done && done(); };
+      $('toast').classList.remove('show'); render(); show('scrTut');
+    }
+    const tutorialOnce = () => new Promise((res) => { if (settings.tutDone) res(); else tutorial(res); });
+    $('btnTutorial').onclick = () => { click(); tutorial(() => openSettings(settingsFrom)); };
+
+    // ---------- Banner Zimurgo: dopo il livello 2 e poi ogni 4 livelli, 4 secondi ----------
+    const zimDue = (l) => l === 2 || (l > 2 && (l - 2) % 4 === 0);
+    function zimLogo() {
+      if (BB.IMG && BB.IMG.zimurgo) return '<img alt="Zimurgo" src="' + BB.IMG.zimurgo + '">';
+      return '<svg viewBox="0 0 200 200" role="img" aria-label="Zimurgo"><circle cx="100" cy="100" r="96" fill="#1f4d2e" stroke="#e8c15a" stroke-width="5"/><circle cx="100" cy="100" r="84" fill="none" stroke="#e8c15a" stroke-opacity=".5" stroke-width="1.5"/>' +
+        '<path d="M64 46h54l-6 70a9 9 0 0 1-9 8H79a9 9 0 0 1-9-8z" fill="#e0a526" stroke="#fff4d0" stroke-width="3"/><path d="M63 46c0-12 12-15 20-10 6-8 20-8 24 2 9-3 16 4 11 12z" fill="#fffaf0"/><path d="M118 62h10c8 0 10 10 6 18-3 7-9 9-14 9" fill="none" stroke="#fff4d0" stroke-width="5" stroke-linecap="round"/>' +
+        '<text x="100" y="152" text-anchor="middle" font-family="Alfa Slab One,Georgia,serif" font-size="25" fill="#f3d36a" letter-spacing="1">ZIMURGO</text><text x="100" y="170" text-anchor="middle" font-family="Barlow Condensed,Arial,sans-serif" font-size="10" fill="#cfe3d3" letter-spacing="1">PUB · BIRRERIA · ENOTECA</text></svg>';
+    }
+    function showZim() {
+      return new Promise((res) => {
+        $('zimBox').innerHTML = zimLogo() + '<div class="zt">' + esc(T('zim.tag')) + '</div><div class="zs">' + esc(T('zim.sub')) + '</div><div class="zw">📍 ' + esc(T('zim.where')) + '</div><div class="zb"><i></i></div>';
+        $('scrZim').hidden = false;
+        requestAnimationFrame(() => requestAnimationFrame(() => { const b = $('zimBox').querySelector('.zb i'); if (b) b.style.width = '100%'; }));
+        setTimeout(() => { $('scrZim').hidden = true; res(); }, 4000);
+      });
+    }
+    g.__zim = { zimDue, showZim };
+
     $('btnShop').onclick = () => { click(); openShop('home'); };
     $('btnAch').onclick = () => { click(); renderAch(); };
-    $('btnContinue').onclick = async () => { click(); await ensureSensors(); game.continueGame(); };
+    $('btnContinue').onclick = async () => { click(); await ensureSensors(); await tutorialOnce(); game.continueGame(); };
     $('btnNew').onclick = () => {
       click();
-      if (!game.hasSave()) { ensureSensors().then(() => game.startNew()); return; }
+      if (!game.hasSave()) { ensureSensors().then(tutorialOnce).then(() => game.startNew()); return; }
       dialog(T('dlg.newTitle'), T('dlg.newBody'), [
-        { label: T('dlg.yes'), primary: true, fn: async () => { await ensureSensors(); game.startNew(); } },
+        { label: T('dlg.yes'), primary: true, fn: async () => { await ensureSensors(); await tutorialOnce(); game.startNew(); } },
         { label: T('cancel') },
       ]);
     };
@@ -3050,8 +3326,10 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
     $('btnDbgAds').onclick = () => { save.data.purchases.adsRemoved = !save.data.purchases.adsRemoved; save.save(); toast('[TEST] flag senza pubblicità: ' + save.data.purchases.adsRemoved, 2600); };
 
     // ---------- Pausa ----------
+    try { if (screen.orientation && screen.orientation.lock) screen.orientation.lock('portrait').catch(() => {}); } catch (e) {}
     function pause() { if (game.state === 'play' || game.state === 'choose' || game.state === 'select') { open = false; game.pause(); show('scrPause'); } }
     $('btnPause').onclick = () => { click(); pause(); };
+    try { const mqL = g.matchMedia('(orientation: landscape) and (pointer: coarse)'); const onRot = () => { if (mqL.matches) pause(); }; if (mqL.addEventListener) mqL.addEventListener('change', onRot); else mqL.addListener(onRot); } catch (e) {}
     $('btnResume').onclick = () => { click(); game.resume(); hideAll(); };
     $('btnPauseHome').onclick = () => { click(); game.goHome(); showHome(); };
     document.addEventListener('visibilitychange', () => { if (document.hidden) { pause(); save.save(); } });
@@ -3153,7 +3431,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
     function updateBar() {
       $('barInfo').textContent = (game.session.bonus ? T('bonus.tag', { s: game.served, n: BB.CONFIG.perLevel }) : T('bar.info', { l: game.session.level, s: game.served, n: BB.CONFIG.perLevel })) + (game.combo >= 2 ? ' · 🔥×' + game.combo : '');
       const half = game.lost % BB.CONFIG.lostPerHeart;
-      $('barLives').textContent = '♥'.repeat(Math.max(0, game.lives)) + '♡'.repeat(Math.max(0, game.maxLives - game.lives)) + (half ? ' ½' : '');
+      $('barLives').textContent = game.maxLives > 6 ? '♥ ' + Math.max(0, game.lives) + '/' + game.maxLives + (half ? ' ½' : '') : '♥'.repeat(Math.max(0, game.lives)) + '♡'.repeat(Math.max(0, game.maxLives - game.lives)) + (half ? ' ½' : '');
       $('barLives').setAttribute('aria-label', T('lives.aria2', { n: game.lives }) + (half ? T('lives.aria3', { k: BB.CONFIG.lostPerHeart }) : ''));
       $('barCoins').textContent = save.data.progress.coins + ' ◉';
     }
@@ -3171,7 +3449,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       if (m.poured < 1 && m.flow < 0.05) return [T(touch ? 'hint.startTouch' : 'hint.startTilt', { pour: T('pour') }), ''];
       if (m.flow < 0.05) return [f >= 0.7 ? T('hint.serve', { serve: T('serve').toUpperCase() }) : T('hint.closedKeep'), ''];
       if (!settings.hints) return ['', ''];
-      const ideal = BB.Pour.idealTilt(game.style, f), d = m.tilt - ideal;
+      const ideal = BB.Pour.idealTilt(game.style, f, m.geo), d = m.tilt - ideal;
       if (Math.abs(d) < 10) return [T('hint.good'), ''];
       return [T(d > 0 ? 'hint.straighten' : 'hint.tiltMore'), 'warn'];
     }
@@ -3296,18 +3574,20 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       $('victoryPanel').innerHTML = '<h2>' + (v.bonus ? T('vic.bonusTitle') : T('vic.title', { n: v.level })) + '</h2>' + starsHtml(v.stars) +
         '<div class="score">' + v.avgScore + '<small>' + T('vic.avg') + '</small></div>' +
         '<div class="coins">' + T('vic.coins', { n: v.coins }) + '</div>' + unl +
-        '<button class="btn" id="vDouble">' + T('vic.double') + '</button><div class="live" id="vMsg" style="text-align:center"></div>' +
+        '<button class="btn" id="vDouble">' + T('vic.double') + ' · +' + (v.dbl || v.coins) + ' ◉</button><div class="live" id="vMsg" style="text-align:center"></div>' +
         '<button class="btn primary" id="vNext">' + T('continue') + '</button><button class="btn" id="vShop">🛒 ' + T('vic.shop') + '</button><button class="btn ghost" id="vHome">' + T('home') + '</button>';
       show('scrVictory'); confetti($('scrVictory'));
       $('vShop').onclick = () => { click(); openShop('victory'); };
       $('vNext').onclick = async () => {
-        click(); hideAll(); game.continueAfterVictory(); monet.maybeInterstitial('level_complete');
+        click();
+        if (zimDue(v.level) && !v.bonus) { $('vNext').disabled = true; await showZim(); }
+        hideAll(); game.continueAfterVictory(); monet.maybeInterstitial('level_complete');
         if (game.session && game.session.bonus) { game.pause(); dialog(T('bonus.title'), T('bonus.body'), [{ label: T('bonus.go'), primary: true, fn: () => game.resume() }]); }
       };
       $('vHome').onclick = () => { click(); game.goHome(); showHome(); monet.maybeInterstitial('level_complete'); };
       $('vDouble').onclick = async () => {
         click(); $('vDouble').disabled = true; const r = await game.doubleReward();
-        if (r.granted) { $('vMsg').textContent = T('vic.doubled'); $('vDouble').hidden = true; }
+        if (r.granted) { $('vMsg').textContent = T('vic.doubled') + ' +' + (r.added || 0) + ' ◉'; $('vDouble').hidden = true; updateBar(); }
         else { $('vDouble').disabled = false; $('vMsg').textContent = T(r.status === 'dismissed' ? 'vic.adDismissed' : r.status === 'unavailable' ? 'ad.none' : 'vic.adFailed'); }
       };
     }
@@ -3322,9 +3602,13 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
     });
 
     // ---------- ciclo principale ----------
+    let nextRearm = 0, staleN = 0;
     function frame(now) {
       const dt = Math.min(0.05, (now - lastT) / 1000); lastT = now;
       sensors.update(dt);
+      if (sensors.mode === 'gyro' && (game.state === 'play' || game.state === 'choose' || game.state === 'select') && sensors.stale(2500) && Date.now() > nextRearm) {
+        nextRearm = Date.now() + 3000; sensors.rearm(); if (++staleN === 3) toast(T('toast.gyroStale'), 4000);
+      } else if (!sensors.stale(2500)) staleN = 0;
       let tiltIn = 0, sign = 1;
       if (sensors.mode === 'gyro') { const r = sensors.read(); tiltIn = r.deg; sign = r.sign; }
       else {
