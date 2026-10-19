@@ -1974,7 +1974,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       // piano fusto: solo i livelli pari (2, 4, 6...). Livello 2: dopo il secondo cliente servito. Gli altri: a caso durante il servizio, una volta sola
       const lv = this.session.level; this.kegUsed = !(lv >= 2 && lv % 2 === 0);
       this.spillRnd = BB.rng(((this.session.seed * 13 + this.session.level * 7 + 5) >>> 0) || 1); // imprevisto birra rovesciata: livelli dispari da 3 in poi
-      this.spill = { on: false, wait: false, t: 0, waitT: 0, taps: 0, need: 10, fill: 0, foam: 0, styleId: null, glassId: null };
+      this.spill = { on: false, wait: false, t: 0, waitT: 0, taps: 0, need: 15, fill: 0, foam: 0, styleId: null, glassId: null };
       this.spillUsed = !(lv >= 3 && lv % 2 === 1); this.spillAtPour = lv === 3 ? 2 : 2 + Math.floor(this.spillRnd() * 3); this.spillAt = 0.35 + this.spillRnd() * 0.25;
       this.kegAtPour = lv === 2 ? 3 : 2 + Math.floor(this.kegRnd() * 3); this.kegArm = -1; this.pourCount = 0; this.levelCoins = 0; // scatta entro 1 s dall'inizio di una spillatura
       const R = this.rules;
@@ -2064,16 +2064,16 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       if (this.spillUsed || this.state !== 'play' || !this.model || !this.order) return;
       if (this.keg && (this.keg.empty || this.keg.wait)) return;
       const m = this.model; if (this.pourCount < this.spillAtPour || m.flow < 0.05 || m.total < m.targetVol * this.spillAt) return;
-      this.spillUsed = true; Object.assign(sp, { on: true, wait: false, t: 0, waitT: 0, taps: 0, fill: Math.min(1, m.total / m.cap), foam: m.foamPct, styleId: this.order.styleId, glassId: this.chosenGlassId });
+      this.spillUsed = true; m.flow = 0; Object.assign(sp, { on: true, wait: false, t: 0, waitT: 0, taps: 0, fill: Math.min(1, m.total / m.cap), foam: m.foamPct, styleId: this.order.styleId, glassId: this.chosenGlassId });
       this.emit('spillStart', { styleId: sp.styleId, glassId: sp.glassId });
     }
     spillTap() {
       const sp = this.spill;
-      if (!sp || !sp.on || sp.wait || sp.t < 1.2 || this.state === 'paused') return false;
+      if (!sp || !sp.on || sp.wait || sp.t < 1.4 || this.state === 'paused') return false;
       sp.taps++;
       if (sp.taps < sp.need) { this.emit('spillTap', { p: sp.taps / sp.need }); return true; }
       sp.on = false; sp.wait = true; sp.waitT = 0;
-      const fast = sp.t - 1.2 <= 6, coins = 10 + (fast ? 5 : 0);
+      const fast = sp.t - 1.4 <= 8, coins = 10 + (fast ? 5 : 0);
       this.progress.coins += coins; this.levelCoins = (this.levelCoins | 0) + coins;
       const st = BB.Meta.stats(this.save); st.spill = (st.spill | 0) + 1; this.save.save();
       this.emit('spillDone', { coins, fast }); this._announce();
@@ -2115,7 +2115,8 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
 
     // input: { tilt: gradi richiesti dal telefono/touch, open: rubinetto aperto }
     update(dt, input) {
-      if (this.state === 'select' || this.state === 'choose' || this.state === 'play') { this._tickQueue(dt); this._tickKeg(dt); this._tickSpill(dt); }
+      if (this.state === 'select' || this.state === 'choose' || this.state === 'play') { const evt = (this.keg && (this.keg.empty || this.keg.wait)) || (this.spill && (this.spill.on || this.spill.wait)); // durante un imprevisto la coda avanza più lentamente
+        this._tickQueue(evt ? dt * 0.4 : dt); this._tickKeg(dt); this._tickSpill(dt); }
       if (this.state === 'play') {
         if (this.spill && (this.spill.on || this.spill.wait)) return; // birra rovesciata: tutto fermo finché non si pulisce
         const open = !!input.open && !(this.keg && (this.keg.empty || this.keg.wait)); // fusto vuoto: la birra non scende
@@ -2655,7 +2656,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       c.strokeStyle = 'rgba(0,0,0,0.12)'; c.lineWidth = 1; for (let i = 1; i < 5; i++) { c.beginPath(); c.moveTo(0, ctop + cs * i / 5); c.lineTo(W, ctop + cs * i / 5); c.stroke(); }
       const k = (H * 0.26) / (def.H + (def.stem ? def.stem.h : 0));
       const impX = cx + 30, impY = base + cs * 0.12, py = ctop + cs * 0.6;
-      const ragOn = sp.on && u >= 1.2 || sp.wait;
+      const ragOn = sp.on && u >= 1.4 || sp.wait;
       // pozza
       const grow = ease((u - TI) / 0.55), clean = this.spP, rx = W * 0.34 * grow * (1 - clean * 0.97), ry = rx * 0.2;
       if (rx > 1) {
@@ -2674,11 +2675,11 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
         for (let i = 0; i < 16; i++) { const ang = -Math.PI * (0.1 + Math.random() * 0.8); const v = 120 + Math.random() * 260; this.spShards.push({ x: impX, y: impY - 6, vx: Math.cos(ang) * v * (Math.random() < 0.5 ? -1 : 1), vy: Math.sin(ang) * v, r: Math.random() * 6, vr: (Math.random() - 0.5) * 12, s: 7 + Math.random() * 12, fy: py + (Math.random() - 0.5) * ry * 1.6, on: false }); }
         for (let i = 0; i < 22; i++) { const ang = -Math.PI * Math.random(); const v = 80 + Math.random() * 240; this.spDrops.push({ x: impX, y: impY, vx: Math.cos(ang) * v, vy: Math.sin(ang) * v - 40, r: 2 + Math.random() * 3.5, life: 1 }); }
       }
-      const sw = 1 - Math.max(0, Math.min(1, (clean - 0.5) / 0.45));
+      const sw = sp.on ? 1 - ease((u - 0.85) / 0.45) : 0; // i cocci spariscono prima che inizi la pulizia
       this.spShards.forEach((sh) => {
         if (!sh.on) { sh.vy += 1000 * dt; sh.x += sh.vx * dt; sh.y += sh.vy * dt; sh.r += sh.vr * dt; if (sh.y >= sh.fy) { sh.y = sh.fy; sh.vy *= -0.32; sh.vx *= 0.55; sh.vr *= 0.5; if (Math.abs(sh.vy) < 40) { sh.on = true; sh.vx = sh.vy = sh.vr = 0; } } }
         if (sw <= 0.01) return;
-        c.save(); c.globalAlpha = a * sw; c.translate(sh.x + (1 - sw) * 60, sh.y); c.rotate(sh.r);
+        c.save(); c.globalAlpha = a * sw; c.translate(sh.x, sh.y - (1 - sw) * 10); c.rotate(sh.r);
         c.fillStyle = 'rgba(205,232,248,0.55)'; c.strokeStyle = 'rgba(255,255,255,0.95)'; c.lineWidth = 1.5;
         c.beginPath(); c.moveTo(-sh.s * 0.6, sh.s * 0.3); c.lineTo(sh.s * 0.1, -sh.s * 0.6); c.lineTo(sh.s * 0.7, sh.s * 0.4); c.closePath(); c.fill(); c.stroke(); c.restore();
       });
@@ -2698,12 +2699,6 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
         c.save(); c.translate(gx, gy); c.rotate(rot); this._glassPath(c, def, k, fl, st.color, st.foamColor || '#fff', sp.foam, a); c.restore();
         if (u >= TL && Math.random() < 0.7) this.spDrops.push({ x: gx, y: gy - 60, vx: (Math.random() - 0.3) * 160, vy: -60 - Math.random() * 120, r: 2 + Math.random() * 3, life: 1 });
       }
-      // braccio che urta il bicchiere
-      if (u < 0.75) {
-        const ap = u < 0.05 ? 0 : u < TL ? ease((u - 0.05) / 0.25) : 1 - ease((u - TL) / 0.35);
-        const ax = W + 70 - ap * (W + 70 - (cx + Math.max.apply(null, def.profile.map((q) => q[1])) * k + 40)), ay = base - H * 0.1;
-        c.save(); c.translate(ax, ay); c.fillStyle = '#c8432a'; this._rr(0, -22, 220, 44, 20); c.fill(); c.fillStyle = '#e0b08a'; c.beginPath(); c.arc(-4, 0, 25, 0, Math.PI * 2); c.fill(); c.strokeStyle = 'rgba(0,0,0,0.3)'; c.lineWidth = 2; c.stroke(); c.restore();
-      }
       // straccio
       if (ragOn) {
         const target = sp.wait ? W + 140 : null;
@@ -2711,7 +2706,6 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
         else this.spRagX += (target - this.spRagX) * Math.min(1, dt * 3);
         const vel = sp.on ? Math.cos(this.spRag) * (this.spRagT - this.spRag) : 0, tilt = Math.max(-0.4, Math.min(0.4, vel * 0.25)), rw = 112, rh = 54;
         c.save(); c.translate(this.spRagX, py - 6); c.rotate(tilt);
-        c.fillStyle = '#e0b08a'; c.beginPath(); c.ellipse(0, -rh * 0.55, 20, 15, 0, 0, Math.PI * 2); c.fill();
         c.beginPath(); c.moveTo(-rw / 2, -rh * 0.35); c.quadraticCurveTo(0, -rh * 0.75, rw / 2, -rh * 0.35); c.lineTo(rw / 2 + 4, rh * 0.25); c.quadraticCurveTo(rw * 0.25, rh * 0.5, 0, rh * 0.28); c.quadraticCurveTo(-rw * 0.25, rh * 0.5, -rw / 2 - 4, rh * 0.25); c.closePath();
         c.fillStyle = '#f2eee2'; c.fill(); c.strokeStyle = '#6b6a60'; c.lineWidth = 2; c.stroke(); c.save(); c.clip();
         c.fillStyle = 'rgba(200,50,40,0.75)'; for (let i = -3; i <= 3; i++) c.fillRect(i * 20 - 4, -rh, 8, rh * 2); for (let j = 0; j < 3; j++) c.fillRect(-rw, -rh * 0.35 + j * 18, rw * 2, 6);
@@ -3661,7 +3655,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
     game.on('spillStart', () => {
       open = false; pourBtn.classList.remove('on'); document.body.classList.add('keg'); renderer.spillReset(); audio.setPour(0, 0, 0, 0);
       kb.dataset.i = 'spill.btn'; kb.textContent = T('spill.btn'); kb.classList.remove('go'); kb.classList.add('spill', 'hold');
-      audio.sfx('spillBump'); setTimeout(() => { if (game.spill.on) { audio.sfx('glassBreak'); renderer.shake = 12; } }, 640); setTimeout(() => kb.classList.remove('hold'), 1200);
+      audio.sfx('spillBump'); setTimeout(() => { if (game.spill.on) { audio.sfx('glassBreak'); renderer.shake = 12; } }, 640); setTimeout(() => kb.classList.remove('hold'), 1400);
     });
     game.on('spillTap', (e) => { renderer.spTarget = e.p; renderer.spTarget = e.p; renderer.spRagT += Math.PI; renderer.shake = 2; audio.sfx('wipe'); });
     game.on('spillDone', (e) => {
@@ -3772,12 +3766,14 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
         tiltIn = sensors.touchTilt;
       }
       if (game.state === 'select' || game.state === 'choose' || game.state === 'play' || game.state === 'settling') {
+        const spOn = !!(game.spill && (game.spill.on || game.spill.wait));
+        if (spOn) { open = false; pourBtn.classList.remove('on'); }
         game.update(dt, { tilt: tiltIn, open });
         if (game.state === 'settling') { open = false; pourBtn.classList.remove('on'); }
         const m = game.model;
         if (m) {
           if (open && !prevOpen) audio.sfx('tapOpen'); if (!open && prevOpen) audio.sfx('tapClose'); prevOpen = open;
-          audio.setPour(m.flow, m.turbulence, clamp(m.foam / 80, 0, 1), m.targetVol ? clamp(m.total / m.targetVol, 0, 1) : 0, m.tilt > 62);
+          if (spOn) audio.setPour(0, 0, 0, 0); else audio.setPour(m.flow, m.turbulence, clamp(m.foam / 80, 0, 1), m.targetVol ? clamp(m.total / m.targetVol, 0, 1) : 0, m.tilt > 62);
         }
         updateHud(dt);
       } else { audio.setPour(0, 0, 0, 0); }
