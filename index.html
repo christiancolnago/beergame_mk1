@@ -1207,8 +1207,9 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
         const lost = dv * miss;
         this.waste += lost; dv -= lost;
         const fill = clamp(this.total / this.cap, 0, 1);
-        const s = clamp(this.tilt / 45, 0, 1);
-        const tau = 0.08 + style.tiltSens * Math.pow(1 - s, 1.5) * (0.55 + 0.6 * fill);
+        const K = BB.Pour.K;
+        const s = clamp(this.tilt / K.sRef, 0, 1);
+        const tau = K.base + style.tiltSens * K.amp * Math.pow(1 - s, K.exp) * (K.fa + K.fb * fill);
         const gF = clamp(style.foamProd * tau, 0, 0.92);
         this.beer += dv * (1 - gF);
         this.foam += dv * gF;
@@ -1254,7 +1255,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
   }
 
   BB.PourModel = PourModel;
-  BB.Pour = { idealTilt, effectiveCapacity, SLOSH_THRESHOLD };
+  BB.Pour = { idealTilt, effectiveCapacity, SLOSH_THRESHOLD, K: { sRef: 38, base: 0.06, amp: 0.7, exp: 1.4, fa: 0.55, fb: 0.4 } };
 })(typeof globalThis !== 'undefined' ? globalThis : this);
 
 /* ---- scoring.js ---- */
@@ -1288,9 +1289,9 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
     const amount = band(amountErr, order.tolQ);
     const foamErr = Math.abs(foamPct - order.foamTarget);
     const foam = band(foamErr, order.tolF);
-    const technique = clamp(1 - model.avgTechErr / 35, 0, 1);
+    const technique = clamp(1 - Math.max(0, model.avgTechErr - 6) / 40, 0, 1);
     const lostFrac = (model.waste + model.spilled) / cap;
-    const waste = clamp(1 - lostFrac / 0.12, 0, 1);
+    const waste = clamp(1 - Math.max(0, lostFrac - 0.01) / 0.12, 0, 1);
 
     let score = 100 * (0.30 * amount + 0.30 * foam + 0.15 * technique + 0.25 * waste);
     let timeBonus = 0;
@@ -1664,11 +1665,15 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       return this.mode;
     }
 
-    update(dt) { // filtro leggero per eliminare il rumore, senza nascondere i movimenti bruschi
-      const a = 1 - Math.exp(-dt / 0.03);
-      this.smooth.roll += wrap180(this.raw.roll - this.smooth.roll) * a;
-      this.smooth.pitch += wrap180(this.raw.pitch - this.smooth.pitch) * a;
-      this.smooth.tilt += (this.raw.tilt - this.smooth.tilt) * a;
+    update(dt) { // filtro adattivo: forte con il telefono fermo (niente tremolio), reattivo nei movimenti veri
+      const f = (cur, raw, wrap) => {
+        const d = wrap ? wrap180(raw - cur) : raw - cur;
+        const tau = 0.14 / (1 + Math.abs(d) / 1.2) + 0.02; // ~0.16s sotto 0.5° di rumore, ~0.03s per scarti >5°
+        return cur + d * (1 - Math.exp(-dt / tau));
+      };
+      this.smooth.roll = f(this.smooth.roll, this.raw.roll, true);
+      this.smooth.pitch = f(this.smooth.pitch, this.raw.pitch, true);
+      this.smooth.tilt = f(this.smooth.tilt, this.raw.tilt, false);
     }
 
     calibrate() {
@@ -1681,7 +1686,12 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       if (this.mode !== 'gyro') return { deg: this.touchTilt, sign: this.touchSign };
       const axis = this.settings.axis === 'pitch' ? 'pitch' : this.settings.axis === 'roll' ? 'roll' : 'tilt';
       const neutral = this.settings.neutral[axis] || 0, raw = this.smooth[axis];
-      return { deg: Tilt.degrees(raw, neutral, this.settings.sens), sign: Tilt.sign(raw, neutral) };
+      const d = wrap180(raw - neutral);
+      const dz = 1.2, ad = Math.abs(d);                       // zona morta: sotto ~1.2° il bicchiere resta dritto
+      const eff = ad <= dz ? 0 : ad - dz;
+      if (ad > dz * 1.5) this._sgn = d >= 0 ? 1 : -1;        // isteresi: il verso cambia solo con un'inclinazione reale
+      else if (this._sgn == null) this._sgn = d >= 0 ? 1 : -1;
+      return { deg: clamp(eff * this.settings.sens, 0, 95), sign: this._sgn };
     }
     setTouch(deg, sign) { this.touchTilt = clamp(deg, 0, 95); if (sign) this.touchSign = sign; }
     stop() { if (this.win && this.win.removeEventListener) this.win.removeEventListener('deviceorientation', this._handler); }
