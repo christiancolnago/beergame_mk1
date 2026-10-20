@@ -127,9 +127,9 @@ body.keg #kegBtn{display:block} body.keg #row,body.keg #picker,body.keg #tiltStr
 
 /* scelta del bicchiere */
 #picker { width: 100%; }
-#pickRow { display: flex; gap: 8px; justify-content: center; }
-.pick { flex: 1; max-width: 150px; min-height: 112px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 4px; padding: 8px 6px 8px; background: linear-gradient(180deg, var(--panel-2), var(--panel)); border: 1px solid var(--brass-dark); border-radius: 14px; box-shadow: 0 4px 0 #3d2b12; font-family: var(--ui); font-weight: 700; font-size: 15px; letter-spacing: .04em; text-transform: uppercase; color: var(--ink); }
-.pick svg { width: 64px; height: 78px; }
+#pickRow { display: flex; gap: 6px; justify-content: center; padding: 0 6px; }
+.pick { flex: 1 1 0; min-width: 0; max-width: 150px; min-height: 112px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 4px; padding: 8px 6px 8px; background: linear-gradient(180deg, var(--panel-2), var(--panel)); border: 1px solid var(--brass-dark); border-radius: 14px; box-shadow: 0 4px 0 #3d2b12; font-family: var(--ui); font-weight: 700; font-size: 13px; letter-spacing: .02em; text-transform: uppercase; color: var(--ink); text-align: center; line-height: 1.1; }
+.pick svg { width: 54px; height: 70px; }
 .pick:active { transform: translateY(2px); box-shadow: 0 2px 0 #3d2b12; }
 .pick.bad { border-color: var(--bad); animation: nope .35s; }
 @keyframes nope { 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
@@ -279,7 +279,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       <button class="btn primary" id="btnContinue" data-i="continue" style="min-height:58px;font-size:20px">Continua</button>
       <button class="btn" id="btnNew" data-i="new" style="min-height:54px">Nuova partita</button>
       <div class="row2"><button class="btn" id="btnShop" style="min-height:54px">🛒 <span data-i="home.shop">Negozio</span></button><button class="btn" id="btnAch" style="min-height:54px">🏆 <span data-i="home.ach">Obiettivi</span></button></div>
-      <button class="btn" id="btnSettings" data-i="settings" style="min-height:54px">Impostazioni</button>
+      <div class="row2"><button class="btn" id="btnSettings" data-i="settings" style="min-height:54px">Impostazioni</button><button class="btn" id="btnTutHome" data-i="home.tut" style="min-height:54px">Tutorial</button></div>
       <button class="btn ghost" id="btnAds" data-i="removeAds" style="min-height:48px">Rimuovi pubblicità · € 3,99</button>
       <div class="badge" id="homeBadge">Prototipo · pubblicità e acquisti in modalità test</div>
       <div class="seg langSeg" id="langHome"></div>
@@ -899,90 +899,98 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       color: ['#fadb5f', '#e2a41b'], clarity: 0.95, haze: 0.0, bubbles: 1.0,
       foamColor: '#ffffff', foamBubble: 0.8,
       foamProd: 0.88, foamHalfLife: 12, foamTarget: 0.19, foamRange: [0.13, 0.26],
-      tiltSens: 1.15, flowMul: 1.0, technique: DYN,
+      tiltSens: 1.15, flowMul: 1.0, technique: DYN, recipe: 'czech3',
     },
     ipa: {
       id: 'ipa', name: 'IPA', unlockLevel: 1, glasses: ['pint'],
       color: ['#e0932a', '#a8561a'], clarity: 0.6, haze: 0.35, bubbles: 0.7,
       foamColor: '#fff0d0', foamBubble: 1.0,
       foamProd: 0.74, foamHalfLife: 16, foamTarget: 0.16, foamRange: [0.10, 0.24],
-      tiltSens: 1.1, flowMul: 1.0, technique: DYN,
+      tiltSens: 1.1, flowMul: 1.0, technique: DYN, recipe: 'hazy2',
     },
     tripel: {
       id: 'tripel', name: 'Tripel', unlockLevel: 1, glasses: ['belgian'],
       color: ['#f0b83c', '#c98a1a'], clarity: 0.7, haze: 0.3, bubbles: 0.95,
       foamColor: '#fff6df', foamBubble: 1.1,
       foamProd: 0.84, foamHalfLife: 16, foamTarget: 0.19, foamRange: [0.13, 0.26],
-      tiltSens: 1.2, flowMul: 0.95, technique: DYN,
+      tiltSens: 1.2, flowMul: 0.95, technique: DYN, recipe: 'belgian',
     },
     stout: {
       id: 'stout', name: 'Stout', unlockLevel: 2, glasses: ['pint'],
       color: ['#3a2418', '#150a05'], clarity: 0.12, haze: 0.0, bubbles: 0.9,
       foamColor: '#e9d3b0', foamBubble: 0.5,
       foamProd: 0.85, foamHalfLife: 28, foamTarget: 0.17, foamRange: [0.11, 0.23],
-      tiltSens: 0.9, flowMul: 0.9, technique: DYN,
+      tiltSens: 0.9, flowMul: 0.9, technique: DYN, recipe: 'stout2',
     },
     helles: {
       id: 'helles', name: 'Helles', unlockLevel: 3, glasses: ['biconico'],
       color: ['#f8d567', '#e0a526'], clarity: 0.9, haze: 0.05, bubbles: 0.8,
       foamColor: '#fffaf0', foamBubble: 0.9,
       foamProd: 0.85, foamHalfLife: 10, foamTarget: 0.17, foamRange: [0.11, 0.24],
-      tiltSens: 1.05, flowMul: 1.0, technique: DYN,
+      tiltSens: 1.05, flowMul: 1.0, technique: DYN, recipe: 'czech3',
     },
     quad: {
       id: 'quad', name: 'Quadrupel', unlockLevel: 4, glasses: ['belgian'],
       color: ['#5e2410', '#2b0f06'], clarity: 0.3, haze: 0.1, bubbles: 0.8,
       foamColor: '#efd7b0', foamBubble: 1.0,
       foamProd: 0.78, foamHalfLife: 18, foamTarget: 0.17, foamRange: [0.11, 0.24],
-      tiltSens: 1.1, flowMul: 0.85, technique: DYN,
+      tiltSens: 1.1, flowMul: 0.85, technique: DYN, recipe: 'belgian',
     },
     porter: {
       id: 'porter', name: 'Porter', unlockLevel: 5, glasses: ['pint'],
       color: ['#4a2a17', '#1e0f07'], clarity: 0.2, haze: 0.0, bubbles: 0.7,
       foamColor: '#e6cfaa', foamBubble: 0.7,
       foamProd: 0.63, foamHalfLife: 18, foamTarget: 0.12, foamRange: [0.08, 0.18],
-      tiltSens: 0.9, flowMul: 0.95, technique: DYN,
+      tiltSens: 0.9, flowMul: 0.95, technique: DYN, recipe: 'stout2',
     },
     bock: {
       id: 'bock', name: 'Bock', unlockLevel: 6, glasses: ['biconico'],
       color: ['#a8561a', '#5e2a0c'], clarity: 0.7, haze: 0.1, bubbles: 0.5,
       foamColor: '#f1dcb6', foamBubble: 1.0,
       foamProd: 0.82, foamHalfLife: 15, foamTarget: 0.17, foamRange: [0.11, 0.24],
-      tiltSens: 1.05, flowMul: 1.0, technique: DYN,
+      tiltSens: 1.05, flowMul: 1.0, technique: DYN, recipe: 'czech3',
     },
     dipa: {
       id: 'dipa', name: 'Double IPA', unlockLevel: 7, glasses: ['pint'],
       color: ['#e6a232', '#b06a1c'], clarity: 0.4, haze: 0.55, bubbles: 0.6,
       foamColor: '#fff3d8', foamBubble: 1.1,
       foamProd: 0.7, foamHalfLife: 18, foamTarget: 0.16, foamRange: [0.10, 0.24],
-      tiltSens: 1.15, flowMul: 0.95, technique: DYN,
+      tiltSens: 1.15, flowMul: 0.95, technique: DYN, recipe: 'hazy2',
+    },
+    bitter: {
+      id: 'bitter', name: 'Bitter', unlockLevel: 8, glasses: ['nonic'],
+      color: ['#d2822e', '#8f4a17'], clarity: 0.75, haze: 0.12, bubbles: 0.35,
+      foamColor: '#fbf0d8', foamBubble: 0.8,
+      foamProd: 0.5, foamHalfLife: 14, foamTarget: 0.08, foamRange: [0.05, 0.14],
+      tiltSens: 0.8, flowMul: 1.0, technique: DYN, recipe: 'cask',
     },
   };
   // Birre reali del birrificio Due Tocchi (livello bonus). Non fanno parte della progressione normale.
   BB.STYLES.gargan = {
     id: 'gargan', name: 'GARGANHELLES', kind: 'Helles', label: 'gargan', bonus: true, unlockLevel: 99, glasses: ['biconico'],
     color: ['#f8d567', '#e0a526'], clarity: 0.9, haze: 0.05, bubbles: 0.8, foamColor: '#fffaf0', foamBubble: 0.9,
-    foamProd: 0.85, foamHalfLife: 10, foamTarget: 0.17, foamRange: [0.11, 0.24], tiltSens: 1.05, flowMul: 1.0, technique: DYN,
+    foamProd: 0.85, foamHalfLife: 10, foamTarget: 0.17, foamRange: [0.11, 0.24], tiltSens: 1.05, flowMul: 1.0, technique: DYN, recipe: 'czech3',
   };
   BB.STYLES.trivella = {
     id: 'trivella', name: 'TRIVELLA', kind: 'DDH Imperial IPA', label: 'trivella', bonus: true, unlockLevel: 99, glasses: ['pint'],
     color: ['#e6a232', '#b06a1c'], clarity: 0.4, haze: 0.55, bubbles: 0.6, foamColor: '#fff3d8', foamBubble: 1.1,
-    foamProd: 0.7, foamHalfLife: 18, foamTarget: 0.16, foamRange: [0.10, 0.24], tiltSens: 1.15, flowMul: 0.95, technique: DYN,
+    foamProd: 0.7, foamHalfLife: 18, foamTarget: 0.16, foamRange: [0.10, 0.24], tiltSens: 1.15, flowMul: 0.95, technique: DYN, recipe: 'hazy2',
   };
   BB.STYLES.storta = {
     id: 'storta', name: 'STORTA', kind: 'Belgian Strong Ale', label: 'storta', bonus: true, unlockLevel: 99, glasses: ['belgian'],
     color: ['#b8651f', '#6a2c0c'], clarity: 0.5, haze: 0.1, bubbles: 0.8, foamColor: '#f1dcb6', foamBubble: 1.0,
-    foamProd: 0.78, foamHalfLife: 18, foamTarget: 0.17, foamRange: [0.11, 0.24], tiltSens: 1.1, flowMul: 0.85, technique: DYN,
+    foamProd: 0.78, foamHalfLife: 18, foamTarget: 0.17, foamRange: [0.11, 0.24], tiltSens: 1.1, flowMul: 0.85, technique: DYN, recipe: 'belgian',
   };
-  BB.STYLE_ORDER = ['pils', 'ipa', 'tripel', 'stout', 'helles', 'quad', 'porter', 'bock', 'dipa'];
+  BB.STYLE_ORDER = ['pils', 'ipa', 'tripel', 'stout', 'helles', 'quad', 'porter', 'bock', 'dipa', 'bitter'];
   BB.BONUS_STYLES = ['gargan', 'trivella', 'storta'];
   BB.BONUS_VENUE = { id: 'bonus', name: 'Due Tocchi', fromLevel: 0, wall: ['#2a2d30', '#111315'], accent: '#e8e0d0', counter: ['#6b4423', '#3f2713'] };
 
   // profile: [t (0 fondo -> 1 bordo), semi-larghezza] nelle stesse unità dell'altezza H.
-  BB.GLASS_ORDER = ['biconico', 'pint', 'belgian'];
+  BB.GLASS_ORDER = ['biconico', 'pint', 'belgian', 'nonic'];
   BB.GLASSES = {
     biconico: { id: 'biconico', name: 'Bicchiere biconico', capacity: 400, H: 3.3, profile: [[0, 0.36], [0.2, 0.46], [0.4, 0.6], [0.62, 0.76], [0.8, 0.7], [1, 0.6]], stem: null },
     pint:     { id: 'pint', name: 'Pinta americana', capacity: 568, H: 2.7, profile: [[0, 0.62], [1, 0.95]], stem: null },
+    nonic:    { id: 'nonic', name: 'Pinta inglese', capacity: 568, H: 2.8, profile: [[0, 0.58], [0.66, 0.88], [0.76, 1.0], [0.84, 0.9], [1, 0.92]], stem: null },
     belgian:  { id: 'belgian', name: 'Calice belga', capacity: 330, H: 2.0, profile: [[0, 0.22], [0.25, 0.72], [0.55, 1.0], [0.85, 0.96], [1, 0.9]], stem: { h: 0.9, foot: 0.85 } },
   };
 
@@ -1144,7 +1152,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
   // Inclinazione ideale in funzione della frazione di ordine versata
   function idealTilt(style, fillFrac, geo) {
     const f = clamp(fillFrac, 0, 1); let t = BB.piecewise(style.technique.pts, f);
-    if (geo) while (t > 0 && BB.Glass.capacityFrac(geo, t) < f + (BB.Pour.margin == null ? 0.06 : BB.Pour.margin)) t -= 1; // un bicchiere inclinato trabocca: si raddrizza man mano che si riempie
+    if (geo) t = Math.min(t, capLimitTilt(geo, f)); // un bicchiere inclinato trabocca: si raddrizza man mano che si riempie
     return Math.max(0, t);
   }
 
@@ -1155,8 +1163,102 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
     return cap * (1 - 0.55 * k * k);
   }
 
+  // ---- Hard mode: ricette di spillatura a fasi, una per famiglia di stili ----
+  // fill: versa inclinando da tilt[0] a tilt[1] fino alla frazione `to` dell'ordine; rest: rubinetto chiuso e bicchiere dritto per `sec` secondi
+  // (la schiuma si assesta, settle = velocità di assestamento); cut: spatola, bicchiere dritto e rubinetto chiuso, toglie la schiuma oltre il bordo.
+  const RECIPES = {
+    czech3: { id: 'czech3', phases: [
+      { k: 'fill', tilt: [45, 40], to: 0.62 },
+      { k: 'rest', sec: 3, settle: 4 },
+      { k: 'fill', tilt: [10, 0], to: 1.0 },
+    ] },
+    stout2: { id: 'stout2', phases: [
+      { k: 'fill', tilt: [45, 40], to: 0.74 },
+      { k: 'rest', sec: 5, settle: 5 },
+      { k: 'fill', tilt: [12, 0], to: 1.0 },
+    ] },
+    belgian: { id: 'belgian', dome: 0.07, phases: [
+      { k: 'fill', tilt: [45, 38], to: 0.64 },
+      { k: 'fill', tilt: [20, 0], to: 1.06 },
+      { k: 'cut', sec: 1.4 },
+    ] },
+    hazy2: { id: 'hazy2', phases: [
+      { k: 'fill', tilt: [45, 40], to: 0.62 },
+      { k: 'rest', sec: 1.5, settle: 3 },
+      { k: 'fill', tilt: [26, 4], to: 1.0 },
+    ] },
+    cask: { id: 'cask', phases: [
+      { k: 'fill', tilt: [32, 28], to: 0.58 },
+      { k: 'rest', sec: 2.5, settle: 2.5 },
+      { k: 'fill', tilt: [16, 4], to: 1.0 },
+    ] },
+  };
+
+  class Coach {
+    constructor(recipe, model) {
+      this.recipe = recipe; this.r = recipe.phases; this.m = model; this.i = 0; this.fs = 0; this.fresh = true;
+      this.st = this.r.map(() => ({ err: 0, w: 0, prog: 0, viol: 0, done: false }));
+    }
+    get phase() { return this.r[this.i] || null; }
+    get finished() { return this.i >= this.r.length; }
+    // inclinazione consigliata ora (già limitata dalla capacità: un bicchiere inclinato trabocca prima)
+    ideal(f) {
+      const p = this.phase; if (!p) return 0;
+      if (p.k === 'rest' || p.k === 'cut') return 0;
+            const q = BB.clamp((f - this.fs) / Math.max(0.01, p.to - this.fs), 0, 1);
+      const t = p.tilt[0] + (p.tilt[1] - p.tilt[0]) * q;
+      return Math.max(0, Math.min(t, capLimitTilt(this.m.geo, f)));
+    }
+    // frazione (0..1) di avanzamento della fase corrente
+    progress() {
+      const p = this.phase; if (!p) return 1;
+      if (p.k === 'fill') return BB.clamp((this.m.total / this.m.targetVol - this.fs) / Math.max(0.01, p.to - this.fs), 0, 1);
+      return BB.clamp(this.st[this.i].prog / p.sec, 0, 1);
+    }
+    get settling() { const p = this.phase; return p && p.k === 'rest' ? p.settle : 1; }
+    _next() { this.i++; this.fresh = true; }
+    update(h, dv) {
+      const p = this.phase; if (!p) return;
+      const m = this.m, f = m.total / m.targetVol, st = this.st[this.i];
+      if (p.k === 'fill') {
+        if (this.fresh) { this.fs = f; this.fresh = false; }
+        if (dv > 0) { st.err += Math.abs(m.tilt - this.ideal(f)) * dv; st.w += dv; }
+        if (f >= p.to || (f >= p.to - 0.035 && m.flow < 0.05 && st.w > 0)) { st.done = true; this._next(); }
+      } else if (p.k === 'rest') {
+        if (m.flow < 0.05 && m.tilt < 12) st.prog += h; else if (m.flow >= 0.05) st.viol += h;
+        if (st.prog >= p.sec) { st.done = true; this._next(); }
+      } else if (p.k === 'cut') {
+        const calm = m.flow < 0.05 && m.tilt < 10;
+        if (calm) {
+          st.prog += h;
+          const excess = m.total - m.targetVol;
+          if (excess > 0) { const rem = Math.min(excess, m.foam * 0.9, 70 * h); m.foam -= rem; m.cut = (m.cut || 0) + rem; }
+        } else if (m.flow >= 0.05) st.viol += h;
+        if (st.prog >= p.sec) { st.done = true; this._next(); }
+      }
+    }
+    // 0..1: quanto la tecnica rispetta la ricetta
+    score() {
+      let sum = 0;
+      this.r.forEach((p, i) => {
+        const st = this.st[i]; let c;
+        if (p.k === 'fill') { const e = st.w > 0 ? st.err / st.w : 99; c = BB.clamp(1 - Math.max(0, e - 7) / 30, 0, 1); if (!st.done) c *= 0.3; }
+        else c = BB.clamp(st.prog / p.sec, 0, 1) * (1 - BB.clamp(st.viol / 0.7, 0, 1));
+        sum += c;
+      });
+      return sum / this.r.length;
+    }
+  }
+
+  // Inclinazione massima con cui la frazione f di volume non trabocca ancora
+  function capLimitTilt(geo, f) {
+    let t = 90; const need = f + (BB.Pour.margin == null ? 0.06 : BB.Pour.margin);
+    while (t > 0 && BB.Glass.capacityFrac(geo, t) < need) t -= 1;
+    return t;
+  }
+
   class PourModel {
-    constructor(glassDef, style, order) {
+    constructor(glassDef, style, order, opts) {
       this.cap = glassDef.capacity;
       this.geo = BB.Glass.build(glassDef);
       this.style = style;
@@ -1170,11 +1272,13 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       this.techErr = 0; this.techW = 0; this.turbSum = 0; this.maxOmega = 0;
       this.spillRate = 0; this.streamRate = 0; this.turbulence = 0;
       this.tapOpenedOnce = false;
+      this.hard = !!(opts && opts.hard); this.coach = null; this.dome = 0; this.cut = 0;
+      if (this.hard) { const rc = RECIPES[style.recipe] || RECIPES.hazy2; this.coach = new Coach(rc, this); this.dome = rc.dome || 0; }
     }
 
     get total() { return this.beer + this.foam; }
     get foamPct() { return this.total > 1e-6 ? this.foam / this.total : 0; }
-    get effCap() { return effectiveCapacity(this.cap, this.tilt, this.geo); }
+    get effCap() { return effectiveCapacity(this.cap, this.tilt, this.geo) * (1 + this.dome * clamp(1 - this.tilt / 15, 0, 1)); }
 
     step(dt, input) {
       const n = Math.max(1, Math.ceil(dt / (1 / 60)));
@@ -1197,7 +1301,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       this.flow = clamp(this.flow + (want ? h / 0.15 : -h / 0.10), 0, 1);
       if (input.open) { this.openTime += h; this.tapOpenedOnce = true; }
 
-      let dv = BB.CONFIG.flowRate * style.flowMul * this.flow * h;
+      let dv = BB.CONFIG.flowRate * style.flowMul * this.flow * h, dvIn = 0;
       this.streamRate = dv / h;
       this.spillRate = 0;
       this.turbulence = 0;
@@ -1213,7 +1317,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
         const gF = clamp(style.foamProd * tau, 0, 0.92);
         this.beer += dv * (1 - gF);
         this.foam += dv * gF;
-        this.poured += dv;
+        this.poured += dv; dvIn = dv;
         this.turbulence = tau;
         this.turbSum += tau * dv;
         const ideal = idealTilt(style, this.total / this.targetVol, this.geo);
@@ -1221,7 +1325,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       }
 
       // la schiuma collassa lentamente in birra
-      const dFoam = this.foam * (Math.LN2 / style.foamHalfLife) * h;
+      const dFoam = Math.min(this.foam, this.foam * (Math.LN2 / style.foamHalfLife) * h * (this.coach ? this.coach.settling : 1));
       this.foam -= dFoam; this.beer += dFoam * FOAM_DRAIN_TO_BEER;
 
       // movimenti bruschi: sbattimento (birra -> schiuma) e schizzi se il bicchiere è pieno
@@ -1236,6 +1340,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       // fuoriuscita oltre la capacità efficace
       const over = this.total - this.effCap;
       if (over > 0) this._remove(over, h);
+      if (this.coach) this.coach.update(h, dvIn);
     }
 
     _remove(ml, h) {
@@ -1255,7 +1360,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
   }
 
   BB.PourModel = PourModel;
-  BB.Pour = { idealTilt, effectiveCapacity, SLOSH_THRESHOLD, K: { sRef: 38, base: 0.06, amp: 0.7, exp: 1.4, fa: 0.55, fb: 0.4 } };
+  BB.Pour = { idealTilt, effectiveCapacity, SLOSH_THRESHOLD, RECIPES, capLimitTilt, K: { sRef: 38, base: 0.06, amp: 0.7, exp: 1.4, fa: 0.55, fb: 0.4 } };
 })(typeof globalThis !== 'undefined' ? globalThis : this);
 
 /* ---- scoring.js ---- */
@@ -1273,6 +1378,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
     spill: 'Fuoriuscita: raddrizza il bicchiere quando è quasi pieno, un bicchiere inclinato trabocca prima.',
     waste: 'Birra sprecata: sotto i 60° il getto entra nel bicchiere, oltre finisce sul bancone.',
     glass: 'Bicchiere sbagliato: ogni stile ha il suo bicchiere. Guarda bene la forma prima di scegliere.',
+    method: 'Segui i passaggi della ricetta.',
     jerk: 'Movimenti bruschi sbattono la birra. Muovi il telefono con dolcezza.',
     timeout: 'Tempo scaduto: il cliente se ne è andato. Parti subito e non esitare.',
     good: 'Ottima spillatura!',
@@ -1293,7 +1399,8 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
     const lostFrac = (model.waste + model.spilled) / cap;
     const waste = clamp(1 - Math.max(0, lostFrac - 0.01) / 0.12, 0, 1);
 
-    let score = 100 * (0.30 * amount + 0.30 * foam + 0.15 * technique + 0.25 * waste);
+    const hard = !!model.coach, techH = hard ? model.coach.score() : technique;
+    let score = hard ? 100 * (0.25 * amount + 0.25 * foam + 0.30 * techH + 0.20 * waste) : 100 * (0.30 * amount + 0.30 * foam + 0.15 * technique + 0.25 * waste);
     let timeBonus = 0;
     score = clamp(score + timeBonus - 12 * (ctx.wrongPicks || 0), 0, 100);
 
@@ -1308,6 +1415,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       ['over', total > model.targetVol ? (1 - amount) : 0],
       ['glass', (ctx.wrongPicks || 0) * 0.2],
       ['jerk', model.maxOmega > 220 && model.avgTechErr > 20 ? 0.4 : 0],
+      ['method', hard && techH < 0.7 ? (1 - techH) * 0.9 : 0],
     ];
     penalties.sort((a, b) => b[1] - a[1]);
     if (penalties[0][1] > 0.15) reason = penalties[0][0];
@@ -1323,7 +1431,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
     const mood = !ok ? 'angry' : score >= 80 ? 'happy' : 'meh';
     return {
       ok, score: Math.round(score), stars, mood, reason, tip: TIPS[reason] || TIPS.good,
-      parts: { amount, foam, technique, waste, timeBonus },
+      parts: { amount, foam, technique: techH, waste, timeBonus },
       total, beer: model.beer, foamMl: model.foam, foamPct, spilled: model.spilled, waste_ml: model.waste,
       amountErrPct: amountErr * 100, elapsed: ctx.elapsed || 0, wrongPicks: ctx.wrongPicks || 0,
     };
@@ -1896,6 +2004,8 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
   Object.keys(S).forEach((l) => Object.assign(BB.I18n.dict[l], S[l]));
   const S2 = {"it": {"av.eyes": "Occhi", "av.gender": "Sesso", "av.genderS.0": "Uomo", "av.genderS.1": "Donna", "av.earring": "Orecchini", "av.earringS.0": "Nessuno", "av.earringS.1": "Perla", "av.earringS.2": "Cerchio", "av.earringS.3": "Pendente", "av.lips": "Rossetto", "av.lipsS.0": "Nessuno", "av.lipsS.1": "Rosa", "av.lipsS.2": "Rosso", "av.lipsS.3": "Prugna", "av.face": "Viso", "av.faceS.0": "Pulito", "av.faceS.1": "Lentiggini", "av.faceS.2": "Neo", "av.faceS.3": "Cicatrice", "av.neck": "Collo", "av.neckS.0": "Nessuno", "av.neckS.1": "Sciarpa", "av.neckS.2": "Papillon", "av.neckS.3": "Collana", "av.hairS.6": "Caschetto", "av.hairS.7": "Coda", "av.hairS.8": "Trecce", "av.hairS.9": "Ciuffo", "av.beardS.4": "Barba corta", "av.beardS.5": "Baffi a manubrio", "av.glassesS.4": "Occhi di gatto", "tut.how": "Tutorial", "tut.next": "Avanti", "tut.back": "Indietro", "tut.skip": "Salta", "tut.start": "Inizia a spillare!", "tut.hud.t": "Lo schermo di gioco", "tut.hud.pause": "Pausa: ferma tutto, anche i clienti.", "tut.hud.lvl": "Liv. 4 · 0/4 — livello e clienti serviti. Ne servi 4 e passi al livello dopo.", "tut.hud.lives": "Cuori: ogni 2 clienti persi ne perdi uno. Il ½ ti dice che ne hai già perso uno.", "tut.hud.coins": "Monete: le guadagni spillando bene e le spendi nel negozio.", "tut.hud.queue": "Coda clienti: tocca un cliente per prendere l'ordine. La barra è la sua pazienza: se finisce, se ne va!", "tut.hud.order": "Banner dell'ordine: nome, birra richiesta e schiuma giusta.", "tut.how.t": "Come si spilla", "tut.how1": "Tocca un cliente della coda.", "tut.how2": "Scegli il bicchiere giusto per quello stile: sbagliare costa punti.", "tut.how3": "Tieni premuto SPILLA e inclina il telefono: parti inclinato e raddrizza man mano che si riempie. Troppo inclinato e la birra trabocca!", "tut.how4": "A sinistra vedi l'inclinazione (zona verde = giusta), a destra quanta birra e schiuma c'è nel bicchiere.", "tut.how5": "Premi SERVI quando livello e schiuma sono giusti. Se il telefono non è dritto usa CALIBRA.", "tut.how6": "Imprevisto: se finisce il fusto, tocca CAMBIA più veloce che puoi e poi CONTINUA.", "tut.styles.t": "Stili e bicchieri", "tut.styles.d": "Ogni stile va servito nel suo bicchiere. Scegli sempre quello giusto!", "tut.unlock": "dal liv. {n}", "tut.coin.t": "Monete e bonus", "tut.coin1": "Spilla bene per guadagnare monete: i PERFETTI e le combo ne danno di più.", "tut.coin2": "Spendile nel negozio: pazienza, cuori extra, mance, rubinetti e cappelli, senza limiti.", "tut.coin3": "I bonus sono utilissimi: ritira ogni giorno il bonus giornaliero e completa gli obiettivi!", "tut.coin4": "A fine livello guarda il video per RADDOPPIARE le monete guadagnate.", "tut.rot.t": "Tieni lo schermo in verticale", "tut.rot.b": "Si gioca in verticale. Per giocare al meglio attiva il blocco dell'orientamento verticale del telefono: così lo schermo non ruota quando lo inclini.", "toast.gyroStale": "Il sensore non risponde. Riattivalo da Impostazioni.", "zim.tag": "Vieni a trovarci!", "zim.sub": "Birra artigianale, enoteca e vino sfuso", "zim.wait": "Continua tra {n}…", "zim.where": "Via Varesina 22 · Jerago con Orago (VA)", "set.tutorial": "Rivedi il tutorial"}, "en": {"av.eyes": "Eyes", "av.gender": "Gender", "av.genderS.0": "Man", "av.genderS.1": "Woman", "av.earring": "Earrings", "av.earringS.0": "None", "av.earringS.1": "Stud", "av.earringS.2": "Hoop", "av.earringS.3": "Drop", "av.lips": "Lipstick", "av.lipsS.0": "None", "av.lipsS.1": "Pink", "av.lipsS.2": "Red", "av.lipsS.3": "Plum", "av.face": "Face", "av.faceS.0": "Clean", "av.faceS.1": "Freckles", "av.faceS.2": "Mole", "av.faceS.3": "Scar", "av.neck": "Neck", "av.neckS.0": "None", "av.neckS.1": "Scarf", "av.neckS.2": "Bow tie", "av.neckS.3": "Necklace", "av.hairS.6": "Bob", "av.hairS.7": "Ponytail", "av.hairS.8": "Pigtails", "av.hairS.9": "Quiff", "av.beardS.4": "Stubble", "av.beardS.5": "Handlebar", "av.glassesS.4": "Cat-eye", "tut.how": "Tutorial", "tut.next": "Next", "tut.back": "Back", "tut.skip": "Skip", "tut.start": "Start pouring!", "tut.hud.t": "The game screen", "tut.hud.pause": "Pause: stops everything, customers too.", "tut.hud.lvl": "Lv. 4 · 0/4 — level and customers served. Serve 4 to reach the next level.", "tut.hud.lives": "Hearts: every 2 lost customers you lose one. The ½ means you already lost one.", "tut.hud.coins": "Coins: earned by pouring well, spent in the shop.", "tut.hud.queue": "Customer queue: tap a customer to take the order. The bar is their patience: when it runs out they leave!", "tut.hud.order": "Order banner: name, requested beer and the right foam.", "tut.how.t": "How to pour", "tut.how1": "Tap a customer in the queue.", "tut.how2": "Pick the right glass for that style: a wrong pick costs points.", "tut.how3": "Hold POUR and tilt the phone: start tilted and straighten as it fills. Stay too tilted and the beer overflows!", "tut.how4": "On the left you see the tilt (green zone = right), on the right how much beer and foam is in the glass.", "tut.how5": "Press SERVE when level and foam are right. If the phone isn't level use CALIBRATE.", "tut.how6": "Surprise: if the keg runs out, tap SWAP as fast as you can, then GO ON.", "tut.styles.t": "Styles and glasses", "tut.styles.d": "Each style is served in its own glass. Always pick the right one!", "tut.unlock": "from lv. {n}", "tut.coin.t": "Coins and bonuses", "tut.coin1": "Pour well to earn coins: PERFECT pours and combos pay more.", "tut.coin2": "Spend them in the shop: patience, extra hearts, tips, taps and hats, with no limit.", "tut.coin3": "Bonuses are really useful: claim the daily bonus every day and complete the goals!", "tut.coin4": "At the end of a level watch the video to DOUBLE the coins you earned.", "tut.rot.t": "Keep the screen upright", "tut.rot.b": "You play upright. For the best experience, turn on your phone's portrait orientation lock so the screen doesn't rotate when you tilt it.", "toast.gyroStale": "The sensor isn't responding. Re-enable it in Settings.", "zim.tag": "Come and visit us!", "zim.sub": "Craft beer, wine shop and loose wine", "zim.wait": "Continue in {n}…", "zim.where": "Via Varesina 22 · Jerago con Orago (VA), Italy", "set.tutorial": "Replay tutorial"}, "fr": {"av.eyes": "Yeux", "av.gender": "Sexe", "av.genderS.0": "Homme", "av.genderS.1": "Femme", "av.earring": "Boucles d'oreilles", "av.earringS.0": "Aucune", "av.earringS.1": "Perle", "av.earringS.2": "Créole", "av.earringS.3": "Pendante", "av.lips": "Rouge à lèvres", "av.lipsS.0": "Aucun", "av.lipsS.1": "Rose", "av.lipsS.2": "Rouge", "av.lipsS.3": "Prune", "av.face": "Visage", "av.faceS.0": "Net", "av.faceS.1": "Taches de rousseur", "av.faceS.2": "Grain de beauté", "av.faceS.3": "Cicatrice", "av.neck": "Cou", "av.neckS.0": "Aucun", "av.neckS.1": "Écharpe", "av.neckS.2": "Nœud papillon", "av.neckS.3": "Collier", "av.hairS.6": "Carré", "av.hairS.7": "Queue de cheval", "av.hairS.8": "Couettes", "av.hairS.9": "Banane", "av.beardS.4": "Barbe de 3 jours", "av.beardS.5": "Moustache à guidon", "av.glassesS.4": "Papillon", "tut.how": "Tutoriel", "tut.next": "Suivant", "tut.back": "Retour", "tut.skip": "Passer", "tut.start": "On tire !", "tut.hud.t": "L'écran de jeu", "tut.hud.pause": "Pause : tout s'arrête, les clients aussi.", "tut.hud.lvl": "Niv. 4 · 0/4 — niveau et clients servis. Servez-en 4 pour passer au suivant.", "tut.hud.lives": "Cœurs : tous les 2 clients perdus, vous en perdez un. Le ½ indique que vous en avez déjà perdu un.", "tut.hud.coins": "Pièces : gagnées en tirant bien, dépensées à la boutique.", "tut.hud.queue": "File de clients : touchez un client pour prendre la commande. La barre est sa patience : à zéro, il s'en va !", "tut.hud.order": "Bandeau de commande : nom, bière demandée et bonne mousse.", "tut.how.t": "Comment tirer", "tut.how1": "Touchez un client dans la file.", "tut.how2": "Choisissez le bon verre pour ce style : se tromper coûte des points.", "tut.how3": "Maintenez TIRER et inclinez le téléphone : commencez incliné et redressez au fur et à mesure. Trop incliné, la bière déborde !", "tut.how4": "À gauche l'inclinaison (zone verte = bonne), à droite la quantité de bière et de mousse dans le verre.", "tut.how5": "Appuyez sur SERVIR quand niveau et mousse sont bons. Si le téléphone n'est pas droit, utilisez CALIBRER.", "tut.how6": "Imprévu : si le fût est vide, touchez CHANGER le plus vite possible, puis CONTINUER.", "tut.styles.t": "Styles et verres", "tut.styles.d": "Chaque style se sert dans son propre verre. Choisissez toujours le bon !", "tut.unlock": "dès le niv. {n}", "tut.coin.t": "Pièces et bonus", "tut.coin1": "Tirez bien pour gagner des pièces : les PARFAITS et les combos rapportent plus.", "tut.coin2": "Dépensez-les à la boutique : patience, cœurs en plus, pourboires, robinets et chapeaux, sans limite.", "tut.coin3": "Les bonus sont très utiles : récupérez le bonus quotidien chaque jour et remplissez les objectifs !", "tut.coin4": "À la fin d'un niveau, regardez la vidéo pour DOUBLER les pièces gagnées.", "tut.rot.t": "Gardez l'écran à la verticale", "tut.rot.b": "On joue à la verticale. Pour une meilleure expérience, activez le verrouillage de l'orientation portrait de votre téléphone : l'écran ne pivotera plus quand vous l'inclinez.", "toast.gyroStale": "Le capteur ne répond pas. Réactivez-le dans les Réglages.", "zim.tag": "Venez nous voir !", "zim.sub": "Bière artisanale, cave et vin au tonneau", "zim.wait": "Continuer dans {n}…", "zim.where": "Via Varesina 22 · Jerago con Orago (VA), Italie", "set.tutorial": "Revoir le tutoriel"}, "de": {"av.eyes": "Augen", "av.gender": "Geschlecht", "av.genderS.0": "Mann", "av.genderS.1": "Frau", "av.earring": "Ohrringe", "av.earringS.0": "Keine", "av.earringS.1": "Stecker", "av.earringS.2": "Creole", "av.earringS.3": "Anhänger", "av.lips": "Lippenstift", "av.lipsS.0": "Keiner", "av.lipsS.1": "Rosa", "av.lipsS.2": "Rot", "av.lipsS.3": "Pflaume", "av.face": "Gesicht", "av.faceS.0": "Glatt", "av.faceS.1": "Sommersprossen", "av.faceS.2": "Leberfleck", "av.faceS.3": "Narbe", "av.neck": "Hals", "av.neckS.0": "Keiner", "av.neckS.1": "Schal", "av.neckS.2": "Fliege", "av.neckS.3": "Kette", "av.hairS.6": "Bob", "av.hairS.7": "Pferdeschwanz", "av.hairS.8": "Zöpfe", "av.hairS.9": "Tolle", "av.beardS.4": "Dreitagebart", "av.beardS.5": "Zwirbelbart", "av.glassesS.4": "Katzenaugen", "tut.how": "Tutorial", "tut.next": "Weiter", "tut.back": "Zurück", "tut.skip": "Überspringen", "tut.start": "Los geht's!", "tut.hud.t": "Der Spielbildschirm", "tut.hud.pause": "Pause: alles steht still, auch die Gäste.", "tut.hud.lvl": "Lvl. 4 · 0/4 — Level und bediente Gäste. Bediene 4, um ins nächste Level zu kommen.", "tut.hud.lives": "Herzen: alle 2 verlorenen Gäste verlierst du eins. Das ½ zeigt, dass du schon einen verloren hast.", "tut.hud.coins": "Münzen: verdienst du mit gutem Zapfen, ausgegeben im Shop.", "tut.hud.queue": "Warteschlange: tippe einen Gast an, um die Bestellung aufzunehmen. Der Balken ist seine Geduld: ist er leer, geht er!", "tut.hud.order": "Bestellbanner: Name, gewünschtes Bier und die richtige Schaumkrone.", "tut.how.t": "So wird gezapft", "tut.how1": "Tippe einen Gast in der Schlange an.", "tut.how2": "Wähle das richtige Glas für den Stil: ein falsches kostet Punkte.", "tut.how3": "Halte ZAPFEN gedrückt und neige das Handy: starte geneigt und richte dich beim Füllen auf. Zu schräg und das Bier läuft über!", "tut.how4": "Links siehst du die Neigung (grüne Zone = richtig), rechts wie viel Bier und Schaum im Glas sind.", "tut.how5": "Drücke SERVIEREN, wenn Füllstand und Schaum stimmen. Ist das Handy nicht gerade, nutze KALIBRIEREN.", "tut.how6": "Überraschung: Ist das Fass leer, tippe so schnell du kannst auf WECHSELN, dann auf WEITER.", "tut.styles.t": "Stile und Gläser", "tut.styles.d": "Jeder Stil wird in seinem eigenen Glas serviert. Wähle immer das richtige!", "tut.unlock": "ab Lvl. {n}", "tut.coin.t": "Münzen und Boni", "tut.coin1": "Zapfe gut, um Münzen zu verdienen: PERFEKTE Zapfungen und Combos bringen mehr.", "tut.coin2": "Gib sie im Shop aus: Geduld, Extraherzen, Trinkgeld, Zapfhähne und Hüte, ohne Limit.", "tut.coin3": "Boni sind sehr nützlich: hole jeden Tag den Tagesbonus ab und erfülle die Ziele!", "tut.coin4": "Schau dir am Levelende das Video an und VERDOPPLE deine verdienten Münzen.", "tut.rot.t": "Bildschirm hochkant halten", "tut.rot.b": "Gespielt wird hochkant. Aktiviere für das beste Spielerlebnis die Hochformat-Sperre deines Handys, damit sich der Bildschirm beim Neigen nicht dreht.", "toast.gyroStale": "Der Sensor reagiert nicht. Aktiviere ihn in den Einstellungen neu.", "zim.tag": "Besuch uns!", "zim.sub": "Craft-Bier, Weinhandlung und offener Wein", "zim.wait": "Weiter in {n}…", "zim.where": "Via Varesina 22 · Jerago con Orago (VA), Italien", "set.tutorial": "Tutorial wiederholen"}};
   Object.keys(S2).forEach((l) => Object.assign(BB.I18n.dict[l], S2[l]));
+  const S3 = {"it": {"mode.title": "Scegli la modalità", "mode.body": "Normale: spillatura guidata, ideale per iniziare. Hard: spillatura a più tempi come nei locali veri (3 tempi, spillatura belga, doppia spillatura della stout…): serve più tecnica e le monete valgono ×1,5.", "mode.normal": "Normale", "mode.hard": "Hard mode", "mode.hardTag": "Hard", "home.tut": "Tutorial", "glass.nonic": "Pinta inglese", "rc.fill": "Versa inclinato (~{t}°) fino al {to}%", "rc.top": "Raddrizza e versa fino al {to}%", "rc.head": "Bicchiere dritto: forma la testa di schiuma sopra il bordo", "rc.rest": "Rubinetto chiuso, bicchiere dritto: la schiuma si assesta ({s}s)", "rc.restBad": "Chiudi il rubinetto e tieni il bicchiere dritto!", "rc.cut": "Spatola: bicchiere dritto e rubinetto chiuso, taglia la schiuma in eccesso", "rc.done": "Spillatura completata: premi {serve}", "tip.method": "Segui i passaggi della ricetta: ogni stile ha la sua spillatura.", "tut.hard.t": "Hard mode", "tut.hard.b": "Spillatura vera, a più tempi. Pils, Helles e Bock in 3 tempi: inclinato, riposo, testa di schiuma. Stout e Porter a doppia spillatura con pausa di assestamento. Tripel e Quadrupel alla belga, con taglio della schiuma con la spatola. IPA e Double IPA delicate, con una breve sosta. Bitter con pausa tra i due colpi. Le istruzioni compaiono sopra il bicchiere."}, "en": {"mode.title": "Choose a mode", "mode.body": "Normal: guided pour, great to start. Hard: multi-stage pours like real bars (3-stage pour, Belgian pour, stout two-part pour…): more technique, coins ×1.5.", "mode.normal": "Normal", "mode.hard": "Hard mode", "mode.hardTag": "Hard", "home.tut": "Tutorial", "glass.nonic": "English pint", "rc.fill": "Pour tilted (~{t}°) up to {to}%", "rc.top": "Straighten and pour up to {to}%", "rc.head": "Glass upright: build the foam head above the rim", "rc.rest": "Tap closed, glass upright: the foam settles ({s}s)", "rc.restBad": "Close the tap and keep the glass upright!", "rc.cut": "Spatula: glass upright, tap closed, cut off the excess foam", "rc.done": "Pour complete: press {serve}", "tip.method": "Follow the recipe steps: every style has its own pour.", "tut.hard.t": "Hard mode", "tut.hard.b": "Real multi-stage pouring. Pils, Helles and Bock in 3 stages: tilted, rest, foam head. Stout and Porter as a two-part pour with a settling pause. Tripel and Quadrupel the Belgian way, cutting the head with the spatula. IPA and Double IPA gently, with a short rest. Bitter with a pause between the two pulls. Instructions appear above the glass."}, "fr": {"mode.title": "Choisis le mode", "mode.body": "Normal : tirage guidé, idéal pour débuter. Hard : tirage en plusieurs temps comme dans les vrais bars (3 temps, tirage belge, double tirage de la stout…) : plus de technique et pièces ×1,5.", "mode.normal": "Normal", "mode.hard": "Mode Hard", "mode.hardTag": "Hard", "home.tut": "Tutoriel", "glass.nonic": "Pinte anglaise", "rc.fill": "Verse incliné (~{t}°) jusqu'à {to}%", "rc.top": "Redresse et verse jusqu'à {to}%", "rc.head": "Verre droit : forme la mousse au-dessus du bord", "rc.rest": "Robinet fermé, verre droit : la mousse se stabilise ({s}s)", "rc.restBad": "Ferme le robinet et garde le verre droit !", "rc.cut": "Spatule : verre droit, robinet fermé, coupe l'excès de mousse", "rc.done": "Tirage terminé : appuie sur {serve}", "tip.method": "Suis les étapes de la recette : chaque style a son tirage.", "tut.hard.t": "Mode Hard", "tut.hard.b": "Un vrai tirage en plusieurs temps. Pils, Helles et Bock en 3 temps : incliné, repos, mousse. Stout et Porter en double tirage avec pause de stabilisation. Tripel et Quadrupel à la belge, avec coupe de la mousse à la spatule. IPA et Double IPA en douceur, avec une courte pause. Bitter avec une pause entre les deux coups. Les instructions s'affichent au-dessus du verre."}, "de": {"mode.title": "Modus wählen", "mode.body": "Normal: geführtes Zapfen, ideal zum Einstieg. Hard: mehrstufiges Zapfen wie in echten Kneipen (3 Züge, belgisch, doppeltes Zapfen beim Stout…): mehr Technik und Münzen ×1,5.", "mode.normal": "Normal", "mode.hard": "Hard-Modus", "mode.hardTag": "Hard", "home.tut": "Tutorial", "glass.nonic": "Englisches Pint", "rc.fill": "Geneigt einschenken (~{t}°) bis {to}%", "rc.top": "Aufrichten und bis {to}% einschenken", "rc.head": "Glas gerade: Schaumkrone über dem Rand aufbauen", "rc.rest": "Hahn zu, Glas gerade: der Schaum setzt sich ({s}s)", "rc.restBad": "Hahn schließen und Glas gerade halten!", "rc.cut": "Spatel: Glas gerade, Hahn zu, überschüssigen Schaum abstreichen", "rc.done": "Fertig gezapft: {serve} drücken", "tip.method": "Folge den Schritten des Rezepts: jede Sorte hat ihr eigenes Zapfen.", "tut.hard.t": "Hard-Modus", "tut.hard.b": "Echtes mehrstufiges Zapfen. Pils, Helles und Bock in 3 Zügen: geneigt, Pause, Schaumkrone. Stout und Porter als Doppelzapfen mit Setzpause. Tripel und Quadrupel nach belgischer Art, mit Abstreichen des Schaums per Spatel. IPA und Double IPA sanft, mit kurzer Pause. Bitter mit Pause zwischen den beiden Zügen. Die Anweisungen erscheinen über dem Glas."}};
+  Object.keys(S3).forEach((l) => Object.assign(BB.I18n.dict[l], S3[l]));
 })(typeof globalThis !== 'undefined' ? globalThis : this);
 
 /* ---- game.js ---- */
@@ -1937,9 +2047,9 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
     // ---------- avvio / ripresa ----------
     hasSave() { return this.save.hasGame(); }
 
-    startNew() {
+    startNew(hard) {
       this.save.newGame();
-      this._createSession(1);
+      this._createSession(1, false, !!hard);
       this._enterLevel();
     }
     continueGame() {
@@ -1947,19 +2057,20 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       if (!s) { this._createSession(this.progress.level); }
       else {
         const idx = Math.min(Math.max(0, s.idx), BB.CONFIG.perLevel - 1);
-        this.session = { level: s.level, seed: s.seed, idx, lives: s.lives, results: s.results.slice(0, idx), bonus: false };
+        this.session = { level: s.level, seed: s.seed, idx, lives: s.lives, results: s.results.slice(0, idx), bonus: false, hard: !!s.hard };
         this.pool = BB.LevelManager.generate(s.level, s.seed, 0, false);
       }
       this._enterLevel();
     }
-    _createSession(level, bonus) {
+    _createSession(level, bonus, hard) {
       const seed = this.seedFn();
-      this.session = { level, seed, idx: 0, lives: this.maxLives, results: [], bonus: !!bonus };
+      if (hard == null) hard = this.session ? !!this.session.hard : !!(this.save.data.session && this.save.data.session.hard);
+      this.session = { level, seed, idx: 0, lives: this.maxLives, results: [], bonus: !!bonus, hard: !!hard };
       this.pool = BB.LevelManager.generate(level, seed, 0, !!bonus);
       this._persist();
     }
     _persist() {
-      this.save.data.session = this.session ? { level: this.session.level, seed: this.session.seed, idx: this.session.idx, lives: this.session.lives, results: this.session.results.slice(), bonus: !!this.session.bonus } : null;
+      this.save.data.session = this.session ? { level: this.session.level, seed: this.session.seed, idx: this.session.idx, lives: this.session.lives, results: this.session.results.slice(), bonus: !!this.session.bonus, hard: !!this.session.hard } : null;
       this.save.data.progress.played = true;
       this._syncUnlocks();
       this.save.save();
@@ -2091,7 +2202,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
     }
     spillContinue() {
       const sp = this.spill; if (!sp || !sp.wait || sp.waitT < 0.9 || !this.order) return false;
-      sp.wait = false; this.model = new BB.PourModel(this.glass, this.style, this.order); // bicchiere nuovo, stesso ordine
+      sp.wait = false; this.model = new BB.PourModel(this.glass, this.style, this.order, { hard: !!(this.session && this.session.hard) }); // bicchiere nuovo, stesso ordine
       this.emit('spillResume'); return true;
     }
     kegTap() { // ogni tocco avvicina il fusto nuovo; al terzo è collegato
@@ -2117,7 +2228,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       if (this.state !== 'choose' || !this.order || !BB.GLASSES[id]) return false;
       if (id !== this.order.glassId) { this.wrongPicks++; this.order.wrongPicks = this.wrongPicks; this.emit('wrongGlass', { id, count: this.wrongPicks }); return false; }
       this.chosenGlassId = id; this.pourCount = (this.pourCount | 0) + 1;
-      this.model = new BB.PourModel(this.glass, this.style, this.order);
+      this.model = new BB.PourModel(this.glass, this.style, this.order, { hard: !!(this.session && this.session.hard) });
       this.setState('play');
       this.emit('glass', id);
       return true;
@@ -2178,7 +2289,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       res.combo = this.combo;
       const base = Math.round(res.score / 10), pb = res.perfect ? 5 : 0, cb = this.combo >= 2 ? Math.min(this.combo, 6) * 2 : 0;
       res.coinsPerfect = pb; res.coinsCombo = cb;
-      res.coins = Math.round((base + pb + cb) * M.tipMult(this.save));
+      res.coins = Math.round((base + pb + cb) * M.tipMult(this.save) * (this.session && this.session.hard ? 1.5 : 1));
       this.progress.coins += res.coins; this.levelCoins = (this.levelCoins | 0) + res.coins;
       st.served++; if (res.perfect) st.perfect++; st.bestCombo = Math.max(st.bestCombo, this.combo);
     }
@@ -3068,6 +3179,8 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       // confine birra/schiuma desiderato
       const yB = bot - o.qty * (1 - o.foamTarget) * h; c.setLineDash([3, 3]); c.strokeStyle = 'rgba(255,255,255,0.9)'; c.lineWidth = 1.5;
       c.beginPath(); c.moveTo(x - 6, yB); c.lineTo(x + w + 4, yB); c.stroke(); c.setLineDash([]);
+      const cph = m.coach && m.coach.phase;
+      if (cph && cph.k === 'fill') { const yP = bot - Math.min(1.08, cph.to) * o.qty * h; c.setLineDash([2, 4]); c.strokeStyle = '#6fd0ff'; c.lineWidth = 2; c.beginPath(); c.moveTo(x - 8, yP); c.lineTo(x + w + 6, yP); c.stroke(); c.setLineDash([]); }
       c.textAlign = 'right';
       c.fillStyle = '#f4ecd8'; c.font = '700 13px ' + FONT; c.fillText(BB.I18n.t('gauge.full') + ' ' + Math.round(m.total / cap * 100) + '%', x + w + 12, bot + 14);
       c.font = '700 12px ' + FONT; c.fillStyle = game.style.foamColor; c.fillText(BB.I18n.t('gauge.foam') + ' ' + Math.round(m.foamPct * 100) + '%', x + w + 12, bot + 27);
@@ -3078,7 +3191,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       c.fillStyle = 'rgba(0,0,0,0.45)'; this._rr(lx, top, w, h, 8); c.fill();
       const yOf = (deg) => bot - (deg / 90) * h;
       if (view.hints) {
-        const ideal = BB.Pour.idealTilt(game.style, m.total / m.targetVol, m.geo);
+        const ideal = m.coach ? m.coach.ideal(m.total / m.targetVol) : BB.Pour.idealTilt(game.style, m.total / m.targetVol, m.geo);
         c.fillStyle = 'rgba(110,220,140,0.35)'; c.fillRect(lx, yOf(Math.min(90, ideal + 9)), w, yOf(Math.max(0, ideal - 9)) - yOf(Math.min(90, ideal + 9)));
         c.strokeStyle = '#6fe08e'; c.lineWidth = 2; c.beginPath(); c.moveTo(lx - 4, yOf(ideal)); c.lineTo(lx + w + 4, yOf(ideal)); c.stroke();
       }
@@ -3156,7 +3269,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
     let toastT = 0;
     function toast(msg, ms) { const t = $('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), ms || 2200); }
     function dialog(title, body, buttons) {
-      $('dialogPanel').innerHTML = '<h2>' + esc(title) + '</h2><p>' + esc(body) + '</p><div class="stack" id="dlgBtns"></div>';
+      $('dialogPanel').innerHTML = '<h2>' + esc(title) + '</h2><p style="white-space:pre-line">' + esc(body) + '</p><div class="stack" id="dlgBtns"></div>';
       buttons.forEach((b) => { const el = document.createElement('button'); el.className = 'btn' + (b.primary ? ' primary' : ''); el.textContent = b.label; el.onclick = () => { $('scrDialog').hidden = true; b.fn && b.fn(); }; $('dlgBtns').appendChild(el); });
       $('scrDialog').hidden = false;
     }
@@ -3278,7 +3391,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       $('btnContinue').disabled = !has;
       const p = save.data.progress;
       $('homeStats').hidden = !has;
-      if (has) $('homeStats').textContent = T('home.stats', { l: save.data.session ? save.data.session.level : p.level, c: p.coins });
+      if (has) $('homeStats').textContent = T('home.stats', { l: save.data.session ? save.data.session.level : p.level, c: p.coins }) + (save.data.session && save.data.session.hard ? ' · ' + T('mode.hardTag') : '');
       $('btnAds').hidden = monet.adsRemoved;
       $('homeBadge').textContent = monet.isTestMode ? T('badge.test') : '';
       $('homeBadge').hidden = !monet.isTestMode;
@@ -3374,7 +3487,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       };
     }
     // ---------- Tutorial (stili e bicchieri si generano dai dati: nuovi stili/bicchieri compaiono da soli) ----------
-    const TUT = ['hud', 'how', 'styles', 'coins', 'rot'];
+    const TUT = ['hud', 'how', 'styles', 'hard', 'coins', 'rot'];
     function tutorial(done) {
       let i = 0;
       const li = (icon, txt) => '<li><span class="ti">' + icon + '</span><span>' + esc(txt) + '</span></li>';
@@ -3389,6 +3502,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
             return '<div class="tutG"><div class="gs">' + glassSvg(BB.GLASSES[gid]) + '</div><div><b>' + esc(T('glass.' + gid)) + '</b><small>' + names.join(' · ') + '</small></div></div>';
           }).join('') + '</div>';
         }
+        else if (id === 'hard') h = '<h2>' + T('tut.hard.t') + '</h2><p>' + esc(T('tut.hard.b')) + '</p>';
         else if (id === 'coins') h = '<h2>' + T('tut.coin.t') + '</h2><ul class="tutL">' + li('◉', T('tut.coin1')) + li('🛒', T('tut.coin2')) + li('🎁', T('tut.coin3')) + li('📺', T('tut.coin4')) + '</ul>';
         else h = '<h2>🔒 ' + T('tut.rot.t') + '</h2><p>' + esc(T('tut.rot.b')) + '</p>';
         h += '<div class="tdots">' + TUT.map((_, k) => '<u' + (k === i ? ' class="on"' : '') + '></u>').join('') + '</div><div class="tbtn">' + (i > 0 ? '<button class="btn" id="tBack">' + T('tut.back') + '</button>' : (last ? '' : '<button class="btn ghost" id="tSkip">' + T('tut.skip') + '</button>')) + '<button class="btn primary" id="tNext">' + T(last ? 'tut.start' : 'tut.next') + '</button></div>';
@@ -3400,7 +3514,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       const finish = () => { settings.tutDone = 1; save.save(); $('scrTut').hidden = true; done && done(); };
       $('toast').classList.remove('show'); render(); show('scrTut');
     }
-    const tutorialOnce = () => new Promise((res) => { if (settings.tutDone) res(); else tutorial(res); });
+    const tutorialOnce = () => Promise.resolve(); // il tutorial non si apre più da solo: si vede dal tasto in home
     $('btnTutorial').onclick = () => { click(); tutorial(() => openSettings(settingsFrom)); };
 
     // ---------- Banner Zimurgo: dopo il livello 2 e poi ogni 4 livelli, 4 secondi ----------
@@ -3431,14 +3545,16 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
     $('btnShop').onclick = () => { click(); openShop('home'); };
     $('btnAch').onclick = () => { click(); renderAch(); };
     $('btnContinue').onclick = async () => { click(); await ensureSensors(); await tutorialOnce(); game.continueGame(); };
+    const beginNew = (hard) => async () => { await ensureSensors(); await tutorialOnce(); game.startNew(hard); };
     $('btnNew').onclick = () => {
       click();
-      if (!game.hasSave()) { ensureSensors().then(tutorialOnce).then(() => game.startNew()); return; }
-      dialog(T('dlg.newTitle'), T('dlg.newBody'), [
-        { label: T('dlg.yes'), primary: true, fn: async () => { await ensureSensors(); await tutorialOnce(); game.startNew(); } },
+      dialog(T('mode.title'), T('mode.body') + (game.hasSave() ? '\n\n' + T('dlg.newBody') : ''), [
+        { label: T('mode.normal'), primary: true, fn: beginNew(false) },
+        { label: T('mode.hard'), fn: beginNew(true) },
         { label: T('cancel') },
       ]);
     };
+    $('btnTutHome').onclick = () => { click(); tutorial(() => showHome()); };
     $('btnAds').onclick = async () => {
       click(); const r = await monet.buyRemoveAds();
       if (r.status === 'purchased') { toast(T('ads.removed')); showHome(); }
@@ -3582,6 +3698,15 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       $('barLives').setAttribute('aria-label', T('lives.aria2', { n: game.lives }) + (half ? T('lives.aria3', { k: BB.CONFIG.lostPerHeart }) : ''));
       $('barCoins').textContent = save.data.progress.coins + ' ◉';
     }
+    // Hard mode: istruzione del passaggio corrente della ricetta
+    function coachHint(m) {
+      const c = m.coach, p = c.phase, n = c.r.length;
+      if (!p) return [T('rc.done', { serve: T('serve').toUpperCase() }), ''];
+      const pre = (c.i + 1) + '/' + n + ' · ';
+      if (p.k === 'fill') return [pre + (p.to > 1 ? T('rc.head') : p.tilt[0] >= 30 ? T('rc.fill', { t: Math.round(p.tilt[0]), to: Math.round(p.to * 100) }) : T('rc.top', { to: Math.round(p.to * 100) })), ''];
+      if (p.k === 'rest') return m.flow > 0.05 ? [T('rc.restBad'), 'bad'] : [pre + T('rc.rest', { s: Math.max(1, Math.ceil(p.sec - c.st[c.i].prog)) }), ''];
+      return m.flow > 0.05 ? [T('rc.restBad'), 'bad'] : [pre + T('rc.cut'), ''];
+    }
     function hintText() {
       if (game.spill && (game.state === 'select' || game.state === 'choose' || game.state === 'play')) { if (game.spill.wait) return [T('spill.ready'), '']; if (game.spill.on) return [T('spill.hint'), 'bad']; }
       if (game.keg && game.keg.wait && (game.state === 'select' || game.state === 'choose' || game.state === 'play')) return [T('keg.ready'), ''];
@@ -3591,9 +3716,10 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       const m = game.model, o = game.order; if (!m) return ['', ''];
       const touch = sensors.mode !== 'gyro', f = m.total / m.targetVol;
       if (game.state === 'settling') return [T('hint.settle'), ''];
-      if (f > 0.93 && m.flow > 0.05) return [T('hint.close'), 'bad'];
+      if (!m.coach && f > 0.93 && m.flow > 0.05) return [T('hint.close'), 'bad'];
       if (m.spillRate > 0) return [T('hint.spill'), 'bad'];
       if (m.waste > 8 && m.tilt > 62) return [T('hint.waste'), 'bad'];
+      if (m.coach) { const ch = coachHint(m); if (ch) return ch; }
       if (m.poured < 1 && m.flow < 0.05) return [T(touch ? 'hint.startTouch' : 'hint.startTilt', { pour: T('pour') }), ''];
       if (m.flow < 0.05) return [f >= 0.7 ? T('hint.serve', { serve: T('serve').toUpperCase() }) : T('hint.closedKeep'), ''];
       if (!settings.hints) return ['', ''];
@@ -3798,7 +3924,8 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
     new ResizeObserver(() => { renderer.resize(); layoutStrip(); }).observe($('app'));
 
     BB.I18n.applyStatic(document); buildLangSegs(); buildPicker(); applyMode(); showHome(); requestAnimationFrame(frame);
-    if (!player.set) { player.look = AV.random(); openAvatar('home'); }
+    if (!player.set) player.look = AV.random();
+    if (!player.set) openAvatar('home');
     // per test e debug
     g.__bb = { game, save, monet, sensors, renderer, provider, audio };
   };
