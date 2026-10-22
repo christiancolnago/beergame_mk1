@@ -56,12 +56,12 @@ button:focus-visible, input:focus-visible { outline: 3px solid var(--amber); out
 .lives { color: var(--bad); letter-spacing: .12em; }
 .iconbtn { pointer-events: auto; width: 40px; height: 40px; border-radius: 12px; background: rgba(0,0,0,.55); border: 1px solid var(--line); display: grid; place-items: center; }
 .iconbtn svg { width: 18px; height: 18px; fill: var(--ink); }
-#order { background: linear-gradient(180deg, var(--panel-2), var(--panel)); border: 1px solid var(--brass-dark); border-radius: 14px; padding: 5px 10px; display: grid; grid-template-columns: auto 1fr; gap: 0 10px; align-items: center; box-shadow: 0 6px 18px rgba(0,0,0,.45); }
-#swatch { grid-row: span 3; width: 28px; height: 38px; border-radius: 4px 4px 9px 9px; border: 2px solid rgba(255,255,255,.55); }
-#oWho { font-family: var(--ui); font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-dim); }
-#oWhat { font-family: var(--display); font-size: 17px; line-height: 1.1; }
-#oDet { font-family: var(--ui); font-size: 15px; font-weight: 600; color: var(--amber); }
-#oTime { grid-column: 1 / -1; height: 5px; border-radius: 3px; background: rgba(255,255,255,.12); overflow: hidden; margin-top: 4px; }
+#order { background: linear-gradient(180deg, var(--panel-2), var(--panel)); border: 1px solid var(--brass-dark); border-radius: 14px; padding: 3px 10px 4px; display: grid; grid-template-columns: auto 1fr auto; gap: 0 8px; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,.4); }
+#swatch { grid-row: span 2; width: 20px; height: 28px; border-radius: 4px 4px 9px 9px; border: 2px solid rgba(255,255,255,.55); }
+#oWho { grid-column: 2 / -1; font-family: var(--ui); font-size: 11px; line-height: 1.15; letter-spacing: .06em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-transform: uppercase; color: var(--ink-dim); }
+#oWhat { font-family: var(--display); font-size: 15px; line-height: 1.1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#oDet { font-family: var(--ui); font-size: 13px; font-weight: 600; color: var(--amber); white-space: nowrap; }
+#oTime { grid-column: 1 / -1; height: 5px; border-radius: 3px; background: rgba(255,255,255,.12); overflow: hidden; margin-top: 3px; height: 4px; }
 #oTime i { display: block; height: 100%; background: var(--good); width: 100%; }
 
 /* comandi */
@@ -139,6 +139,7 @@ body.keg #kegBtn{display:block} body.keg #row,body.keg #picker,body.keg #tiltStr
 .screen { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px 16px; background: rgba(8,10,9,.78); backdrop-filter: blur(3px); overflow-y: auto; touch-action: pan-y; }
 .screen.solid { background: radial-gradient(120% 80% at 50% 0%, #2b3a33 0%, #101a16 60%); }
 .panel { width: 100%; max-width: 380px; background: linear-gradient(180deg, var(--panel-2), var(--panel)); border: 1px solid var(--brass-dark); border-radius: 18px; padding: 18px 18px 16px; box-shadow: 0 14px 40px rgba(0,0,0,.6); display: flex; flex-direction: column; gap: 12px; }
+.chip#barInfo { white-space: pre-line; line-height: 1.15; text-align: center; font-size: 14px; }
 .brow { display: grid; grid-template-columns: 38px 1fr auto; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 10px; background: rgba(255,255,255,.04); font-family: var(--ui); font-size: 16px; }
 .brow b { color: var(--brass); font-weight: 800; }
 .brow .bn { font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -201,7 +202,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
 .adbox { border: 2px dashed var(--bad); border-radius: 12px; padding: 14px; text-align: center; font-family: var(--ui); }
 .adbox strong { display: block; font-size: 22px; color: #ffb09e; letter-spacing: .06em; }
 .big { font-family: var(--display); font-size: 40px; text-align: center; }
-@media (max-height: 700px) { #pour { width: 76px; height: 76px; font-size: 12px; } #hint { font-size: 15px; } #oWhat { font-size: 17px; } #oDet { font-size: 15px; } .btn { min-height: 44px; } }
+@media (max-height: 700px) { #pour { width: 76px; height: 76px; font-size: 12px; } #hint { font-size: 15px; } #oWhat { font-size: 15px; } #oDet { font-size: 13px; } .btn { min-height: 44px; } }
 @media (max-height: 640px) { .title { font-size: 36px; } .panel { padding: 14px; gap: 9px; } .score { font-size: 44px; } }
 @media (prefers-reduced-motion: reduce) { .switch::after, #toast { transition: none; } }
 </style>
@@ -303,7 +304,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       <div class="coins" id="homeStats" hidden></div>
       <button class="btn primary" id="btnContinue" data-i="continue" style="min-height:58px;font-size:20px">Continua</button>
       <button class="btn" id="btnNew" data-i="new" style="min-height:54px">Nuova partita</button>
-      <div class="row2"><button class="btn" id="btnSerata" style="min-height:54px">🍺 <span data-i="ser.btn">Serata infinita</span></button><button class="btn" id="btnBoard" style="min-height:54px">🏆 <span data-i="ser.board">Classifica</span></button></div>
+      <button class="btn" id="btnBoard" style="min-height:54px">🏆 <span data-i="ser.board">Classifica</span></button>
       <div class="row2"><button class="btn" id="btnShop" style="min-height:54px">🛒 <span data-i="home.shop">Negozio</span></button><button class="btn" id="btnAch" style="min-height:54px">🏆 <span data-i="home.ach">Obiettivi</span></button></div>
       <div class="row2"><button class="btn" id="btnSettings" data-i="settings" style="min-height:54px">Impostazioni</button><button class="btn" id="btnTutHome" data-i="home.tut" style="min-height:54px">Tutorial</button></div>
       <button class="btn ghost" id="btnAds" data-i="removeAds" style="min-height:48px">Rimuovi pubblicità · € 3,99</button>
@@ -369,7 +370,6 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
   <!-- NEGOZIO / OBIETTIVI / BONUS GIORNALIERO -->
   <div class="screen" id="scrShop" hidden><div class="panel" id="shopPanel"></div></div>
   <div class="screen" id="scrTips" hidden><div class="panel" id="tipsPanel"></div></div>
-  <div class="screen" id="scrSerata" hidden><div class="panel" id="serPanel"></div></div>
   <div class="screen" id="scrBoard" hidden style="justify-content:flex-start"><div class="panel" id="boardPanel"></div></div>
   <div class="screen" id="scrAch" hidden><div class="panel" id="achPanel"></div></div>
   <div class="screen" id="scrDaily" hidden><div class="panel" id="dailyPanel"></div></div>
@@ -1085,7 +1085,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
     { id: 'brewery', name: 'Birreria', fromLevel: 13, wall: ['#38302a', '#19130f'], accent: '#e46f3a', counter: ['#8a5a2b', '#4a2f14'] },
   ];
 
-  BB.CONFIG = { flowRate: 85, lives: 3, passScore: 55, saveKey: 'bb_save_v2', perLevel: 4, lostPerHeart: 2, endlessLives: 4, healEvery: 5 };
+  BB.CONFIG = { flowRate: 85, lives: 3, passScore: 55, saveKey: 'bb_save_v2', perLevel: 4, lostPerHeart: 2 };
 })(typeof globalThis !== 'undefined' ? globalThis : this);
 
 /* ---- glassgeo.js ---- */
@@ -1521,15 +1521,9 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
   const BB = (g.BB = g.BB || {});
   const { clamp } = BB;
 
-  BB.hashStr = BB.hashStr || function (str) { let h = 2166136261 >>> 0; for (let i = 0; i < str.length; i++) h = Math.imul(h ^ str.charCodeAt(i), 16777619) >>> 0; return (h % 2147483000) + 1; };
   const LevelManager = {
     // Coda in tempo reale: capienza, ritmo degli arrivi (s) e pazienza base (s) dipendono dal livello.
-    // Serata infinita: la curva continua a salire anche dopo i livelli normali (pavimenti più bassi), ma con un tetto.
-    rules(level, endless) {
-      if (endless) {
-        const l = Math.min(level, 28);
-        return { maxQueue: l < 3 ? 3 : l < 12 ? 4 : 5, interval: Math.max(7.5, 21 - 1.0 * (l - 1)), patience: Math.max(21, 80 - 4 * (l - 1)), startCount: 2 };
-      }
+    rules(level) {
       return { maxQueue: level < 3 ? 3 : 4, interval: Math.max(9, 21 - 1.0 * (level - 1)), patience: Math.max(28, 80 - 4 * (level - 1)), startCount: 2 };
     },
     unlockedStyles(level) { return BB.STYLE_ORDER.filter((id) => BB.STYLES[id].unlockLevel <= level); },
@@ -1619,7 +1613,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       settings: { sfx: true, music: true, sens: 1.0, axis: 'roll', axisV: 1, tutDone: 0, hints: true, lang: '', neutral: { roll: 0, pitch: 0, tilt: 0, calibrated: false } },
       player: { name: '', set: false, look: { skin: 1, hairStyle: 1, hair: 1, beard: 0, glasses: 0, hat: 0, shirt: 1, apron: 0 } },
       purchases: { adsRemoved: false },
-      serata: { best: { normal: 0, hard: 0 }, bestServed: { normal: 0, hard: 0 }, plays: 0, nick: '', daily: { date: '', normal: 0, hard: 0 } },
+      lb: { best: 0, bestServed: 0, nick: '', run: { score: 0, served: 0, secs: 0 } }, // classifica online: record e serie in corso
       meta: { upg: { pat: 0, heart: 0, tip: 0 }, taps: [], tap: 'brass', hats: [], ach: [], daily: { last: '', streak: 0, best: 0 },
               stats: { served: 0, perfect: 0, bestCombo: 0, bonusDone: 0, threeStar: 0, spent: 0, lost: 0, keg: 0, kegFast: 0 } },
     };
@@ -1683,13 +1677,13 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
     hasGame() { return !!(this.data.session || this.data.progress.played); }
     // Nuova partita: azzera progressi e sblocchi, conserva impostazioni e acquisto permanente.
     newGame() {
-      const keep = { settings: this.data.settings, purchases: this.data.purchases, player: this.data.player, meta: this.data.meta, serata: this.data.serata, coins: this.data.progress.coins };
+      const keep = { settings: this.data.settings, purchases: this.data.purchases, player: this.data.player, meta: this.data.meta, lb: this.data.lb, coins: this.data.progress.coins };
       this.data = defaults();
       this.data.meta = keep.meta; this.data.progress.coins = keep.coins | 0; // negozio, obiettivi e monete restano
       this.data.settings = keep.settings;
       this.data.purchases = keep.purchases;
       this.data.player = keep.player;
-      if (keep.serata) this.data.serata = keep.serata;
+      if (keep.lb) this.data.lb = Object.assign({}, keep.lb, { run: { score: 0, served: 0, secs: 0 } }); // nuova partita: la serie riparte da zero, il record resta
       this.save();
       return this.data;
     }
@@ -2139,7 +2133,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
   Object.keys(S3).forEach((l) => Object.assign(BB.I18n.dict[l], S3[l]));
   const S4 = {"it": {"bt.pils": "Lager tedesca chiara, secca e amara, con luppolo erbaceo, floreale e speziato ben in evidenza. Il malto si sente appena e lascia spazio a un finale asciutto e croccante, con schiuma cremosa e persistente. Nasce in Germania intorno al 1870 adattando la Pilsner ceca all'acqua più dura e ai luppoli locali: più si sale verso nord, più è secca e amara.", "bt.ipa":"Pale ale britannica amara, di forza medio-alta e molto attenuata, con finale secco e aroma luppolato floreale, speziato o d'arancia. Colore da oro ad ambra, malto di pane e biscotto sullo sfondo, corpo medio-leggero. Nasce a Londra a fine Settecento come stock ale chiara spedita in India: forza, molto luppolo e alta attenuazione la aiutavano a viaggiare; il nome India Pale Ale si afferma intorno al 1830.","bt.aipa": "Pale ale americana luppolata, amara e di forza medio-alta: aromi di agrumi, fiori, pino e frutta tropicale, malto pulito e finale piuttosto secco. Colore da oro ad ambra rossiccia, corpo medio-leggero. L'Anchor Liberty Ale del 1975, fatta con luppolo Cascade, è considerata la prima versione craft moderna.", "bt.tripel": "Belgian ale forte e chiara, speziata di pepe e chiodi di garofano, con esteri di agrumi, amaro deciso e finale secco: l'alcol è ben nascosto. Molto carbonata, con schiuma persistente che lascia il tipico merletto belga sul bicchiere. È stata resa famosa dall'abbazia di Westmalle, che la produce dal 1934.", "bt.stout": "Nera, tostata, con un carattere di caffè; l'amaro va da equilibrato a secco. Alla spina con azoto è cremosa e vellutata, con una schiuma fitta e duratura color nocciola. Discende dalle porter londinesi: la versione di Dublino è più secca e amara, quella di Cork più dolce.", "bt.helles": "Lager dorata di Monaco, morbida e maltata ma non dolce, con luppolo appena speziato o erbaceo e amaro contenuto. Corpo medio, finale asciutto e molto bevibile. Creata a Monaco nel 1894 per competere con le Pilsner e spesso attribuita a Spaten: va bevuta freschissima.", "bt.quad": "Belgian Dark Strong Ale, detta anche Quadrupel: ambra scuro, malto ricco e tostato con note di uvetta, prugna, fichi e datteri, spezie delicate e un alcol morbido che scalda. Carbonazione alta e schiuma densa e cremosa. Westvleteren la produce già prima della Seconda guerra mondiale, poi sono arrivate Chimay e Rochefort: migliora con l'invecchiamento.", "bt.porter": "Birra inglese marrone scuro di forza moderata, con malto di pane tostato, cioccolato e caramello, tostatura mai bruciata e amaro contenuto. Corpo medio-leggero e schiuma beige. Nasce a Londra nei primi del Settecento ed è considerata l'antenata di tutte le stout.", "bt.bock": "Lager forte, scura e maltata, con note tostate di crosta di pane e caramello scuro, luppolo quasi assente e un finale non stucchevole. Corpo medio-pieno, con schiuma cremosa e abbondante. Nasce a Einbeck nel Medioevo; \"Bock\" in tedesco significa \"caprone\".", "bt.dipa": "Versione forte e super luppolata dell'American IPA: aroma intenso di agrumi, resina, frutta tropicale e a nocciolo, amaro alto ma non aspro e finale secco. Il malto resta pulito sullo sfondo e l'alcol ben integrato. Nata negli Stati Uniti alla fine degli anni Novanta, è stata resa popolare dalla Pliny the Elder (2000).", "bt.bitter": "Birra inglese da sessione, saporita ma rinfrescante: l'amaro domina, con malto di pane e biscotto, qualche nota di caramello ed esteri fruttati. Da ambra chiaro a rame, carbonazione bassa e schiuma contenuta. Tradizionalmente si serve a pompa da cask, con calma e poca anidride carbonica.", "bt.apa": "Pale ale americana di media forza, luppolata ma equilibrata e molto bevibile: agrumi, fiori, pino o frutta tropicale, malto di supporto, amaro moderato-alto e finale pulito. Da oro ad ambra, spesso limpida. È l'adattamento craft americano della pale ale inglese, resa popolare dalla Sierra Nevada Pale Ale (1980).", "bt.mild": "Ale inglese scura e leggera da sessione, maltata, con note di caramello, toffee, tostato o cioccolato e amaro basso. Corpo da leggero a medio, carbonazione bassa. \"Mild\" indicava in origine una birra non invecchiata; la maggior parte si aggira intorno al 3,2% e viene servita a cask.", "bt.oyster": "Stout scura e cremosa tradizionalmente abbinata alle ostriche, che in alcune versioni vengono usate nella produzione per una leggera sapidità salmastra. Base di caffè e cioccolato, corpo pieno e finale rotondo. I valori indicati sono indicativi.", "bt.btn": "Beer Tips", "bt.title": "Beer Tips", "bt.sub": "Gli stili che hai sbloccato: tocca uno stile per scoprirlo.", "bt.glass": "Bicchiere", "bt.temp": "Temperatura di servizio", "bt.abv": "Gradazione", "bt.ibu": "Amaro (IBU)", "bt.srm": "Colore (SRM)", "bt.back": "Indietro", "bt.code": "BJCP {c}", "bt.src": "Fonte: BJCP Style Guidelines 2021 (testi riassunti). Le temperature di servizio sono indicative.", "bt.nobjcp": "Stile non codificato dal BJCP.", "home.tut": "Tutorial e Disclaimer", "set.tutorial": "Tutorial e Disclaimer", "tut.disc.t": "Gioca in modo responsabile", "tut.disc.b": "Questo gioco è un passatempo e non vuole in alcun modo incitare al consumo di alcol. Le bevande alcoliche sono riservate ai maggiorenni, secondo la legge del tuo Paese. Se bevi, fallo con moderazione e consapevolezza: l'abuso di alcol fa male alla salute, non metterti alla guida dopo aver bevuto e niente alcol in gravidanza o se assumi farmaci. Le informazioni sugli stili sono a scopo culturale e informativo. Se pensi di avere un problema con l'alcol, parlane con il tuo medico o con un servizio di assistenza.", "tut.hard.b": "Spillatura vera, a più tempi. Pils, Helles e Bock in 3 tempi: inclinato, riposo, testa di schiuma. Stout, Porter e Oyster Stout a doppia spillatura con pausa di assestamento. Tripel e Quadrupel alla belga, con taglio della schiuma con la spatola. IPA, American IPA, Double IPA e APA delicate, con una breve sosta. Bitter e Mild con pausa tra i due colpi. Le istruzioni compaiono sopra il bicchiere.", "glass.nonic": "Pinta inglese"}, "en": {"bt.pils": "A pale, dry, bitter German lager with a prominent floral, herbal and spicy hop aroma. Malt shows briefly before a crisp, dry finish, under a creamy, long-lasting white head. First brewed in Germany in the early 1870s, adapting Czech Pilsner to harder water and local hops: the further north you go, the drier and more bitter it gets.", "bt.ipa":"A bitter, moderately strong, very well-attenuated British pale ale with a dry finish and a floral, spicy or orange-like hop aroma. Gold to amber, bready and biscuity malt in the background, medium-light body. It began in the late 1700s as a pale London stock ale shipped to India: strength, heavy hopping and high attenuation helped it travel, and the name India Pale Ale took hold around 1830.","bt.aipa": "A hop-forward, bitter, moderately strong pale American ale: citrus, floral, pine and tropical aromas, clean malt and a fairly dry finish. Colour from gold to reddish amber, medium-light body. Anchor Liberty Ale (1975, Cascade hops) is generally seen as the first modern American craft version.", "bt.tripel": "A strong, pale Belgian ale: peppery, clove-like spice, citrusy esters, firm bitterness and a dry finish, with the alcohol well hidden. Highly carbonated, with a lasting head that leaves Belgian lace on the glass. Popularised by the Westmalle abbey, which has brewed it since 1934.", "bt.stout": "Black and roasty with a coffee-like character; the balance runs from even to quite dry and bitter. On draught with nitrogen it is creamy and smooth under a thick, long-lasting tan head. It evolved from London porters: Dublin-style versions are drier and more bitter, Cork-style ones sweeter.", "bt.helles": "A golden Munich lager, smooth and malty without being sweet, with gentle spicy or herbal hops and restrained bitterness. Medium body, soft dry finish, very drinkable. Created in Munich in 1894 to compete with Pilsner-type beers and often credited to Spaten: drink it very fresh.", "bt.quad": "A Belgian Dark Strong Ale, also called Quadrupel: deep amber, rich toasty malt with raisin, plum, fig and date notes, gentle spice and a soft, warming alcohol. High carbonation and a dense, creamy head. Westvleteren was brewing it before WWII, followed by Chimay and Rochefort: it improves with age.", "bt.porter": "A moderate-strength dark brown English ale with bready, toasty malt, chocolate and caramel, restrained roast (never burnt) and modest bitterness. Medium-light body and a tan head. Born in London in the early 1700s, it is considered the ancestor of all stouts.", "bt.bock": "A strong, dark, malty German lager with toasty, bread-crust and dark caramel notes, almost no hop aroma and a finish that is not cloying. Medium-full body under a creamy, abundant head. It originated in Einbeck in the Middle Ages; \"Bock\" means \"ram\" in German.", "bt.dipa": "A stronger, intensely hoppy version of the American IPA: big citrus, resin, tropical and stone-fruit aromas, high but not harsh bitterness and a dry finish. Malt stays clean in the background and the alcohol well integrated. Born in the US in the late 1990s and popularised by Pliny the Elder (2000).", "bt.bitter": "An English session beer, flavourful yet refreshing: bitterness leads, with bready, biscuity malt, a little caramel and fruity esters. Pale amber to copper, low carbonation and a modest head. Traditionally served by hand pump from the cask, unhurried and with little carbonation.", "bt.apa": "An average-strength, hop-forward American pale ale that stays balanced and very drinkable: citrus, floral, pine or tropical hops, supportive malt, moderate to high bitterness and a clean finish. Gold to amber, often quite clear. The American craft take on English pale ale, popularised by Sierra Nevada Pale Ale (1980).", "bt.mild": "A dark, light, malt-focused English session ale with caramel, toffee, toast or chocolate notes and low bitterness. Light to medium body, low carbonation. \"Mild\" originally meant unaged beer; most examples sit around 3.2% ABV and are served on cask.", "bt.oyster": "A dark, creamy stout traditionally paired with oysters, which some versions use in the brewing for a light briny savouriness. Coffee and chocolate base, full body and a rounded finish. The figures shown are indicative.", "bt.btn": "Beer Tips", "bt.title": "Beer Tips", "bt.sub": "The styles you have unlocked: tap one to discover it.", "bt.glass": "Glass", "bt.temp": "Serving temperature", "bt.abv": "ABV", "bt.ibu": "Bitterness (IBU)", "bt.srm": "Colour (SRM)", "bt.back": "Back", "bt.code": "BJCP {c}", "bt.src": "Source: BJCP Style Guidelines 2021 (summarised). Serving temperatures are indicative.", "bt.nobjcp": "Not a style defined by the BJCP.", "home.tut": "Tutorial & Disclaimer", "set.tutorial": "Tutorial & Disclaimer", "tut.disc.t": "Play responsibly", "tut.disc.b": "This game is a pastime and is not meant to encourage alcohol consumption in any way. Alcoholic drinks are for adults only, according to the law of your country. If you drink, do so in moderation and with awareness: alcohol abuse harms your health, never drive after drinking, and avoid alcohol during pregnancy or if you take medication. The information on styles is for cultural and informational purposes. If you think you have a problem with alcohol, talk to your doctor or a support service.", "tut.hard.b": "Real multi-stage pouring. Pils, Helles and Bock in 3 stages: tilted, rest, foam head. Stout, Porter and Oyster Stout as a two-part pour with a settling pause. Tripel and Quadrupel the Belgian way, cutting the head with the spatula. IPA, American IPA, Double IPA and APA gently, with a short rest. Bitter and Mild with a pause between the two pulls. Instructions appear above the glass.", "glass.nonic": "English pint"}, "fr": {"bt.pils": "Lager allemande pâle, sèche et amère, avec un houblon floral, herbacé et épicé bien présent. Le malt se fait sentir brièvement avant une finale sèche et nette, sous une mousse crémeuse et persistante. Née en Allemagne vers 1870 en adaptant la Pilsner tchèque à une eau plus dure et aux houblons locaux : plus on monte vers le nord, plus elle est sèche et amère.", "bt.ipa":"Pale ale britannique amère, de force moyenne à élevée et très atténuée, à la finale sèche et à l'arôme houblonné floral, épicé ou d'orange. De l'or à l'ambre, malt de pain et de biscuit en arrière-plan, corps moyen-léger. Née à Londres à la fin du XVIIIe siècle comme stock ale pâle expédiée en Inde : force, beaucoup de houblon et forte atténuation l'aidaient à voyager ; le nom India Pale Ale s'impose vers 1830.","bt.aipa": "Pale ale américaine houblonnée, amère et de force moyenne à élevée : arômes d'agrumes, de fleurs, de pin et de fruits tropicaux, malt net et finale plutôt sèche. Couleur de l'or à l'ambre rougeâtre, corps moyen-léger. L'Anchor Liberty Ale (1975, houblon Cascade) est considérée comme la première version craft moderne.", "bt.tripel": "Ale belge forte et claire, épicée de poivre et de clou de girofle, avec des esters d'agrumes, une amertume nette et une finale sèche : l'alcool est bien caché. Très gazeuse, avec une mousse persistante qui laisse la dentelle belge sur le verre. Rendue célèbre par l'abbaye de Westmalle, qui la brasse depuis 1934.", "bt.stout": "Noire et torréfiée, avec un caractère de café ; l'amertume va de l'équilibré au sec. À la pression avec de l'azote, elle est crémeuse et veloutée sous une mousse épaisse et durable de couleur noisette. Issue des porters londoniens : la version de Dublin est plus sèche et amère, celle de Cork plus douce.", "bt.helles": "Lager dorée de Munich, souple et maltée sans être sucrée, avec un houblon légèrement épicé ou herbacé et une amertume retenue. Corps moyen, finale sèche et très désaltérante. Créée à Munich en 1894 pour concurrencer les Pilsner et souvent attribuée à Spaten : à boire très fraîche.", "bt.quad": "Belgian Dark Strong Ale, aussi appelée Quadrupel : ambre foncé, malt riche et toasté avec des notes de raisin sec, prune, figue et datte, épices délicates et un alcool doux qui réchauffe. Forte carbonatation et mousse dense et crémeuse. Westvleteren la brassait déjà avant la Seconde Guerre mondiale, puis sont venues Chimay et Rochefort : elle s'améliore en vieillissant.", "bt.porter": "Bière anglaise brun foncé de force modérée, avec du malt de pain grillé, du chocolat et du caramel, une torréfaction jamais brûlée et une amertume contenue. Corps moyen-léger et mousse beige. Née à Londres au début du XVIIIe siècle, elle est considérée comme l'ancêtre de toutes les stouts.", "bt.bock": "Lager forte, foncée et maltée, aux notes toastées de croûte de pain et de caramel foncé, presque sans houblon et à la finale jamais écœurante. Corps moyen-plein, mousse crémeuse et abondante. Née à Einbeck au Moyen Âge ; « Bock » signifie « bélier » en allemand.", "bt.dipa": "Version plus forte et très houblonnée de l'American IPA : arômes intenses d'agrumes, de résine et de fruits tropicaux et à noyau, amertume élevée mais pas agressive et finale sèche. Le malt reste net en arrière-plan et l'alcool bien intégré. Née aux États-Unis à la fin des années 1990 et popularisée par la Pliny the Elder (2000).", "bt.bitter": "Bière anglaise de session, savoureuse mais rafraîchissante : l'amertume domine, avec du malt de pain et de biscuit, un peu de caramel et des esters fruités. D'ambre clair à cuivre, faible carbonatation et mousse discrète. Traditionnellement servie à la pompe depuis le fût (cask), sans hâte et avec peu de gaz.", "bt.apa": "Pale ale américaine de force moyenne, houblonnée mais équilibrée et très buvable : agrumes, fleurs, pin ou fruits tropicaux, malt en soutien, amertume modérée à élevée et finale nette. De l'or à l'ambre, souvent limpide. L'adaptation craft américaine de la pale ale anglaise, popularisée par la Sierra Nevada Pale Ale (1980).", "bt.mild": "Ale anglaise foncée et légère de session, maltée, aux notes de caramel, toffee, grillé ou chocolat et à l'amertume faible. Corps léger à moyen, faible carbonatation. « Mild » désignait à l'origine une bière non vieillie ; la plupart tournent autour de 3,2 % et se servent au fût (cask).", "bt.oyster": "Stout foncée et crémeuse traditionnellement associée aux huîtres, que certaines versions utilisent dans le brassage pour une légère salinité. Base de café et de chocolat, corps plein et finale ronde. Les valeurs indiquées sont indicatives.", "bt.btn": "Beer Tips", "bt.title": "Beer Tips", "bt.sub": "Les styles débloqués : touche un style pour le découvrir.", "bt.glass": "Verre", "bt.temp": "Température de service", "bt.abv": "Degré", "bt.ibu": "Amertume (IBU)", "bt.srm": "Couleur (SRM)", "bt.back": "Retour", "bt.code": "BJCP {c}", "bt.src": "Source : BJCP Style Guidelines 2021 (textes résumés). Les températures de service sont indicatives.", "bt.nobjcp": "Style non codifié par le BJCP.", "home.tut": "Tutoriel et avertissement", "set.tutorial": "Tutoriel et avertissement", "tut.disc.t": "Joue de façon responsable", "tut.disc.b": "Ce jeu est un passe-temps et ne vise en aucun cas à encourager la consommation d'alcool. Les boissons alcoolisées sont réservées aux adultes, selon la loi de ton pays. Si tu bois, fais-le avec modération et conscience : l'abus d'alcool nuit à la santé, ne conduis jamais après avoir bu, et pas d'alcool pendant la grossesse ou sous traitement. Les informations sur les styles sont données à titre culturel et informatif. Si tu penses avoir un problème avec l'alcool, parles-en à ton médecin ou à un service d'aide.", "tut.hard.b": "Un vrai tirage en plusieurs temps. Pils, Helles et Bock en 3 temps : incliné, repos, mousse. Stout, Porter et Oyster Stout en double tirage avec pause de stabilisation. Tripel et Quadrupel à la belge, avec coupe de la mousse à la spatule. IPA, American IPA, Double IPA et APA en douceur, avec une courte pause. Bitter et Mild avec une pause entre les deux coups. Les instructions s'affichent au-dessus du verre.", "glass.nonic": "Pinte anglaise"}, "de": {"bt.pils": "Helles, trockenes, bitteres deutsches Lagerbier mit ausgeprägtem blumigem, kräuterigem und würzigem Hopfenaroma. Das Malz tritt nur kurz hervor, dann folgt ein knackig trockener Abgang unter einer cremigen, lange haltbaren Schaumkrone. Um 1870 in Deutschland entstanden, als das tschechische Pilsner an härteres Wasser und heimischen Hopfen angepasst wurde: je weiter nördlich, desto trockener und bitterer.", "bt.ipa":"Bitteres, mittelstarkes, sehr hoch vergorenes britisches Pale Ale mit trockenem Abgang und blumigem, würzigem oder orangenartigem Hopfenaroma. Von Gold bis Bernstein, brotiges und kekshaftes Malz im Hintergrund, mittelleichter Körper. Entstanden Ende des 18. Jahrhunderts als helles Londoner Stock Ale für den Versand nach Indien: Stärke, viel Hopfen und hohe Vergärung halfen ihm beim Transport; der Name India Pale Ale setzte sich um 1830 durch.","bt.aipa": "Hopfenbetontes, bitteres, mittelstarkes amerikanisches Pale Ale: Aromen von Zitrus, Blüten, Kiefer und tropischen Früchten, sauberes Malz und ein eher trockener Abgang. Farbe von Gold bis rötlichem Bernstein, mittelleichter Körper. Das Anchor Liberty Ale (1975, Cascade-Hopfen) gilt als erste moderne amerikanische Craft-Version.", "bt.tripel": "Starkes, helles belgisches Ale: pfeffrige, nelkenartige Würze, Zitrusester, feste Bittere und ein trockener Abgang, der Alkohol gut verborgen. Stark karbonisiert, mit lang haltendem Schaum, der das typische belgische Spitzenmuster am Glas hinterlässt. Berühmt gemacht von der Abtei Westmalle, die es seit 1934 braut.", "bt.stout": "Schwarz und röstig mit Kaffeecharakter; die Balance reicht von ausgewogen bis recht trocken und bitter. Vom Fass mit Stickstoff ist es cremig und samtig unter einer dicken, lange haltbaren hellbraunen Krone. Es entwickelte sich aus den Londoner Portern: die Dubliner Variante ist trockener und bitterer, die aus Cork süßer.", "bt.helles": "Goldenes Münchner Lagerbier, weich und malzig ohne süß zu sein, mit leicht würzigem oder kräuterigem Hopfen und zurückhaltender Bittere. Mittlerer Körper, weicher trockener Abgang, sehr süffig. 1894 in München geschaffen, um mit Pilsner-Bieren zu konkurrieren, oft Spaten zugeschrieben: am besten ganz frisch trinken.", "bt.quad": "Belgian Dark Strong Ale, auch Quadrupel genannt: tiefes Bernstein, reiches, röstiges Malz mit Noten von Rosine, Pflaume, Feige und Dattel, zarte Würze und ein weicher, wärmender Alkohol. Hohe Karbonisierung und dichte, cremige Krone. Westvleteren braute es schon vor dem Zweiten Weltkrieg, später folgten Chimay und Rochefort: es verbessert sich mit der Lagerung.", "bt.porter": "Dunkelbraunes englisches Bier mittlerer Stärke mit brotigem, getoastetem Malz, Schokolade und Karamell, nie verbrannter Röstung und moderater Bittere. Mittelleichter Körper und beige Krone. Im frühen 18. Jahrhundert in London entstanden und als Vorfahre aller Stouts angesehen.", "bt.bock": "Starkes, dunkles, malziges deutsches Lagerbier mit getoasteten Noten von Brotkruste und dunklem Karamell, fast ohne Hopfenaroma und einem nicht klebrigen Abgang. Mittel- bis vollmundig, mit cremiger, reichlicher Krone. Entstanden im Mittelalter in Einbeck; „Bock“ bedeutet auf Deutsch „Widder“.", "bt.dipa": "Stärkere, intensiv gehopfte Version des American IPA: kräftige Aromen von Zitrus, Harz, tropischen und Steinfrüchten, hohe, aber nicht harte Bittere und ein trockener Abgang. Das Malz bleibt sauber im Hintergrund, der Alkohol gut eingebunden. Ende der 1990er in den USA entstanden und durch Pliny the Elder (2000) populär geworden.", "bt.bitter": "Englisches Session-Bier, geschmackvoll und doch erfrischend: Die Bittere dominiert, dazu brotiges, kekshaftes Malz, etwas Karamell und fruchtige Ester. Von hellem Bernstein bis Kupfer, niedrige Karbonisierung und bescheidene Krone. Traditionell per Handpumpe vom Cask gezapft, ohne Eile und mit wenig Kohlensäure.", "bt.apa": "Amerikanisches Pale Ale mittlerer Stärke, hopfenbetont, aber ausgewogen und sehr süffig: Zitrus, Blüten, Kiefer oder tropische Früchte, stützendes Malz, mäßige bis hohe Bittere und ein sauberer Abgang. Von Gold bis Bernstein, oft klar. Die amerikanische Craft-Interpretation des englischen Pale Ale, populär durch Sierra Nevada Pale Ale (1980).", "bt.mild": "Dunkles, leichtes, malzbetontes englisches Session-Ale mit Noten von Karamell, Toffee, Toast oder Schokolade und niedriger Bittere. Leichter bis mittlerer Körper, niedrige Karbonisierung. „Mild“ bedeutete ursprünglich ungelagertes Bier; die meisten haben rund 3,2 % und werden vom Cask ausgeschenkt.", "bt.oyster": "Dunkles, cremiges Stout, traditionell zu Austern serviert; manche Versionen verwenden sie beim Brauen für eine leichte salzige Note. Kaffee- und Schokoladenbasis, vollmundig und mit rundem Abgang. Die Angaben sind Richtwerte.", "bt.btn": "Beer Tips", "bt.title": "Beer Tips", "bt.sub": "Die freigeschalteten Stile: Tippe auf einen Stil, um ihn zu entdecken.", "bt.glass": "Glas", "bt.temp": "Serviertemperatur", "bt.abv": "Alkoholgehalt", "bt.ibu": "Bittere (IBU)", "bt.srm": "Farbe (SRM)", "bt.back": "Zurück", "bt.code": "BJCP {c}", "bt.src": "Quelle: BJCP Style Guidelines 2021 (zusammengefasst). Serviertemperaturen sind Richtwerte.", "bt.nobjcp": "Kein vom BJCP definierter Stil.", "home.tut": "Tutorial & Hinweis", "set.tutorial": "Tutorial & Hinweis", "tut.disc.t": "Verantwortungsvoll spielen", "tut.disc.b": "Dieses Spiel ist ein Zeitvertreib und soll in keiner Weise zum Alkoholkonsum anregen. Alkoholische Getränke sind nur für Erwachsene, entsprechend dem Gesetz deines Landes. Wenn du trinkst, dann mit Maß und Bewusstsein: Alkoholmissbrauch schadet der Gesundheit, setze dich nach dem Trinken nie ans Steuer, und meide Alkohol in der Schwangerschaft oder bei Medikamenteneinnahme. Die Informationen zu den Stilen dienen der Kultur und Information. Wenn du glaubst, ein Problem mit Alkohol zu haben, sprich mit deinem Arzt oder einer Beratungsstelle.", "tut.hard.b": "Echtes mehrstufiges Zapfen. Pils, Helles und Bock in 3 Zügen: geneigt, Pause, Schaumkrone. Stout, Porter und Oyster Stout als Doppelzapfen mit Setzpause. Tripel und Quadrupel nach belgischer Art, mit Abstreichen des Schaums per Spatel. IPA, American IPA, Double IPA und APA sanft, mit kurzer Pause. Bitter und Mild mit Pause zwischen den beiden Zügen. Die Anweisungen erscheinen über dem Glas.", "glass.nonic": "Englisches Pint"}};
   Object.keys(S4).forEach((l) => Object.assign(BB.I18n.dict[l], S4[l]));
-  const S5 = {"it": {"ser.btn": "Serata infinita", "ser.board": "Classifica", "ser.hud": "Lv {l} · {s} pt", "ser.desc": "Serve più clienti che puoi: ogni 4 birre la serata si fa più dura. Hai 4 cuori e ogni 5 combo ne recuperi mezzo. Batti il tuo record e scala la classifica!", "ser.best": "Il tuo record", "ser.served": "Clienti serviti", "ser.servedShort": "clienti", "ser.rank": "Sei {r}° su {t}", "ser.dayRank": "{r}° oggi", "ser.play": "Gioca", "ser.daily": "Sfida del giorno", "ser.dailyDesc": "Stessi clienti per tutti, cambia a mezzanotte (UTC)", "ser.dailyBest": "oggi {n} pt", "ser.nickT": "Il tuo nickname", "ser.nickHint": "Appare in classifica insieme al punteggio. 3-14 caratteri: lettere, numeri, spazio . _ -", "ser.nickSend": "Scegli nickname e invia", "ser.badNick": "Nickname non valido o non consentito. Usa 3-14 caratteri (lettere, numeri, . _ -).", "ser.edit": "Nickname", "ser.scopeAll": "Sempre", "ser.scopeWeek": "Settimana", "ser.scopeDay": "Oggi", "ser.loading": "Carico la classifica…", "ser.offline": "Classifica non raggiungibile: controlla la connessione.", "ser.empty": "Ancora nessun punteggio: sii il primo!", "ser.next": "Ti servono {n} pt per superare {name}", "ser.top": "Sei in cima alla classifica! Difendi il primato.", "ser.over": "Serata finita", "ser.pts": "punti", "ser.newRec": "NUOVO RECORD!", "ser.toBest": "Ti mancavano {n} pt per il record", "ser.level": "Livello", "ser.maxCombo": "Combo max", "ser.revive": "Guarda un video: continua con 1 cuore", "ser.retry": "Riprova", "ser.sending": "Invio in classifica…", "ser.queued": "Offline: il punteggio verrà inviato appena torni online.", "ser.levelUp": "Livello {n}!"}, "en": {"ser.btn": "Endless night", "ser.board": "Leaderboard", "ser.hud": "Lv {l} · {s} pts", "ser.desc": "Serve as many customers as you can: every 4 beers the night gets tougher. You have 4 hearts and every 5 combo you win back half. Beat your record and climb the leaderboard!", "ser.best": "Your record", "ser.served": "Customers served", "ser.servedShort": "served", "ser.rank": "You are #{r} of {t}", "ser.dayRank": "#{r} today", "ser.play": "Play", "ser.daily": "Daily challenge", "ser.dailyDesc": "Same customers for everyone, resets at midnight (UTC)", "ser.dailyBest": "today {n} pts", "ser.nickT": "Your nickname", "ser.nickHint": "It appears in the leaderboard with your score. 3-14 characters: letters, numbers, space . _ -", "ser.nickSend": "Choose nickname and submit", "ser.badNick": "Nickname not valid or not allowed. Use 3-14 characters (letters, numbers, . _ -).", "ser.edit": "Nickname", "ser.scopeAll": "Overall", "ser.scopeWeek": "Week", "ser.scopeDay": "Today", "ser.loading": "Loading leaderboard…", "ser.offline": "Leaderboard unreachable: check your connection.", "ser.empty": "No scores yet: be the first!", "ser.next": "You need {n} pts to pass {name}", "ser.top": "You are on top! Defend your lead.", "ser.over": "Night over", "ser.pts": "points", "ser.newRec": "NEW RECORD!", "ser.toBest": "You were {n} pts short of your record", "ser.level": "Level", "ser.maxCombo": "Best combo", "ser.revive": "Watch a video: continue with 1 heart", "ser.retry": "Try again", "ser.sending": "Submitting score…", "ser.queued": "Offline: your score will be sent when you are back online.", "ser.levelUp": "Level {n}!"}, "fr": {"ser.btn": "Soirée infinie", "ser.board": "Classement", "ser.hud": "Niv {l} · {s} pts", "ser.desc": "Sers autant de clients que possible : toutes les 4 bières la soirée se corse. Tu as 4 cœurs et tous les 5 combos tu en regagnes la moitié. Bats ton record et grimpe au classement !", "ser.best": "Ton record", "ser.served": "Clients servis", "ser.servedShort": "clients", "ser.rank": "Tu es {r}e sur {t}", "ser.dayRank": "{r}e aujourd'hui", "ser.play": "Jouer", "ser.daily": "Défi du jour", "ser.dailyDesc": "Mêmes clients pour tous, change à minuit (UTC)", "ser.dailyBest": "aujourd'hui {n} pts", "ser.nickT": "Ton pseudo", "ser.nickHint": "Il apparaît dans le classement avec ton score. 3-14 caractères : lettres, chiffres, espace . _ -", "ser.nickSend": "Choisir le pseudo et envoyer", "ser.badNick": "Pseudo non valide ou non autorisé. Utilise 3-14 caractères (lettres, chiffres, . _ -).", "ser.edit": "Pseudo", "ser.scopeAll": "Total", "ser.scopeWeek": "Semaine", "ser.scopeDay": "Aujourd'hui", "ser.loading": "Chargement du classement…", "ser.offline": "Classement inaccessible : vérifie ta connexion.", "ser.empty": "Aucun score : sois le premier !", "ser.next": "Il te faut {n} pts pour dépasser {name}", "ser.top": "Tu es en tête ! Défends ta place.", "ser.over": "Soirée terminée", "ser.pts": "points", "ser.newRec": "NOUVEAU RECORD !", "ser.toBest": "Il te manquait {n} pts pour ton record", "ser.level": "Niveau", "ser.maxCombo": "Combo max", "ser.revive": "Regarde une vidéo : continue avec 1 cœur", "ser.retry": "Réessayer", "ser.sending": "Envoi du score…", "ser.queued": "Hors ligne : ton score sera envoyé dès que tu seras reconnecté.", "ser.levelUp": "Niveau {n} !"}, "de": {"ser.btn": "Endlose Nacht", "ser.board": "Rangliste", "ser.hud": "Lv {l} · {s} Pkt", "ser.desc": "Bediene so viele Gäste wie möglich: alle 4 Biere wird die Nacht härter. Du hast 4 Herzen und alle 5 Combos gewinnst du ein halbes zurück. Brich deinen Rekord und steige in der Rangliste auf!", "ser.best": "Dein Rekord", "ser.served": "Bediente Gäste", "ser.servedShort": "Gäste", "ser.rank": "Du bist Platz {r} von {t}", "ser.dayRank": "Platz {r} heute", "ser.play": "Spielen", "ser.daily": "Tagesherausforderung", "ser.dailyDesc": "Gleiche Gäste für alle, wechselt um Mitternacht (UTC)", "ser.dailyBest": "heute {n} Pkt", "ser.nickT": "Dein Nickname", "ser.nickHint": "Er erscheint mit deinem Punktestand in der Rangliste. 3-14 Zeichen: Buchstaben, Zahlen, Leerzeichen . _ -", "ser.nickSend": "Nickname wählen und senden", "ser.badNick": "Nickname ungültig oder nicht erlaubt. Nutze 3-14 Zeichen (Buchstaben, Zahlen, . _ -).", "ser.edit": "Nickname", "ser.scopeAll": "Gesamt", "ser.scopeWeek": "Woche", "ser.scopeDay": "Heute", "ser.loading": "Rangliste wird geladen…", "ser.offline": "Rangliste nicht erreichbar: prüfe deine Verbindung.", "ser.empty": "Noch keine Punkte: sei der Erste!", "ser.next": "Du brauchst {n} Pkt, um {name} zu überholen", "ser.top": "Du führst! Verteidige deinen Platz.", "ser.over": "Nacht vorbei", "ser.pts": "Punkte", "ser.newRec": "NEUER REKORD!", "ser.toBest": "Dir fehlten {n} Pkt zum Rekord", "ser.level": "Level", "ser.maxCombo": "Beste Combo", "ser.revive": "Video ansehen: mit 1 Herz weiter", "ser.retry": "Nochmal", "ser.sending": "Punkte werden gesendet…", "ser.queued": "Offline: dein Ergebnis wird gesendet, sobald du wieder online bist.", "ser.levelUp": "Level {n}!"}};
+  const S5 = {"it": {"ser.board": "Classifica", "ser.best": "Il tuo record", "ser.servedShort": "clienti", "ser.rank": "Sei {r}° su {t}", "ser.nickT": "Il tuo nickname", "ser.nickHint": "Appare in classifica insieme al punteggio. 3-14 caratteri: lettere, numeri, spazio . _ -", "ser.nickSend": "Scegli nickname e invia", "ser.badNick": "Nickname non valido o non consentito. Usa 3-14 caratteri (lettere, numeri, . _ -).", "ser.edit": "Nickname", "ser.scopeAll": "Sempre", "ser.scopeWeek": "Settimana", "ser.loading": "Carico la classifica…", "ser.offline": "Classifica non raggiungibile: controlla la connessione.", "ser.empty": "Ancora nessun punteggio: sii il primo!", "ser.next": "Ti servono {n} pt per superare {name}", "ser.top": "Sei in cima alla classifica! Difendi il primato.", "ser.newRec": "NUOVO RECORD!", "ser.toBest": "Ti mancavano {n} pt per il record", "ser.sending": "Invio in classifica…", "ser.queued": "Offline: il punteggio verrà inviato appena torni online.", "ser.desc": "Il punteggio è quello della tua serie: i punti si sommano cliente dopo cliente e livello dopo livello. Se perdi un livello la serie si chiude e riparti da zero. Più sei pulito e veloce, più punti fai.", "ser.run": "Serie in corso", "ser.runEnd": "punti della serie", "ser.runNow": "Serie in corso: {n} pt · {s} clienti"}, "en": {"ser.board": "Leaderboard", "ser.best": "Your record", "ser.servedShort": "served", "ser.rank": "You are #{r} of {t}", "ser.nickT": "Your nickname", "ser.nickHint": "It appears in the leaderboard with your score. 3-14 characters: letters, numbers, space . _ -", "ser.nickSend": "Choose nickname and submit", "ser.badNick": "Nickname not valid or not allowed. Use 3-14 characters (letters, numbers, . _ -).", "ser.edit": "Nickname", "ser.scopeAll": "Overall", "ser.scopeWeek": "Week", "ser.loading": "Loading leaderboard…", "ser.offline": "Leaderboard unreachable: check your connection.", "ser.empty": "No scores yet: be the first!", "ser.next": "You need {n} pts to pass {name}", "ser.top": "You are on top! Defend your lead.", "ser.newRec": "NEW RECORD!", "ser.toBest": "You were {n} pts short of your record", "ser.sending": "Submitting score…", "ser.queued": "Offline: your score will be sent when you are back online.", "ser.desc": "Your score is your streak: points add up customer after customer and level after level. If you fail a level the streak ends and you start from zero. The cleaner and faster you pour, the more points you earn.", "ser.run": "Current streak", "ser.runEnd": "streak points", "ser.runNow": "Current streak: {n} pts · {s} customers"}, "fr": {"ser.board": "Classement", "ser.best": "Ton record", "ser.servedShort": "clients", "ser.rank": "Tu es {r}e sur {t}", "ser.nickT": "Ton pseudo", "ser.nickHint": "Il apparaît dans le classement avec ton score. 3-14 caractères : lettres, chiffres, espace . _ -", "ser.nickSend": "Choisir le pseudo et envoyer", "ser.badNick": "Pseudo non valide ou non autorisé. Utilise 3-14 caractères (lettres, chiffres, . _ -).", "ser.edit": "Pseudo", "ser.scopeAll": "Total", "ser.scopeWeek": "Semaine", "ser.loading": "Chargement du classement…", "ser.offline": "Classement inaccessible : vérifie ta connexion.", "ser.empty": "Aucun score : sois le premier !", "ser.next": "Il te faut {n} pts pour dépasser {name}", "ser.top": "Tu es en tête ! Défends ta place.", "ser.newRec": "NOUVEAU RECORD !", "ser.toBest": "Il te manquait {n} pts pour ton record", "ser.sending": "Envoi du score…", "ser.queued": "Hors ligne : ton score sera envoyé dès que tu seras reconnecté.", "ser.desc": "Ton score est celui de ta série : les points s'additionnent client après client et niveau après niveau. Si tu rates un niveau, la série s'arrête et tu repars de zéro. Plus tu tires proprement et vite, plus tu gagnes de points.", "ser.run": "Série en cours", "ser.runEnd": "points de la série", "ser.runNow": "Série en cours : {n} pts · {s} clients"}, "de": {"ser.board": "Rangliste", "ser.best": "Dein Rekord", "ser.servedShort": "Gäste", "ser.rank": "Du bist Platz {r} von {t}", "ser.nickT": "Dein Nickname", "ser.nickHint": "Er erscheint mit deinem Punktestand in der Rangliste. 3-14 Zeichen: Buchstaben, Zahlen, Leerzeichen . _ -", "ser.nickSend": "Nickname wählen und senden", "ser.badNick": "Nickname ungültig oder nicht erlaubt. Nutze 3-14 Zeichen (Buchstaben, Zahlen, . _ -).", "ser.edit": "Nickname", "ser.scopeAll": "Gesamt", "ser.scopeWeek": "Woche", "ser.loading": "Rangliste wird geladen…", "ser.offline": "Rangliste nicht erreichbar: prüfe deine Verbindung.", "ser.empty": "Noch keine Punkte: sei der Erste!", "ser.next": "Du brauchst {n} Pkt, um {name} zu überholen", "ser.top": "Du führst! Verteidige deinen Platz.", "ser.newRec": "NEUER REKORD!", "ser.toBest": "Dir fehlten {n} Pkt zum Rekord", "ser.sending": "Punkte werden gesendet…", "ser.queued": "Offline: dein Ergebnis wird gesendet, sobald du wieder online bist.", "ser.desc": "Dein Punktestand ist deine Serie: Die Punkte summieren sich Gast für Gast und Level für Level. Scheiterst du an einem Level, endet die Serie und du startest bei null. Je sauberer und schneller du zapfst, desto mehr Punkte gibt es.", "ser.run": "Aktuelle Serie", "ser.runEnd": "Serienpunkte", "ser.runNow": "Aktuelle Serie: {n} Pkt · {s} Gäste"}};
   Object.keys(S5).forEach((l) => Object.assign(BB.I18n.dict[l], S5[l]));
   const DISC = {"it": "Se giochi online: il nickname e il punteggio che invii sono pubblici nella classifica. Non inserire dati personali.", "en": "If you play online: the nickname and score you submit are public on the leaderboard. Do not enter personal data.", "fr": "Si tu joues en ligne : le pseudo et le score envoyés sont publics dans le classement. N'indique aucune donnée personnelle.", "de": "Wenn du online spielst: Nickname und Punktestand sind in der Rangliste öffentlich. Gib keine persönlichen Daten an."};
   Object.keys(DISC).forEach((l) => { BB.I18n.dict[l]['tut.disc.b'] += ' ' + DISC[l]; });
@@ -2151,7 +2145,6 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
 (function (g) {
   'use strict';
   const BB = (g.BB = g.BB || {});
-  const { clamp } = BB;
 
   class Game {
     constructor(save, monet, opts) {
@@ -2178,17 +2171,16 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
     get glass() { return this.chosenGlassId ? BB.GLASSES[this.chosenGlassId] : null; }
     get lives() { return this.session ? this.session.lives : BB.CONFIG.lives; }
     get served() { return this.session ? this.session.idx : 0; }
-    get rules() { const r = BB.LevelManager.rules(this.level, this.endless); r.patience = Math.round(r.patience * (this.endless ? 1 : BB.Meta.patMult(this.save))); return r; }
-    get endless() { return !!(this.session && this.session.endless); }
-    get maxLives() { return this.endless ? BB.CONFIG.endlessLives : BB.CONFIG.lives + BB.Meta.extraLives(this.save); }
+    get rules() { const r = BB.LevelManager.rules(this.level); r.patience = Math.round(r.patience * BB.Meta.patMult(this.save)); return r; }
+    get maxLives() { return BB.CONFIG.lives + BB.Meta.extraLives(this.save); }
     get isPouring() { return this.state === 'play' && this.model && this.model.flow > 0.001; }
 
     // ---------- avvio / ripresa ----------
     hasSave() { return this.save.hasGame(); }
 
-    startNew(hard) {
+    startNew() {
       this.save.newGame();
-      this._createSession(1, false, !!hard);
+      this._createSession(1, false);
       this._enterLevel();
     }
     continueGame() {
@@ -2196,21 +2188,19 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       if (!s) { this._createSession(this.progress.level); }
       else {
         const idx = Math.min(Math.max(0, s.idx), BB.CONFIG.perLevel - 1);
-        this.session = { level: s.level, seed: s.seed, idx, lives: s.lives, results: s.results.slice(0, idx), bonus: false, hard: !!s.hard };
+        this.session = { level: s.level, seed: s.seed, idx, lives: s.lives, results: s.results.slice(0, idx), bonus: false };
         this.pool = BB.LevelManager.generate(s.level, s.seed, 0, false);
       }
       this._enterLevel();
     }
-    _createSession(level, bonus, hard) {
+    _createSession(level, bonus) {
       const seed = this.seedFn();
-      if (hard == null) hard = this.session ? !!this.session.hard : !!(this.save.data.session && this.save.data.session.hard);
-      this.session = { level, seed, idx: 0, lives: this.maxLives, results: [], bonus: !!bonus, hard: !!hard };
+      this.session = { level, seed, idx: 0, lives: this.maxLives, results: [], bonus: !!bonus };
       this.pool = BB.LevelManager.generate(level, seed, 0, !!bonus);
       this._persist();
     }
     _persist() {
-      if (this.session && this.session.endless) { this.save.save(); return; } // la serata infinita non tocca la partita salvata
-      this.save.data.session = this.session ? { level: this.session.level, seed: this.session.seed, idx: this.session.idx, lives: this.session.lives, results: this.session.results.slice(), bonus: !!this.session.bonus, hard: !!this.session.hard } : null;
+      this.save.data.session = this.session ? { level: this.session.level, seed: this.session.seed, idx: this.session.idx, lives: this.session.lives, results: this.session.results.slice(), bonus: !!this.session.bonus } : null;
       this.save.data.progress.played = true;
       this._syncUnlocks();
       this.save.save();
@@ -2230,15 +2220,6 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       this.queue = []; this.spawned = 0; this.lost = 0; this.nextArrival = 0; this.combo = 0;
       this.rnd = BB.rng(((this.session.seed * 31 + this.session.level) >>> 0) || 1);
       this.order = null; this.chosenGlassId = null; this.wrongPicks = 0; this.model = null; this.result = null; this.settleLeft = 0;
-      this._planEvents(); this.levelCoins = 0;
-      const R = this.rules;
-      for (let i = 0; i < R.startCount; i++) this._spawn();
-      this.nextArrival = R.interval * 0.8;
-      this.setState('select');
-      this.emit('queue');
-    }
-    // piano degli imprevisti del livello (fusto sui livelli pari, birra rovesciata sui dispari da 3)
-    _planEvents() {
       this.kegRnd = BB.rng(((this.session.seed * 17 + this.session.level * 5 + 3) >>> 0) || 1); // flusso casuale separato: non altera i clienti
       this.keg = { empty: false, wait: false, waitT: 0, taps: 0, need: 15, t: 0 };
       // piano fusto: solo i livelli pari (2, 4, 6...). Livello 2: dopo il secondo cliente servito. Gli altri: a caso durante il servizio, una volta sola
@@ -2246,41 +2227,12 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       this.spillRnd = BB.rng(((this.session.seed * 13 + this.session.level * 7 + 5) >>> 0) || 1); // imprevisto birra rovesciata: livelli dispari da 3 in poi
       this.spill = { on: false, wait: false, t: 0, waitT: 0, taps: 0, need: 15, fill: 0, foam: 0, styleId: null, glassId: null };
       this.spillUsed = !(lv >= 3 && lv % 2 === 1); this.spillAtPour = lv === 3 ? 2 : 2 + Math.floor(this.spillRnd() * 3); this.spillAt = 0.35 + this.spillRnd() * 0.25;
-      this.kegAtPour = lv === 2 ? 3 : 2 + Math.floor(this.kegRnd() * 3); this.kegArm = -1; this.pourCount = 0; // scatta entro 1 s dall'inizio di una spillatura
-    }
-    // ---------- Serata infinita ----------
-    startEndless(opts) {
-      opts = opts || {}; const hard = !!opts.hard, daily = opts.daily || null;
-      const seed = daily ? BB.hashStr(daily + (hard ? 'h' : 'n')) : this.seedFn();
-      this.session = { level: 1, seed, idx: 0, lives: BB.CONFIG.endlessLives, results: [], bonus: false, hard, endless: true, daily, score: 0, bestCombo: 0, t0: Date.now(), revived: false };
-      this.pool = BB.LevelManager.generate(1, seed, 0, false);
-      this._beginRun();
-    }
-    _endlessNext() {
-      const s = this.session; this.order = null; this.model = null; this.chosenGlassId = null; this.wrongPicks = 0;
-      if (s.idx > 0 && s.idx % 4 === 0) {
-        s.level++;
-        this.pool = BB.LevelManager.generate(s.level, s.seed, 0, false); this.spawned = 0;
-        this._planEvents();
-        this.emit('endlessLevel', { level: s.level, styles: BB.LevelManager.newUnlocks(s.level).styles });
-      }
-      this.setState('select'); this.emit('queue');
-    }
-    // 5 pulizie di fila (>=80) guariscono mezzo cuore: chi gioca bene resiste, chi sbaglia cade
-    _healHalf() {
-      if (this.lost > 0) { const prev = this.lost; this.lost--; if (prev % 2 === 0) this.session.lives++; this.emit('heal'); }
-    }
-    async reviveWithAd() {
-      const s = this.session;
-      if (this.state !== 'levelfail' || !s || !s.endless || s.revived) return { granted: false, status: 'blocked' };
-      const r = await this.monet.rewardedAttempt(false);
-      if (r.granted) {
-        s.revived = true; s.lives = 1; this.lost = 0; this.combo = 0;
-        this.queue.forEach((c) => { c.wait = Math.min(c.wait, c.waitLimit * 0.35); });
-        this.order = null; this.model = null; this.chosenGlassId = null; this.wrongPicks = 0;
-        this.setState('select'); this.emit('queue');
-      }
-      return r;
+      this.kegAtPour = lv === 2 ? 3 : 2 + Math.floor(this.kegRnd() * 3); this.kegArm = -1; this.pourCount = 0; this.levelCoins = 0; // scatta entro 1 s dall'inizio di una spillatura
+      const R = this.rules;
+      for (let i = 0; i < R.startCount; i++) this._spawn();
+      this.nextArrival = R.interval * 0.8;
+      this.setState('select');
+      this.emit('queue');
     }
     _spawn() {
       const base = this.pool[this.spawned % this.pool.length];
@@ -2380,7 +2332,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
     }
     spillContinue() {
       const sp = this.spill; if (!sp || !sp.wait || sp.waitT < 0.9 || !this.order) return false;
-      sp.wait = false; this.model = new BB.PourModel(this.glass, this.style, this.order, { hard: !!(this.session && this.session.hard) }); // bicchiere nuovo, stesso ordine
+      sp.wait = false; this.model = new BB.PourModel(this.glass, this.style, this.order, {}); // bicchiere nuovo, stesso ordine
       this.emit('spillResume'); return true;
     }
     kegTap() { // ogni tocco avvicina il fusto nuovo; al terzo è collegato
@@ -2406,7 +2358,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       if (this.state !== 'choose' || !this.order || !BB.GLASSES[id]) return false;
       if (id !== this.order.glassId) { this.wrongPicks++; this.order.wrongPicks = this.wrongPicks; this.emit('wrongGlass', { id, count: this.wrongPicks }); return false; }
       this.chosenGlassId = id; this.pourCount = (this.pourCount | 0) + 1;
-      this.model = new BB.PourModel(this.glass, this.style, this.order, { hard: !!(this.session && this.session.hard) });
+      this.model = new BB.PourModel(this.glass, this.style, this.order, {});
       this.setState('play');
       this.emit('glass', id);
       return true;
@@ -2414,6 +2366,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
 
     // input: { tilt: gradi richiesti dal telefono/touch, open: rubinetto aperto }
     update(dt, input) {
+      if (this.state === 'select' || this.state === 'choose' || this.state === 'play' || this.state === 'settling' || this.state === 'result') this._lb().run.secs += dt; // tempo di gioco della serie
       if (this.state === 'select' || this.state === 'choose' || this.state === 'play') { const evt = (this.keg && (this.keg.empty || this.keg.wait)) || (this.spill && (this.spill.on || this.spill.wait)); // durante un imprevisto la coda avanza più lentamente
         this._tickQueue(evt ? dt * 0.4 : dt); this._tickKeg(dt); this._tickSpill(dt); }
       if (this.state === 'play') {
@@ -2467,24 +2420,25 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       res.combo = this.combo;
       const base = Math.round(res.score / 10), pb = res.perfect ? 5 : 0, cb = this.combo >= 2 ? Math.min(this.combo, 6) * 2 : 0;
       res.coinsPerfect = pb; res.coinsCombo = cb;
-      res.coins = Math.round((base + pb + cb) * M.tipMult(this.save) * (this.session && this.session.hard ? 1.5 : 1));
-      if (this.session && this.session.endless) {
-        const s = this.session, c = this.order;
-        res.mult = +(1 + 0.1 * Math.min(this.combo, 10)).toFixed(1);
-        const sp = c ? Math.round(15 * clamp(1 - c.wait / Math.max(1, c.waitLimit), 0, 1)) : 0;
-        res.speed = sp; res.points = Math.round(res.score * res.mult) + sp;
-        s.score += res.points; s.bestCombo = Math.max(s.bestCombo, this.combo);
-        if (this.combo > 0 && this.combo % BB.CONFIG.healEvery === 0) this._healHalf();
-      }
+      res.coins = Math.round((base + pb + cb) * M.tipMult(this.save));
       this.progress.coins += res.coins; this.levelCoins = (this.levelCoins | 0) + res.coins;
       st.served++; if (res.perfect) st.perfect++; st.bestCombo = Math.max(st.bestCombo, this.combo);
+      // punteggio della serie (classifica online): qualità × combo + bonus rapidità
+      const c0 = this.order;
+      res.mult = 1 + 0.1 * Math.min(this.combo, 10);
+      res.speed = c0 && c0.waitLimit ? Math.max(0, Math.round(15 * (1 - c0.wait / c0.waitLimit))) : 0;
+      res.points = Math.round(res.score * res.mult) + res.speed;
+      const lb = this._lb(); lb.run.score += res.points; lb.run.served++;
     }
+    _lb() { const d = this.save.data; if (!d.lb) d.lb = { best: 0, bestServed: 0, nick: '', run: { score: 0, served: 0, secs: 0 } }; if (!d.lb.run) d.lb.run = { score: 0, served: 0, secs: 0 }; return d.lb; }
+    // chiude la serie (livello fallito): restituisce il riepilogo e riparte da zero
+    closeRun() { const lb = this._lb(), r = { score: lb.run.score, served: lb.run.served, secs: Math.round(lb.run.secs) }; lb.run = { score: 0, served: 0, secs: 0 }; this.save.save(); return r; }
+    peekRun() { const r = this._lb().run; return { score: r.score, served: r.served, secs: Math.round(r.secs) }; }
     _announce() { BB.Meta.checkAch(this.save).forEach((a) => this.emit('achieve', a)); }
 
     // ---------- dopo il risultato ----------
     next() { // dopo il risultato: torna alla coda oppure completa il livello
       if (this.state !== 'result') return false;
-      if (this.session.endless) { this._endlessNext(); return true; }
       this.order = null; this.model = null; this.chosenGlassId = null; this.wrongPicks = 0;
       if (this.session.idx >= BB.CONFIG.perLevel) this._completeLevel(); else { this.setState('select'); this.emit('queue'); }
       return true;
@@ -3141,7 +3095,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
     drawTap(open, flowLevel) {
       const c = this.ctx, W = this.W, H = this.H, x = W / 2, y = H * 0.305, K = 1.7;
       const sk = this.tapSkin || BB.Meta.TAPS[0];
-      const colTopAbs = Math.max(y - H * 0.1, (this.topInset || 0) + 18), colTop = (colTopAbs - y) / K;
+      const colTopAbs = Math.max(y - H * 0.075, (this.topInset || 0) + 95), colTop = (colTopAbs - y) / K;
       // alone caldo dietro il rubinetto per staccarlo dallo sfondo
       const gl = c.createRadialGradient(x + 10, y, 4, x + 10, y, 90); gl.addColorStop(0, 'rgba(255,214,120,0.34)'); gl.addColorStop(1, 'rgba(255,214,120,0)');
       c.fillStyle = gl; c.fillRect(x - 100, y - 100, 220, 200);
@@ -3450,7 +3404,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
     let open = false, sensorsStarted = false, hudTimer = 0, lastT = performance.now(), prevOpen = false;
 
     // ---------- helpers UI ----------
-    const screens = ['scrTut', 'scrShop', 'scrTips', 'scrSerata', 'scrBoard', 'scrAch', 'scrDaily', 'scrHome', 'scrAvatar', 'scrSettings', 'scrPause', 'scrResult', 'scrVictory', 'scrFail', 'scrDialog', 'scrAd'];
+    const screens = ['scrTut', 'scrShop', 'scrTips', 'scrBoard', 'scrAch', 'scrDaily', 'scrHome', 'scrAvatar', 'scrSettings', 'scrPause', 'scrResult', 'scrVictory', 'scrFail', 'scrDialog', 'scrAd'];
     function show(id) { screens.forEach((s) => { $(s).hidden = s !== id; }); }
     function hideAll() { screens.forEach((s) => { $(s).hidden = true; }); }
     let toastT = 0;
@@ -3578,7 +3532,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       $('btnContinue').disabled = !has;
       const p = save.data.progress;
       $('homeStats').hidden = !has;
-      if (has) $('homeStats').textContent = T('home.stats', { l: save.data.session ? save.data.session.level : p.level, c: p.coins }) + (save.data.session && save.data.session.hard ? ' · ' + T('mode.hardTag') : '');
+      if (has) $('homeStats').textContent = T('home.stats', { l: save.data.session ? save.data.session.level : p.level, c: p.coins });
       $('btnAds').hidden = monet.adsRemoved;
       $('homeBadge').textContent = monet.isTestMode ? T('badge.test') : '';
       $('homeBadge').hidden = !monet.isTestMode;
@@ -3626,128 +3580,68 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       document.querySelectorAll('.tipBtn').forEach((b) => { b.onclick = () => { click(); openTips(unlockLevel, b.dataset.s); }; });
       $('tipsBack').onclick = () => { click(); if (sel) openTips(unlockLevel); else if (game.state === 'victory') renderVictory(game.victory); else showHome(); };
     }
-    // ---------- Serata infinita e classifica online ----------
+    // ---------- classifica online (punteggio della serie) ----------
     const fmtN = (n) => { try { return Number(n).toLocaleString(BB.I18n.lang === 'en' ? 'en-US' : BB.I18n.lang); } catch (e) { return String(n); } };
-    const todayKey = () => new Date().toISOString().slice(0, 10);
-    const ser = () => { const d = save.data; if (!d.serata) d.serata = { best: { normal: 0, hard: 0 }, bestServed: { normal: 0, hard: 0 }, plays: 0, nick: '', daily: { date: '', normal: 0, hard: 0 } }; return d.serata; };
-    let serMode = 'normal', serFrom = 'home', boardScope = 'all', boardMode = 'normal', boardFrom = 'home';
+    const LB = () => game._lb();
+    let boardScope = 'all', boardReq = 0;
     const cleanNick = (v) => String(v || '').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^A-Za-z0-9 ._-]/g, '').replace(/\s+/g, ' ').trim().slice(0, 14);
     const nickOk = (v) => /^[A-Za-z0-9 ._-]{3,14}$/.test(v);
-    function askNick(prefill, errKey) {
+    function askNick(prefill) {
       return new Promise((res) => {
-        $('dialogPanel').innerHTML = '<h2>' + esc(T('ser.nickT')) + '</h2><p>' + esc(T('ser.nickHint')) + '</p><input class="nickIn" id="nickIn" maxlength="14" autocomplete="off" autocapitalize="off" spellcheck="false" value="' + esc(prefill || '') + '"><div class="live" id="nickErr" style="color:var(--bad)">' + (errKey ? esc(T(errKey)) : '') + '</div><div class="stack"><button class="btn primary" id="nickOk">' + esc(T('ser.nickSend')) + '</button><button class="btn" id="nickNo">' + esc(T('cancel')) + '</button></div>';
+        $('dialogPanel').innerHTML = '<h2>' + esc(T('ser.nickT')) + '</h2><p>' + esc(T('ser.nickHint')) + '</p><input class="nickIn" id="nickIn" maxlength="14" autocomplete="off" autocapitalize="off" spellcheck="false" value="' + esc(prefill || '') + '"><div class="live" id="nickErr" style="color:var(--bad)"></div><div class="stack"><button class="btn primary" id="nickOk">' + esc(T('ser.nickSend')) + '</button><button class="btn" id="nickNo">' + esc(T('cancel')) + '</button></div>';
         $('scrDialog').hidden = false;
         const done = (v) => { $('scrDialog').hidden = true; res(v); };
-        $('nickOk').onclick = () => { click(); const v = cleanNick($('nickIn').value); if (!nickOk(v)) { $('nickErr').textContent = T('ser.badNick'); return; } ser().nick = v; save.save(); done(v); };
+        $('nickOk').onclick = () => { click(); const v = cleanNick($('nickIn').value); if (!nickOk(v)) { $('nickErr').textContent = T('ser.badNick'); return; } LB().nick = v; save.save(); done(v); };
         $('nickNo').onclick = () => { click(); done(null); };
       });
     }
-    function openSerata(from) { serFrom = from || 'home'; renderSerata(); show('scrSerata'); }
-    function renderSerata() {
-      const sr = ser(), m = serMode, dBest = sr.daily && sr.daily.date === todayKey() ? sr.daily[m] : 0;
-      $('serPanel').innerHTML = '<h2>🍺 ' + T('ser.btn') + '</h2><p>' + esc(T('ser.desc')) + '</p>' +
-        '<div class="bseg"><button class="btn" data-m="normal" aria-pressed="' + (m === 'normal') + '">' + T('mode.normal') + '</button><button class="btn" data-m="hard" aria-pressed="' + (m === 'hard') + '">' + T('mode.hard') + '</button></div>' +
-        '<div class="tipStats"><span>' + T('ser.best') + '</span><span>' + fmtN(sr.best[m]) + ' pt</span><span>' + T('ser.served') + '</span><span>' + (sr.bestServed ? sr.bestServed[m] : 0) + '</span></div>' +
-        '<div class="live" id="serRank" style="text-align:center"></div>' +
-        '<button class="btn primary" id="serPlay" style="min-height:58px;font-size:20px">' + T('ser.play') + '</button>' +
-        '<button class="btn" id="serDaily">📅 ' + T('ser.daily') + '<small style="display:block;font-weight:600;opacity:.75">' + esc(T('ser.dailyDesc')) + (dBest ? ' · ' + esc(T('ser.dailyBest', { n: fmtN(dBest) })) : '') + '</small></button>' +
-        '<button class="btn" id="serBoard">🏆 ' + T('ser.board') + '</button><button class="btn ghost" id="serBack">' + T('bt.back') + '</button>';
-      document.querySelectorAll('#serPanel .bseg button').forEach((b) => { b.onclick = () => { click(); serMode = b.dataset.m; renderSerata(); }; });
-      $('serPlay').onclick = () => startSerata(false);
-      $('serDaily').onclick = () => startSerata(true);
-      $('serBoard').onclick = () => { click(); boardMode = serMode; openBoard('serata'); };
-      $('serBack').onclick = () => { click(); showHome(); };
-      if (sr.nick || sr.best[m]) BB.Online.board(m, 'all', 1).then((r) => { const el = $('serRank'); if (el && r && r.me) el.textContent = T('ser.rank', { r: r.me.r, t: r.total }); }).catch(() => {});
+    // invia la serie in classifica (chiede il nickname la prima volta); scrive l'esito in `box`
+    async function submitRun(snap, box) {
+      if (!box || !snap || snap.served < 1 || snap.score < 1) return;
+      const lb = LB();
+      const go = async () => {
+        box.innerHTML = '<div class="live" style="text-align:center">' + esc(T('ser.sending')) + '</div>';
+        const r = await BB.Online.submit({ nick: lb.nick, mode: 'normal', board: 'free', day: null, score: snap.score, served: snap.served, duration: Math.max(snap.secs, snap.served * 5), version: '9.1' });
+        let txt;
+        if (r && r.ok) txt = T('ser.rank', { r: r.rank, t: r.total });
+        else if (r && r.error === 'nick') { lb.nick = ''; save.save(); ask(); return; }
+        else if (r && r.error === 'offline') txt = T('ser.queued');
+        else txt = T('ser.offline');
+        box.innerHTML = '<div class="live" style="text-align:center">' + esc(txt) + '</div>';
+      };
+      const ask = () => {
+        box.innerHTML = '<button class="btn">✎ ' + esc(T('ser.nickSend')) + '</button>';
+        box.firstChild.onclick = async () => { click(); const v = await askNick(cleanNick(player.name)); if (v) go(); };
+      };
+      if (nickOk(lb.nick || '')) go(); else ask();
     }
-    async function startSerata(daily) {
-      click(); await ensureSensors(); hideAll();
-      ser().plays++; save.save(); BB.Online.flush();
-      game.startEndless({ hard: serMode === 'hard', daily: daily ? todayKey() : null });
-    }
-    $('btnSerata').onclick = () => { click(); openSerata('home'); };
-    $('btnBoard').onclick = () => { click(); boardMode = ser().best.hard > ser().best.normal ? 'hard' : 'normal'; openBoard('home'); };
-
-    function openBoard(from) { boardFrom = from || 'home'; renderBoard(); show('scrBoard'); loadBoard(); }
+    function openBoard() { renderBoard(); show('scrBoard'); loadBoard(); }
     function renderBoard() {
-      const seg = (arr, cur, key) => '<div class="bseg">' + arr.map((a) => '<button class="btn" data-' + key + '="' + a[0] + '" aria-pressed="' + (cur === a[0]) + '">' + a[1] + '</button>').join('') + '</div>';
-      $('boardPanel').innerHTML = '<h2>🏆 ' + T('ser.board') + '</h2>' +
-        seg([['normal', T('mode.normal')], ['hard', T('mode.hard')]], boardMode, 'm') + seg([['all', T('ser.scopeAll')], ['week', T('ser.scopeWeek')], ['day', T('ser.scopeDay')]], boardScope, 's') +
+      const seg = (arr, cur) => '<div class="bseg">' + arr.map((a) => '<button class="btn" data-s="' + a[0] + '" aria-pressed="' + (cur === a[0]) + '">' + a[1] + '</button>').join('') + '</div>';
+      const lb = LB();
+      $('boardPanel').innerHTML = '<h2>🏆 ' + T('ser.board') + '</h2><p>' + esc(T('ser.desc')) + '</p>' +
+        '<div class="tipStats"><span>' + T('ser.best') + '</span><span>' + fmtN(lb.best) + ' pt</span><span>' + T('ser.run') + '</span><span>' + fmtN(lb.run.score) + ' pt</span></div>' +
+        seg([['all', T('ser.scopeAll')], ['week', T('ser.scopeWeek')]], boardScope) +
         '<div id="boardList" class="stack" style="gap:6px"><div class="live" style="text-align:center">' + esc(T('ser.loading')) + '</div></div>' +
-        '<div class="row2"><button class="btn" id="boardNick">✎ ' + T('ser.edit') + (ser().nick ? ' (' + esc(ser().nick) + ')' : '') + '</button><button class="btn primary" id="boardBack">' + T('bt.back') + '</button></div>';
-      document.querySelectorAll('#boardPanel [data-m]').forEach((b) => { b.onclick = () => { click(); boardMode = b.dataset.m; renderBoard(); loadBoard(); }; });
+        '<div class="row2"><button class="btn" id="boardNick">✎ ' + T('ser.edit') + (lb.nick ? ' (' + esc(lb.nick) + ')' : '') + '</button><button class="btn primary" id="boardBack">' + T('bt.back') + '</button></div>';
       document.querySelectorAll('#boardPanel [data-s]').forEach((b) => { b.onclick = () => { click(); boardScope = b.dataset.s; renderBoard(); loadBoard(); }; });
-      $('boardBack').onclick = () => { click(); if (boardFrom === 'serata') openSerata(serFrom); else if (boardFrom === 'run' && game.state === 'levelfail') renderRunEnd(true); else showHome(); };
-      $('boardNick').onclick = async () => { click(); const v = await askNick(ser().nick || cleanNick(player.name)); if (v) renderBoard(), loadBoard(); };
+      $('boardBack').onclick = () => { click(); showHome(); };
+      $('boardNick').onclick = async () => { click(); const v = await askNick(LB().nick || cleanNick(player.name)); if (v) { renderBoard(); loadBoard(); } };
     }
-    let boardReq = 0;
     async function loadBoard() {
       const my = ++boardReq; let r;
-      try { r = await BB.Online.board(boardMode, boardScope, 50); } catch (e) { r = null; }
+      try { r = await BB.Online.board('normal', boardScope, 50); } catch (e) { r = null; }
       if (my !== boardReq || !$('boardList')) return;
       if (!r) { $('boardList').innerHTML = '<div class="live" style="text-align:center">' + esc(T('ser.offline')) + '</div>'; return; }
       if (!r.rows.length) { $('boardList').innerHTML = '<div class="live" style="text-align:center">' + esc(T('ser.empty')) + '</div>'; return; }
-      const row = (x, extra) => '<div class="brow' + (x.me ? ' me' : '') + (x.r <= 3 ? ' top' + x.r : '') + (extra || '') + '"><b>#' + x.r + '</b><span class="bn">' + esc(x.n) + '</span><span class="bs">' + fmtN(x.s) + '<small>' + x.v + ' ' + esc(T('ser.servedShort')) + '</small></span></div>';
-      let h = r.rows.map((x) => row(x)).join('');
+      const row = (x) => '<div class="brow' + (x.me ? ' me' : '') + (x.r <= 3 ? ' top' + x.r : '') + '"><b>#' + x.r + '</b><span class="bn">' + esc(x.n) + '</span><span class="bs">' + fmtN(x.s) + '<small>' + x.v + ' ' + esc(T('ser.servedShort')) + '</small></span></div>';
+      let h = r.rows.map(row).join('');
       if (r.me && !r.rows.some((x) => x.me)) h += '<div class="live" style="text-align:center">⋯</div>' + row({ r: r.me.r, n: r.me.n, s: r.me.s, v: r.me.v, me: true });
       if (r.me && r.next) h += '<div class="tip ok">' + esc(T('ser.next', { n: fmtN(r.next.s - r.me.s + 1), name: r.next.n })) + '</div>';
       else if (r.me && r.me.r === 1) h += '<div class="tip ok">' + esc(T('ser.top')) + '</div>';
       $('boardList').innerHTML = h;
     }
-
-    // Fine della serata: riepilogo, record, invio in classifica, seconda chance con video
-    function renderRunEnd(noSubmit) {
-      $('toast').classList.remove('show');
-      const s = game.session, mode = s.hard ? 'hard' : 'normal', sr = ser();
-      if (!s.ended) {
-        s.ended = true; s.rec = s.score > sr.best[mode]; s.prevBest = sr.best[mode];
-        if (s.rec) sr.best[mode] = s.score;
-        sr.bestServed[mode] = Math.max(sr.bestServed[mode] || 0, s.idx);
-        if (s.daily) { if (sr.daily.date !== s.daily) sr.daily = { date: s.daily, normal: 0, hard: 0 }; sr.daily[mode] = Math.max(sr.daily[mode], s.score); }
-        save.save(); s.duration = Math.max(5, Math.round((Date.now() - s.t0) / 1000));
-      }
-      const r = game.result, tip = r && !r.ok ? T('tip.' + (r.reason || 'good')) : T('fail.timeout');
-      $('failPanel').innerHTML = '<h2>' + T('ser.over') + '</h2><div class="serBig">' + fmtN(s.score) + '<small>' + T('ser.pts') + '</small></div>' +
-        (s.rec && s.score > 0 ? '<div class="recBadge">' + T('ser.newRec') + '</div>' : (s.prevBest > 0 ? '<div class="live" style="text-align:center">' + esc(T('ser.toBest', { n: fmtN(s.prevBest - s.score + 1) })) + '</div>' : '')) +
-        '<div class="tipStats"><span>' + T('ser.served') + '</span><span>' + s.idx + '</span><span>' + T('ser.level') + '</span><span>' + s.level + '</span><span>' + T('ser.maxCombo') + '</span><span>×' + s.bestCombo + '</span></div>' +
-        '<div class="tip">' + esc(tip) + '</div><div class="live" id="runRank" style="text-align:center"></div><div id="runNick"></div>' +
-        (s.revived ? '' : '<button class="btn" id="fRevive">🎬 ' + T('ser.revive') + '</button>') +
-        '<div class="live" id="fMsg" style="text-align:center"></div>' +
-        '<button class="btn primary" id="fAgain">' + T('ser.retry') + '</button><div class="row2"><button class="btn" id="fBoard">🏆 ' + T('ser.board') + '</button><button class="btn ghost" id="fHome">' + T('home') + '</button></div>';
-      show('scrFail');
-      $('fAgain').onclick = () => { click(); hideAll(); game.startEndless({ hard: s.hard, daily: s.daily }); ser().plays++; save.save(); };
-      $('fHome').onclick = () => { click(); game.goHome(); showHome(); };
-      $('fBoard').onclick = () => { click(); boardMode = mode; openBoard('run'); };
-      if ($('fRevive')) $('fRevive').onclick = async () => {
-        click(); $('fRevive').disabled = true; const r2 = await game.reviveWithAd();
-        if (r2.granted) { s.ended = false; hideAll(); return; }
-        $('fRevive').disabled = false; $('fMsg').textContent = T(r2.status === 'dismissed' ? 'fail.adDismissed' : r2.status === 'unavailable' ? 'ad.none' : 'fail.adFailed');
-      };
-      if (!noSubmit && !s.sent) sendRun();
-      else if (s.rankText) $('runRank').textContent = s.rankText;
-    }
-    async function sendRun() {
-      const s = game.session; if (!s || s.sent || s.idx < 1) return;
-      const sr = ser(); let nick = sr.nick;
-      if (!nickOk(nick || '')) {
-        $('runNick').innerHTML = '<button class="btn" id="runAsk">✎ ' + esc(T('ser.nickSend')) + '</button>';
-        $('runAsk').onclick = async () => { click(); const v = await askNick(cleanNick(player.name)); if (v) { $('runNick').innerHTML = ''; sendRun(); } };
-        return;
-      }
-      s.sent = true; $('runRank').textContent = T('ser.sending');
-      const r = await BB.Online.submit({ nick, mode: s.hard ? 'hard' : 'normal', board: s.daily ? 'daily' : 'free', day: s.daily || null, score: s.score, served: s.idx, duration: s.duration, version: '9.0' });
-      const el = $('runRank'); let txt = '';
-      if (r && r.ok) txt = T('ser.rank', { r: r.rank, t: r.total }) + (r.dayRank ? ' · ' + T('ser.dayRank', { r: r.dayRank }) : '');
-      else if (r && r.error === 'nick') { s.sent = false; sr.nick = ''; save.save(); txt = T('ser.badNick'); }
-      else if (r && r.error === 'offline') txt = T('ser.queued');
-      else txt = T('ser.offline');
-      s.rankText = txt; if (el) el.textContent = txt;
-    }
-    game.on('endlessLevel', (e) => {
-      const W = renderer.W, H = renderer.H; audio.sfx('unlock');
-      renderer.addText(T('ser.levelUp', { n: e.level }), W / 2, H * 0.4, '#ffd36a', 34);
-      if (e.styles && e.styles.length) toast(T('vic.newBeer', { x: e.styles.map((x) => BB.STYLES[x].name).join(', ') }), 3200);
-    });
-    game.on('heal', () => { renderer.addText('+½ ♥', renderer.W * 0.5, renderer.H * 0.3, '#ff6a7a', 30); updateBar(); });
+    $('btnBoard').onclick = () => { click(); BB.Online.flush(); openBoard(); };
 
     function openShop(from) { shopFrom = from; renderShop(); show('scrShop'); }
     function closeShop() { if (shopFrom === 'victory' && game.state === 'victory') renderVictory(game.victory); else showHome(); }
@@ -3816,7 +3710,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       };
     }
     // ---------- Tutorial (stili e bicchieri si generano dai dati: nuovi stili/bicchieri compaiono da soli) ----------
-    const TUT = ['hud', 'how', 'styles', 'hard', 'coins', 'rot', 'disc'];
+    const TUT = ['hud', 'how', 'styles', 'coins', 'rot', 'disc'];
     function tutorial(done) {
       let i = 0;
       const li = (icon, txt) => '<li><span class="ti">' + icon + '</span><span>' + esc(txt) + '</span></li>';
@@ -3875,14 +3769,11 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
     $('btnShop').onclick = () => { click(); openShop('home'); };
     $('btnAch').onclick = () => { click(); renderAch(); };
     $('btnContinue').onclick = async () => { click(); await ensureSensors(); await tutorialOnce(); game.continueGame(); };
-    const beginNew = (hard) => async () => { await ensureSensors(); await tutorialOnce(); game.startNew(hard); };
+    const beginNew = async () => { await ensureSensors(); await tutorialOnce(); game.startNew(); };
     $('btnNew').onclick = () => {
       click();
-      dialog(T('mode.title'), T('mode.body') + (game.hasSave() ? '\n\n' + T('dlg.newBody') : ''), [
-        { label: T('mode.normal'), primary: true, fn: beginNew(false) },
-        { label: T('mode.hard'), fn: beginNew(true) },
-        { label: T('cancel') },
-      ]);
+      if (!game.hasSave()) { beginNew(); return; }
+      dialog(T('new'), T('dlg.newBody'), [{ label: T('new'), primary: true, fn: beginNew }, { label: T('cancel') }]);
     };
     $('btnTutHome').onclick = () => { click(); tutorial(() => showHome()); };
     $('btnAds').onclick = async () => {
@@ -3971,6 +3862,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       $('oDet').textContent = qtyLabel(o.qty) + (gl ? ' ' + Math.round(o.qty * gl.capacity) + ' ml' : '') + ' · ' + T('foam.n', { n: Math.round(o.foamTarget * 100) });
       layoutStrip();
       $('oTime').hidden = false;
+      layoutStrip(); // l'altezza della scheda ordine cambia: il rubinetto parte sotto di essa
     }
     // icona del bicchiere dal suo profilo
     function glassSvg(def) {
@@ -4022,8 +3914,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       if (game.selectCustomer(el.dataset.id)) audio.sfx('click');
     });
     function updateBar() {
-      if (game.endless) { $('barInfo').textContent = T('ser.hud', { l: game.session.level, s: fmtN(game.session.score) }) + (game.combo >= 1 ? ' · ×' + (1 + 0.1 * Math.min(game.combo, 10)).toFixed(1) : ''); } else
-      $('barInfo').textContent = (game.session.bonus ? T('bonus.tag', { s: game.served, n: BB.CONFIG.perLevel }) : T('bar.info', { l: game.session.level, s: game.served, n: BB.CONFIG.perLevel })) + (game.combo >= 2 ? ' · 🔥×' + game.combo : '');
+      const runPts = LB().run.score; $('barInfo').textContent = (game.session.bonus ? T('bonus.tag', { s: game.served, n: BB.CONFIG.perLevel }) : T('bar.info', { l: game.session.level, s: game.served, n: BB.CONFIG.perLevel })) + (runPts > 0 ? '\n' + fmtN(runPts) + ' pt' + (game.combo >= 2 ? ' · 🔥×' + game.combo : '') : (game.combo >= 2 ? ' · 🔥×' + game.combo : ''));
       const half = game.lost % BB.CONFIG.lostPerHeart;
       $('barLives').textContent = game.maxLives > 6 ? '♥ ' + Math.max(0, game.lives) + '/' + game.maxLives + (half ? ' ½' : '') : '♥'.repeat(Math.max(0, game.lives)) + '♡'.repeat(Math.max(0, game.maxLives - game.lives)) + (half ? ' ½' : '');
       $('barLives').setAttribute('aria-label', T('lives.aria2', { n: game.lives }) + (half ? T('lives.aria3', { k: BB.CONFIG.lostPerHeart }) : ''));
@@ -4098,7 +3989,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       if (!r.ok) renderer.shake = 10;
       else {
         const W = renderer.W, H = renderer.H;
-        renderer.addText('+' + (game.endless ? fmtN(r.points) : r.coins), W * 0.78, H * 0.25, '#ffd36a', 28);
+        renderer.addText('+' + r.coins, W * 0.78, H * 0.25, '#ffd36a', 28);
         renderer.burstCoins(Math.min(14, 4 + Math.round(r.coins / 3)), W * 0.78, H * 0.28);
         if (r.perfect) renderer.addText(T('fx.perfect'), W / 2, H * 0.47, '#fff2b0', 40);
         if (r.combo >= 2) renderer.addText(T('fx.combo', { n: r.combo }), W / 2, H * 0.47 + (r.perfect ? 40 : 0), '#ff9a4a', 30);
@@ -4136,7 +4027,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
 
     function renderResult(r) {
       if (game.state !== 'result' && game.state !== 'levelfail') return;
-      const last = !game.endless && game.state === 'result' && r.ok && game.served >= BB.CONFIG.perLevel;
+      const last = game.state === 'result' && r.ok && game.served >= BB.CONFIG.perLevel;
       const bars = [[T('res.amount'), r.parts.amount, '#6fb7ff'], [T('res.foam'), r.parts.foam, '#f4ecd8'], [T('res.tech'), r.parts.technique, '#f0a830'], [T('res.waste'), r.parts.waste, '#5fcf80']];
       const o = game.order, tip = T('tip.' + (r.reason || 'good'));
       let html = '<div class="verdict ' + (r.ok ? 'ok' : 'bad') + '">' + (r.ok ? (r.mood === 'happy' ? T('res.happy') : T('res.meh')) : T('res.bad')) + '</div>' +
@@ -4147,7 +4038,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
         (r.wrongPicks > 0 ? '<span>' + T('res.wrong', { n: r.wrongPicks, p: 12 * r.wrongPicks }) + '</span>' : '') +
         (r.spilled + r.waste_ml > 1 ? '<span>' + T('res.wasted', { n: Math.round(r.spilled + r.waste_ml) }) + '</span>' : '') + '</div>' +
         '<div class="tip ' + (r.ok && r.reason === 'good' ? 'ok' : '') + '">' + esc(r.ok && r.reason !== 'good' ? T('res.improve', { t: tip }) : tip) + '</div>';
-      if (r.ok && game.endless) html += '<div class="coinline">+' + fmtN(r.points) + ' pt · ' + r.score + ' × ' + r.mult.toFixed(1) + (r.speed ? ' + ' + r.speed : '') + '</div>';
+      if (r.ok && r.points) html += '<div class="coinline">+' + fmtN(r.points) + ' pt (' + r.score + ' × ' + r.mult.toFixed(1) + (r.speed ? ' + ' + r.speed : '') + ')</div>';
       if (r.ok) html += '<div class="coinline">' + T('res.coins', { n: r.coins }) + (r.perfect ? ' · ' + T('res.perfectT', { n: r.coinsPerfect }) : '') + (r.combo >= 2 ? ' · ' + T('res.comboT', { n: r.combo, b: r.coinsCombo }) : '') + '</div>';
       if (game.state === 'levelfail') { renderFail(); return; }
       if (!r.ok) html += '<div class="live" style="text-align:center">' + T(r.heartLost ? 'res.lost1' : 'res.lost2') + '</div>';
@@ -4159,17 +4050,19 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
     }
 
     function renderFail() {
-      if (game.endless) { renderRunEnd(); return; }
       $('toast').classList.remove('show');
-      const r = game.result;
+      const r = game.result, snap = game.closeRun(), lb = LB(), rec = snap.score > lb.best, prevBest = lb.best;
+      if (rec) lb.best = snap.score; lb.bestServed = Math.max(lb.bestServed || 0, snap.served); save.save();
       $('failPanel').innerHTML = '<h2>' + T('fail.title') + '</h2><p>' + T('fail.p') + '</p>' +
         '<div class="tip">' + esc(r ? T('tip.' + (r.reason || 'good')) : T('fail.timeout')) + '</div>' +
+        (snap.score > 0 ? '<div class="serBig">' + fmtN(snap.score) + '<small>' + T('ser.runEnd') + '</small></div>' + (rec ? '<div class="recBadge">' + T('ser.newRec') + '</div>' : prevBest > 0 ? '<div class="live" style="text-align:center">' + esc(T('ser.toBest', { n: fmtN(prevBest - snap.score + 1) })) + '</div>' : '') + '<div id="runBoxF"></div>' : '') +
         '<button class="btn primary" id="fRestart">' + T('fail.retry') + '</button>' +
         (game.session && game.session.bonus ? '<button class="btn" id="fSkip">' + T('fail.skipBonus') + '</button>' : '') +
         '<button class="btn" id="fAd">' + T('fail.ad') + '</button>' +
         '<div class="live" id="fMsg" style="text-align:center"></div>' +
         '<button class="btn ghost" id="fHome">' + T('home') + '</button>';
       show('scrFail');
+      if (snap.score > 0) submitRun(snap, $('runBoxF'));
       $('fRestart').onclick = () => { click(); hideAll(); game.restartLevel(); };
       $('fHome').onclick = () => { click(); game.goHome(); showHome(); };
       if ($('fSkip')) $('fSkip').onclick = () => { click(); hideAll(); game.skipBonus(); };
@@ -4193,9 +4086,11 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       $('victoryPanel').innerHTML = '<h2>' + (v.bonus ? T('vic.bonusTitle') : T('vic.title', { n: v.level })) + '</h2>' + starsHtml(v.stars) +
         '<div class="score">' + v.avgScore + '<small>' + T('vic.avg') + '</small></div>' +
         '<div class="coins">' + T('vic.coins', { n: v.coins }) + '</div>' + unl +
+        (LB().run.score > 0 ? '<div class="live" style="text-align:center">' + esc(T('ser.runNow', { n: fmtN(LB().run.score), s: LB().run.served })) + '</div><div id="runBoxV"></div>' : '') +
         '<button class="btn" id="vDouble">' + T('vic.double') + ' · +' + (v.dbl || v.coins) + ' ◉</button><div class="live" id="vMsg" style="text-align:center"></div>' +
         '<button class="btn primary" id="vNext">' + T('continue') + '</button><button class="btn" id="vTips">🍺 ' + T('bt.btn') + '</button><button class="btn" id="vShop">🛒 ' + T('vic.shop') + '</button><button class="btn ghost" id="vHome">' + T('home') + '</button>';
       show('scrVictory'); confetti($('scrVictory'));
+      if ($('runBoxV')) submitRun(game.peekRun(), $('runBoxV'));
       $('vShop').onclick = () => { click(); openShop('victory'); };
       $('vTips').onclick = () => { click(); openTips(v.level + 1); };
       $('vNext').onclick = async () => {
