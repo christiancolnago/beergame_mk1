@@ -1085,7 +1085,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
     { id: 'brewery', name: 'Birreria', fromLevel: 13, wall: ['#38302a', '#19130f'], accent: '#e46f3a', counter: ['#8a5a2b', '#4a2f14'] },
   ];
 
-  BB.CONFIG = { flowRate: 85, lives: 3, passScore: 55, saveKey: 'bb_save_v2', perLevel: 4, lostPerHeart: 2 };
+  BB.CONFIG = { flowRate: 85, lives: 3, passScore: 55, saveKey: 'bb_save_v2', perLevel: 4, lostPerHeart: 1 };
 })(typeof globalThis !== 'undefined' ? globalThis : this);
 
 /* ---- glassgeo.js ---- */
@@ -1942,7 +1942,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
 
   const UPG = {
     pat:   { max: Infinity, cost: [60, 120, 220, 360, 560], icon: '⏳' },   // pazienza clienti +8% a livello
-    heart: { max: Infinity, cost: [300, 800], icon: '♥' },                 // cuori di scorta
+    heart: { max: 1, cost: [300], icon: '♥' },                             // quarto cuore: acquisto unico
     tip:   { max: Infinity, cost: [80, 160, 280, 440, 650], icon: '💰' }, // monete +10% a livello
   };
   const TAPS = [
@@ -1980,7 +1980,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
     upgCost(k, lv) { const c = UPG[k].cost; return lv < c.length ? c[lv] : Math.round(c[c.length - 1] * Math.pow(1.45, lv - c.length + 1)); }, // nessun tetto: il prezzo cresce
     patMult(save) { const l = this.upgLevel(save, 'pat'); return 1 + 0.08 * Math.min(l, 5) + 0.03 * Math.max(0, l - 5); },
     tipMult(save) { const l = this.upgLevel(save, 'tip'); return 1 + 0.10 * Math.min(l, 5) + 0.05 * Math.max(0, l - 5); },
-    extraLives(save) { return this.upgLevel(save, 'heart'); },
+    extraLives(save) { return Math.min(1, this.upgLevel(save, 'heart')); },
     tap(save) { return TAPS.find((t) => t.id === save.data.meta.tap) || TAPS[0]; },
     ownsHat(save, i) { return i < 3 || save.data.meta.hats.indexOf(i) >= 0; },
     ownsTap(save, id) { return id === 'brass' || save.data.meta.taps.indexOf(id) >= 0; },
@@ -1992,6 +1992,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
     },
     buyUpg(save, k) {
       const lv = this.upgLevel(save, k);
+      if (lv >= UPG[k].max) return { ok: false, reason: 'max' };
       const r = this._pay(save, this.upgCost(k, lv)); if (!r.ok) return r;
       save.data.meta.upg[k] = lv + 1; save.save(); return { ok: true };
     },
@@ -2135,6 +2136,8 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
   Object.keys(S4).forEach((l) => Object.assign(BB.I18n.dict[l], S4[l]));
   const S5 = {"it": {"ser.board": "Classifica", "ser.best": "Il tuo record", "ser.servedShort": "clienti", "ser.rank": "Sei {r}° su {t}", "ser.nickT": "Il tuo nickname", "ser.nickHint": "Appare in classifica insieme al punteggio. 3-14 caratteri: lettere, numeri, spazio . _ -", "ser.nickSend": "Scegli nickname e invia", "ser.badNick": "Nickname non valido o non consentito. Usa 3-14 caratteri (lettere, numeri, . _ -).", "ser.edit": "Nickname", "ser.scopeAll": "Sempre", "ser.scopeWeek": "Settimana", "ser.loading": "Carico la classifica…", "ser.offline": "Classifica non raggiungibile: controlla la connessione.", "ser.empty": "Ancora nessun punteggio: sii il primo!", "ser.next": "Ti servono {n} pt per superare {name}", "ser.top": "Sei in cima alla classifica! Difendi il primato.", "ser.newRec": "NUOVO RECORD!", "ser.toBest": "Ti mancavano {n} pt per il record", "ser.sending": "Invio in classifica…", "ser.queued": "Offline: il punteggio verrà inviato appena torni online.", "ser.desc": "Il punteggio è quello della tua serie: i punti si sommano cliente dopo cliente e livello dopo livello. Se perdi un livello la serie si chiude e riparti da zero. Più sei pulito e veloce, più punti fai.", "ser.run": "Serie in corso", "ser.runEnd": "punti della serie", "ser.runNow": "Serie in corso: {n} pt · {s} clienti"}, "en": {"ser.board": "Leaderboard", "ser.best": "Your record", "ser.servedShort": "served", "ser.rank": "You are #{r} of {t}", "ser.nickT": "Your nickname", "ser.nickHint": "It appears in the leaderboard with your score. 3-14 characters: letters, numbers, space . _ -", "ser.nickSend": "Choose nickname and submit", "ser.badNick": "Nickname not valid or not allowed. Use 3-14 characters (letters, numbers, . _ -).", "ser.edit": "Nickname", "ser.scopeAll": "Overall", "ser.scopeWeek": "Week", "ser.loading": "Loading leaderboard…", "ser.offline": "Leaderboard unreachable: check your connection.", "ser.empty": "No scores yet: be the first!", "ser.next": "You need {n} pts to pass {name}", "ser.top": "You are on top! Defend your lead.", "ser.newRec": "NEW RECORD!", "ser.toBest": "You were {n} pts short of your record", "ser.sending": "Submitting score…", "ser.queued": "Offline: your score will be sent when you are back online.", "ser.desc": "Your score is your streak: points add up customer after customer and level after level. If you fail a level the streak ends and you start from zero. The cleaner and faster you pour, the more points you earn.", "ser.run": "Current streak", "ser.runEnd": "streak points", "ser.runNow": "Current streak: {n} pts · {s} customers"}, "fr": {"ser.board": "Classement", "ser.best": "Ton record", "ser.servedShort": "clients", "ser.rank": "Tu es {r}e sur {t}", "ser.nickT": "Ton pseudo", "ser.nickHint": "Il apparaît dans le classement avec ton score. 3-14 caractères : lettres, chiffres, espace . _ -", "ser.nickSend": "Choisir le pseudo et envoyer", "ser.badNick": "Pseudo non valide ou non autorisé. Utilise 3-14 caractères (lettres, chiffres, . _ -).", "ser.edit": "Pseudo", "ser.scopeAll": "Total", "ser.scopeWeek": "Semaine", "ser.loading": "Chargement du classement…", "ser.offline": "Classement inaccessible : vérifie ta connexion.", "ser.empty": "Aucun score : sois le premier !", "ser.next": "Il te faut {n} pts pour dépasser {name}", "ser.top": "Tu es en tête ! Défends ta place.", "ser.newRec": "NOUVEAU RECORD !", "ser.toBest": "Il te manquait {n} pts pour ton record", "ser.sending": "Envoi du score…", "ser.queued": "Hors ligne : ton score sera envoyé dès que tu seras reconnecté.", "ser.desc": "Ton score est celui de ta série : les points s'additionnent client après client et niveau après niveau. Si tu rates un niveau, la série s'arrête et tu repars de zéro. Plus tu tires proprement et vite, plus tu gagnes de points.", "ser.run": "Série en cours", "ser.runEnd": "points de la série", "ser.runNow": "Série en cours : {n} pts · {s} clients"}, "de": {"ser.board": "Rangliste", "ser.best": "Dein Rekord", "ser.servedShort": "Gäste", "ser.rank": "Du bist Platz {r} von {t}", "ser.nickT": "Dein Nickname", "ser.nickHint": "Er erscheint mit deinem Punktestand in der Rangliste. 3-14 Zeichen: Buchstaben, Zahlen, Leerzeichen . _ -", "ser.nickSend": "Nickname wählen und senden", "ser.badNick": "Nickname ungültig oder nicht erlaubt. Nutze 3-14 Zeichen (Buchstaben, Zahlen, . _ -).", "ser.edit": "Nickname", "ser.scopeAll": "Gesamt", "ser.scopeWeek": "Woche", "ser.loading": "Rangliste wird geladen…", "ser.offline": "Rangliste nicht erreichbar: prüfe deine Verbindung.", "ser.empty": "Noch keine Punkte: sei der Erste!", "ser.next": "Du brauchst {n} Pkt, um {name} zu überholen", "ser.top": "Du führst! Verteidige deinen Platz.", "ser.newRec": "NEUER REKORD!", "ser.toBest": "Dir fehlten {n} Pkt zum Rekord", "ser.sending": "Punkte werden gesendet…", "ser.queued": "Offline: dein Ergebnis wird gesendet, sobald du wieder online bist.", "ser.desc": "Dein Punktestand ist deine Serie: Die Punkte summieren sich Gast für Gast und Level für Level. Scheiterst du an einem Level, endet die Serie und du startest bei null. Je sauberer und schneller du zapfst, desto mehr Punkte gibt es.", "ser.run": "Aktuelle Serie", "ser.runEnd": "Serienpunkte", "ser.runNow": "Aktuelle Serie: {n} Pkt · {s} Gäste"}};
   Object.keys(S5).forEach((l) => Object.assign(BB.I18n.dict[l], S5[l]));
+  const S6 = {"it": {"res.lost1": "Cliente perso · perdi un cuore ♥", "res.lost2": "Cliente perso · perdi un cuore ♥", "tut.hud.lives": "Cuori: ogni cliente che scappa o birra sbagliata ti costa un cuore. I cuori NON si rigenerano passando di livello.", "upg.heart.n": "Quarto cuore", "upg.heart.d": "+1 cuore permanente (acquisto unico)", "fail.video": "Guarda un video: riprova il livello con tutti i cuori", "fail.save": "Concludi e salva il punteggio in classifica", "fail.over": "Serie conclusa", "fail.note": "Con il video la serie continua. Se concludi, riparti da zero.", "ser.pending": "La tua serie in corso ({n} pt) entra in classifica quando la concludi, a partita persa."}, "en": {"res.lost1": "Customer lost · you lose a heart ♥", "res.lost2": "Customer lost · you lose a heart ♥", "tut.hud.lives": "Hearts: every customer who leaves or wrong beer costs you a heart. Hearts do NOT refill between levels.", "upg.heart.n": "Fourth heart", "upg.heart.d": "+1 permanent heart (one-time purchase)", "fail.video": "Watch a video: retry the level with all hearts", "fail.save": "Finish and save your score to the leaderboard", "fail.over": "Streak over", "fail.note": "With the video your streak goes on. If you finish, you start from zero.", "ser.pending": "Your current streak ({n} pts) reaches the leaderboard when you finish it, after a game over."}, "fr": {"res.lost1": "Client perdu · tu perds un cœur ♥", "res.lost2": "Client perdu · tu perds un cœur ♥", "tut.hud.lives": "Cœurs : chaque client qui part ou bière ratée te coûte un cœur. Les cœurs ne se rechargent PAS entre les niveaux.", "upg.heart.n": "Quatrième cœur", "upg.heart.d": "+1 cœur permanent (achat unique)", "fail.video": "Regarde une vidéo : refais le niveau avec tous les cœurs", "fail.save": "Terminer et enregistrer le score au classement", "fail.over": "Série terminée", "fail.note": "Avec la vidéo, ta série continue. Si tu termines, tu repars de zéro.", "ser.pending": "Ta série en cours ({n} pts) entre au classement quand tu la termines, après une défaite."}, "de": {"res.lost1": "Gast verloren · du verlierst ein Herz ♥", "res.lost2": "Gast verloren · du verlierst ein Herz ♥", "tut.hud.lives": "Herzen: Jeder Gast, der geht, oder falsch gezapfte Bier kostet ein Herz. Die Herzen füllen sich beim Levelwechsel NICHT auf.", "upg.heart.n": "Viertes Herz", "upg.heart.d": "+1 dauerhaftes Herz (einmaliger Kauf)", "fail.video": "Video ansehen: Level mit allen Herzen wiederholen", "fail.save": "Beenden und Punkte in die Rangliste eintragen", "fail.over": "Serie beendet", "fail.note": "Mit dem Video geht deine Serie weiter. Beendest du sie, startest du bei null.", "ser.pending": "Deine laufende Serie ({n} Pkt) kommt in die Rangliste, wenn du sie nach einem Game Over beendest."}};
+  Object.keys(S6).forEach((l) => Object.assign(BB.I18n.dict[l], S6[l]));
   const DISC = {"it": "Se giochi online: il nickname e il punteggio che invii sono pubblici nella classifica. Non inserire dati personali.", "en": "If you play online: the nickname and score you submit are public on the leaderboard. Do not enter personal data.", "fr": "Si tu joues en ligne : le pseudo et le score envoyés sont publics dans le classement. N'indique aucune donnée personnelle.", "de": "Wenn du online spielst: Nickname und Punktestand sind in der Rangliste öffentlich. Gib keine persönlichen Daten an."};
   Object.keys(DISC).forEach((l) => { BB.I18n.dict[l]['tut.disc.b'] += ' ' + DISC[l]; });
 })(typeof globalThis !== 'undefined' ? globalThis : this);
@@ -2180,7 +2183,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
 
     startNew() {
       this.save.newGame();
-      this._createSession(1, false);
+      this._createSession(1, false, true);
       this._enterLevel();
     }
     continueGame() {
@@ -2193,9 +2196,10 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       }
       this._enterLevel();
     }
-    _createSession(level, bonus) {
+    _createSession(level, bonus, fresh) {
       const seed = this.seedFn();
-      this.session = { level, seed, idx: 0, lives: this.maxLives, results: [], bonus: !!bonus };
+      const lives = !fresh && this.session && this.session.lives > 0 ? Math.min(this.session.lives, this.maxLives) : this.maxLives; // i cuori non si rigenerano da un livello all'altro
+      this.session = { level, seed, idx: 0, lives, results: [], bonus: !!bonus };
       this.pool = BB.LevelManager.generate(level, seed, 0, !!bonus);
       this._persist();
     }
@@ -2227,7 +2231,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       this.spillRnd = BB.rng(((this.session.seed * 13 + this.session.level * 7 + 5) >>> 0) || 1); // imprevisto birra rovesciata: livelli dispari da 3 in poi
       this.spill = { on: false, wait: false, t: 0, waitT: 0, taps: 0, need: 15, fill: 0, foam: 0, styleId: null, glassId: null };
       this.spillUsed = !(lv >= 3 && lv % 2 === 1); this.spillAtPour = lv === 3 ? 2 : 2 + Math.floor(this.spillRnd() * 3); this.spillAt = 0.35 + this.spillRnd() * 0.25;
-      this.kegAtPour = lv === 2 ? 3 : 2 + Math.floor(this.kegRnd() * 3); this.kegArm = -1; this.pourCount = 0; this.levelCoins = 0; // scatta entro 1 s dall'inizio di una spillatura
+      this.kegAtPour = lv === 2 ? 3 : 2 + Math.floor(this.kegRnd() * 3); this.kegArm = -1; this.pourCount = 0; this.levelCoins = 0; this.lvl = { score: 0, served: 0 }; // scatta entro 1 s dall'inizio di una spillatura
       const R = this.rules;
       for (let i = 0; i < R.startCount; i++) this._spawn();
       this.nextArrival = R.interval * 0.8;
@@ -2429,6 +2433,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       res.speed = c0 && c0.waitLimit ? Math.max(0, Math.round(15 * (1 - c0.wait / c0.waitLimit))) : 0;
       res.points = Math.round(res.score * res.mult) + res.speed;
       const lb = this._lb(); lb.run.score += res.points; lb.run.served++;
+      this.lvl = this.lvl || { score: 0, served: 0 }; this.lvl.score += res.points; this.lvl.served++;
     }
     _lb() { const d = this.save.data; if (!d.lb) d.lb = { best: 0, bestServed: 0, nick: '', run: { score: 0, served: 0, secs: 0 } }; if (!d.lb.run) d.lb.run = { score: 0, served: 0, secs: 0 }; return d.lb; }
     // chiude la serie (livello fallito): restituisce il riepilogo e riparte da zero
@@ -2498,7 +2503,12 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
     async extraAttemptWithAd() {
       if (this.state !== 'levelfail') return { granted: false, status: 'blocked' };
       const r = await this.monet.rewardedAttempt(this.isPouring);
-      if (r.granted) { this.session.lives = 1; this._persist(); this._beginRun(); }
+      if (r.granted) { // il video ridà tutti i cuori e si rigioca il livello: la serie continua, ma i punti del tentativo fallito non si contano due volte
+        const lb = this._lb(), l = this.lvl || { score: 0, served: 0 };
+        lb.run.score = Math.max(0, lb.run.score - l.score); lb.run.served = Math.max(0, lb.run.served - l.served);
+        this.session.lives = this.maxLives; this.session.idx = 0; this.session.results = []; this.combo = 0;
+        this._persist(); this._beginRun();
+      }
       return r;
     }
 
@@ -3596,7 +3606,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       });
     }
     // invia la serie in classifica (chiede il nickname la prima volta); scrive l'esito in `box`
-    async function submitRun(snap, box) {
+    async function submitRun(snap, box, auto) {
       if (!box || !snap || snap.served < 1 || snap.score < 1) return;
       const lb = LB();
       const go = async () => {
@@ -3613,7 +3623,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
         box.innerHTML = '<button class="btn">✎ ' + esc(T('ser.nickSend')) + '</button>';
         box.firstChild.onclick = async () => { click(); const v = await askNick(cleanNick(player.name)); if (v) go(); };
       };
-      if (nickOk(lb.nick || '')) go(); else ask();
+      if (nickOk(lb.nick || '')) go(); else if (auto) { ask(); askNick(cleanNick(player.name)).then((v) => { if (v) go(); }); } else ask();
     }
     function openBoard() { renderBoard(); show('scrBoard'); loadBoard(); }
     function renderBoard() {
@@ -3621,7 +3631,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       const lb = LB();
       $('boardPanel').innerHTML = '<h2>🏆 ' + T('ser.board') + '</h2><p>' + esc(T('ser.desc')) + '</p>' +
         '<div class="tipStats"><span>' + T('ser.best') + '</span><span>' + fmtN(lb.best) + ' pt</span><span>' + T('ser.run') + '</span><span>' + fmtN(lb.run.score) + ' pt</span></div>' +
-        seg([['all', T('ser.scopeAll')], ['week', T('ser.scopeWeek')]], boardScope) +
+        (lb.run.score > 0 ? '<div class="tip">' + esc(T('ser.pending', { n: fmtN(lb.run.score) })) + '</div>' : '') + seg([['all', T('ser.scopeAll')], ['week', T('ser.scopeWeek')]], boardScope) +
         '<div id="boardList" class="stack" style="gap:6px"><div class="live" style="text-align:center">' + esc(T('ser.loading')) + '</div></div>' +
         '<div class="row2"><button class="btn" id="boardNick">✎ ' + T('ser.edit') + (lb.nick ? ' (' + esc(lb.nick) + ')' : '') + '</button><button class="btn primary" id="boardBack">' + T('bt.back') + '</button></div>';
       document.querySelectorAll('#boardPanel [data-s]').forEach((b) => { b.onclick = () => { click(); boardScope = b.dataset.s; renderBoard(); loadBoard(); }; });
@@ -3649,10 +3659,10 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       const M = BB.Meta, coins = save.data.progress.coins;
       let s = '<h2>🛒 ' + T('shop.title') + '</h2><div class="coins">' + T('shop.balance', { c: coins }) + ' ◉</div><div class="shsec">' + T('shop.upg') + '</div>';
       Object.keys(M.UPG).forEach((k) => {
-        const u = M.UPG[k], lv = M.upgLevel(save, k), max = false, cost = M.upgCost(k, lv);
+        const u = M.UPG[k], lv = M.upgLevel(save, k), max = lv >= u.max, cost = M.upgCost(k, lv);
         let pips = ''; for (let i = 0; i < Math.min(lv, 8); i++) pips += '<u class="on"></u>'; pips += ' <small>Lv ' + lv + '</small>';
         s += '<div class="shrow"><div class="shi">' + u.icon + '</div><div class="sht"><b>' + T('upg.' + k + '.n') + '</b><small>' + T('upg.' + k + '.d') + '</small><span class="pips">' + pips + '</span></div>' +
-          (max ? '<span class="shmax">' + T('shop.max') + '</span>' : '<button class="btn primary shb" data-act="upg" data-k="' + k + '"' + (coins < cost ? ' disabled' : '') + '>' + cost + ' ◉</button>') + '</div>';
+          (max ? '<span class="shmax">' + T('shop.owned') + '</span>' : '<button class="btn primary shb" data-act="upg" data-k="' + k + '"' + (coins < cost ? ' disabled' : '') + '>' + cost + ' ◉</button>') + '</div>';
       });
       s += '<div class="shsec">' + T('shop.taps') + '</div>';
       M.TAPS.forEach((t) => {
@@ -3675,7 +3685,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
     $('shopPanel').addEventListener('click', (e) => {
       const b = e.target.closest('[data-act]'); if (!b || b.disabled) return;
       const M = BB.Meta, k = b.dataset.k; let r = { ok: true };
-      if (b.dataset.act === 'upg') r = M.buyUpg(save, k);
+      if (b.dataset.act === 'upg') { r = M.buyUpg(save, k); if (r.ok && k === 'heart' && game.session) { game.session.lives = Math.min(game.maxLives, game.session.lives + 1); game._persist(); } }
       else if (b.dataset.act === 'tap') r = M.buyTap(save, k);
       else if (b.dataset.act === 'hat') r = M.buyHat(save, +k);
       else if (b.dataset.act === 'equip') { M.equipTap(save, k); audio.sfx('click'); renderShop(); return; }
@@ -4051,28 +4061,38 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
 
     function renderFail() {
       $('toast').classList.remove('show');
-      const r = game.result, snap = game.closeRun(), lb = LB(), rec = snap.score > lb.best, prevBest = lb.best;
-      if (rec) lb.best = snap.score; lb.bestServed = Math.max(lb.bestServed || 0, snap.served); save.save();
-      $('failPanel').innerHTML = '<h2>' + T('fail.title') + '</h2><p>' + T('fail.p') + '</p>' +
-        '<div class="tip">' + esc(r ? T('tip.' + (r.reason || 'good')) : T('fail.timeout')) + '</div>' +
-        (snap.score > 0 ? '<div class="serBig">' + fmtN(snap.score) + '<small>' + T('ser.runEnd') + '</small></div>' + (rec ? '<div class="recBadge">' + T('ser.newRec') + '</div>' : prevBest > 0 ? '<div class="live" style="text-align:center">' + esc(T('ser.toBest', { n: fmtN(prevBest - snap.score + 1) })) + '</div>' : '') + '<div id="runBoxF"></div>' : '') +
-        '<button class="btn primary" id="fRestart">' + T('fail.retry') + '</button>' +
-        (game.session && game.session.bonus ? '<button class="btn" id="fSkip">' + T('fail.skipBonus') + '</button>' : '') +
-        '<button class="btn" id="fAd">' + T('fail.ad') + '</button>' +
-        '<div class="live" id="fMsg" style="text-align:center"></div>' +
+      const r = game.result, run = game.peekRun(), lb = LB(), has = run.score > 0;
+      const tip = esc(r ? T('tip.' + (r.reason || 'good')) : T('fail.timeout'));
+      $('failPanel').innerHTML = '<h2>' + T('fail.title') + '</h2><p>' + T('fail.p') + '</p><div class="tip">' + tip + '</div>' +
+        (has ? '<div class="serBig">' + fmtN(run.score) + '<small>' + T('ser.runEnd') + ' · ' + run.served + ' ' + T('ser.servedShort') + '</small></div>' +
+          (run.score > lb.best ? '<div class="recBadge">' + T('ser.newRec') + '</div>' : lb.best > 0 ? '<div class="live" style="text-align:center">' + esc(T('ser.toBest', { n: fmtN(lb.best - run.score + 1) })) + '</div>' : '') +
+          '<button class="btn primary" id="fAd">🎬 ' + T('fail.video') + '</button><div class="live" id="fMsg" style="text-align:center">' + esc(T('fail.note')) + '</div>' +
+          '<button class="btn" id="fSave">🏆 ' + T('fail.save') + '</button>'
+          : '<button class="btn primary" id="fRestart">' + T('fail.retry') + '</button>') +
         '<button class="btn ghost" id="fHome">' + T('home') + '</button>';
       show('scrFail');
-      if (snap.score > 0) submitRun(snap, $('runBoxF'));
-      $('fRestart').onclick = () => { click(); hideAll(); game.restartLevel(); };
       $('fHome').onclick = () => { click(); game.goHome(); showHome(); };
-      if ($('fSkip')) $('fSkip').onclick = () => { click(); hideAll(); game.skipBonus(); };
-      $('fAd').onclick = async () => {
+      if ($('fRestart')) $('fRestart').onclick = () => { click(); hideAll(); game.restartLevel(); };
+      if ($('fAd')) $('fAd').onclick = async () => {
         click(); $('fAd').disabled = true;
         const r2 = await game.extraAttemptWithAd();
         if (r2.granted) { hideAll(); return; }
         $('fAd').disabled = false;
         $('fMsg').textContent = T(r2.status === 'dismissed' ? 'fail.adDismissed' : r2.status === 'unavailable' ? 'ad.none' : 'fail.adFailed');
       };
+      if ($('fSave')) $('fSave').onclick = () => { click(); concludeRun(); };
+    }
+    // concludi la serie: il punteggio va in classifica (si chiede il nickname se manca) e il livello si rigioca da capo con tutti i cuori
+    function concludeRun() {
+      const snap = game.closeRun(), lb = LB(), rec = snap.score > lb.best, prevBest = lb.best;
+      if (rec) lb.best = snap.score; lb.bestServed = Math.max(lb.bestServed || 0, snap.served); save.save();
+      $('failPanel').innerHTML = '<h2>' + T('fail.over') + '</h2><div class="serBig">' + fmtN(snap.score) + '<small>' + T('ser.runEnd') + ' · ' + snap.served + ' ' + T('ser.servedShort') + '</small></div>' +
+        (rec ? '<div class="recBadge">' + T('ser.newRec') + '</div>' : prevBest > 0 ? '<div class="live" style="text-align:center">' + esc(T('ser.toBest', { n: fmtN(prevBest - snap.score + 1) })) + '</div>' : '') +
+        '<div id="runBoxF"></div><button class="btn primary" id="fRestart">' + T('fail.retry') + '</button><button class="btn" id="fBoard">🏆 ' + T('ser.board') + '</button><button class="btn ghost" id="fHome">' + T('home') + '</button>';
+      $('fRestart').onclick = () => { click(); hideAll(); game.restartLevel(); };
+      $('fBoard').onclick = () => { click(); BB.Online.flush(); openBoard(); };
+      $('fHome').onclick = () => { click(); game.goHome(); showHome(); };
+      submitRun(snap, $('runBoxF'), true);
     }
     game.on('levelfail', (e) => { if (e && e.timeout) setTimeout(() => { if (game.state === 'levelfail') renderFail(); }, 800); /* altrimenti lo mostra renderResult dopo il verdetto */ });
 
