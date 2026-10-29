@@ -306,7 +306,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       <div class="tip ok" id="homeChal" hidden></div>
       <button class="btn primary" id="btnContinue" data-i="continue" style="min-height:58px;font-size:20px">Continua</button>
       <button class="btn" id="btnNew" data-i="new" style="min-height:54px">Nuova partita</button>
-      <div class="row2"><button class="btn" id="btnBoard" style="min-height:54px">🏆 <span data-i="ser.board">Classifica</span></button><button class="btn" id="btnCol" style="min-height:54px">🍺 <span data-i="home.col">Collezione</span></button></div>
+      <div class="row2"><button class="btn" id="btnBoard" style="min-height:54px">🏆 <span data-i="rec.btn">Record</span></button><button class="btn" id="btnCol" style="min-height:54px">🍺 <span data-i="home.col">Collezione</span></button></div>
       <div class="row2"><button class="btn" id="btnShop" style="min-height:54px">🛒 <span data-i="home.shop">Negozio</span></button><button class="btn" id="btnAch" style="min-height:54px">🏆 <span data-i="home.ach">Obiettivi</span></button></div>
       <div class="row2"><button class="btn" id="btnSettings" data-i="settings" style="min-height:54px">Impostazioni</button><button class="btn" id="btnTutHome" data-i="home.tut" style="min-height:54px">Tutorial</button></div>
       <button class="btn ghost" id="btnAds" data-i="removeAds" style="min-height:48px">Rimuovi pubblicità · € 3,99</button>
@@ -1785,55 +1785,6 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
   BB.MonetizationManager = MonetizationManager;
 })(typeof globalThis !== 'undefined' ? globalThis : this);
 
-/* ---- online.js ---- */
-/* Classifica online (Supabase, solo funzioni RPC: la tabella non è leggibile né scrivibile direttamente).
-   Si inviano solo nickname e punteggio; l'identificativo del dispositivo è un codice casuale locale. */
-(function (g) {
-  'use strict';
-  const BB = (g.BB = g.BB || {});
-  const URL_ = 'https://npopflmsaduygdfyyack.supabase.co';
-  const KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wb3BmbG1zYWR1eWdkZnl5YWNrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIyOTc1MTAsImV4cCI6MjEwNzg3MzUxMH0.uQEuRNeH2MCmmJHH4Cb2fQc0LLjLxEapGRyjPP6YPIA';
-  const ls = () => { try { return g.localStorage; } catch (e) { return null; } };
-  const get = (k) => { try { const s = ls(); return s ? s.getItem(k) : null; } catch (e) { return null; } };
-  const set = (k, v) => { try { const s = ls(); if (s) s.setItem(k, v); } catch (e) {} };
-  function uuid() {
-    try { if (g.crypto && g.crypto.randomUUID) return g.crypto.randomUUID(); } catch (e) {}
-    const h = () => Math.floor(Math.random() * 65536).toString(16).padStart(4, '0');
-    return h() + h() + '-' + h() + '-4' + h().slice(1) + '-a' + h().slice(1) + '-' + h() + h() + h();
-  }
-  const Online = {
-    url: URL_,
-    deviceId() { let d = get('bb_device'); if (!d || !/^[0-9a-f-]{36}$/.test(d)) { d = uuid(); set('bb_device', d); } return d; },
-    async rpc(name, args, ms) {
-      const ctl = typeof g.AbortController === 'function' ? new g.AbortController() : null;
-      const to = setTimeout(() => { if (ctl) ctl.abort(); }, ms || 7000);
-      try {
-        const r = await g.fetch(URL_ + '/rest/v1/rpc/' + name, { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: KEY, Authorization: 'Bearer ' + KEY }, body: JSON.stringify(args), signal: ctl ? ctl.signal : undefined });
-        if (!r.ok) throw new Error('http ' + r.status);
-        return await r.json();
-      } finally { clearTimeout(to); }
-    },
-    pending() { try { const a = JSON.parse(get('bb_pending') || '[]'); return Array.isArray(a) ? a : []; } catch (e) { return []; } },
-    savePending(a) { set('bb_pending', JSON.stringify(a.slice(-20))); },
-    // run: { nick, mode, board, day, score, served, duration, version }
-    async submit(run) {
-      const args = { p_device: this.deviceId(), p_nick: run.nick, p_mode: run.mode, p_board: run.board, p_day: run.day || null, p_score: run.score | 0, p_served: run.served | 0, p_duration: run.duration | 0, p_version: run.version || null };
-      try {
-        const r = await this.rpc('pp_submit', args);
-        if (r && r.ok) { this.flush(); return r; }
-        return r || { ok: false, error: 'bad' };
-      } catch (e) { const q = this.pending(); q.push(args); this.savePending(q); return { ok: false, error: 'offline', queued: true }; }
-    },
-    async flush() { // rinvia i punteggi rimasti in attesa (offline)
-      const q = this.pending(); if (!q.length) return; const left = [];
-      for (const a of q) { try { const r = await this.rpc('pp_submit', a); if (!r || (!r.ok && r.error === 'rate')) left.push(a); } catch (e) { left.push(a); } }
-      this.savePending(left);
-    },
-    board(mode, scope, limit) { return this.rpc('pp_leaderboard', { p_mode: mode, p_scope: scope, p_limit: limit || 50, p_device: this.deviceId() }); },
-  };
-  BB.Online = Online;
-})(typeof globalThis !== 'undefined' ? globalThis : this);
-
 /* ---- sensors.js ---- */
 /* Sensori: lettura giroscopio (DeviceOrientation), calibrazione, sensibilità, fallback touch. */
 (function (g) {
@@ -2141,10 +2092,10 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
   Object.keys(S7).forEach((l) => Object.assign(BB.I18n.dict[l], S7[l]));
   const S8 = {"it": {"shop.heart.n": "Cuore bonus", "shop.heart.d": "Recupera un cuore perso o, se sono pieni, ne aggiunge uno (massimo 4). Acquistabile quante volte vuoi.", "shop.heart.none": "Inizia una partita per usarlo", "shop.heart.full": "MAX"}, "en": {"shop.heart.n": "Bonus heart", "shop.heart.d": "Restores a lost heart or, if you are full, adds one (max 4). Buy as many times as you like.", "shop.heart.none": "Start a game to use it", "shop.heart.full": "MAX"}, "fr": {"shop.heart.n": "Cœur bonus", "shop.heart.d": "Récupère un cœur perdu ou, si tu es au complet, en ajoute un (maximum 4). Achetable autant de fois que tu veux.", "shop.heart.none": "Lance une partie pour l'utiliser", "shop.heart.full": "MAX"}, "de": {"shop.heart.n": "Bonusherz", "shop.heart.d": "Stellt ein verlorenes Herz wieder her oder fügt eines hinzu, wenn alle voll sind (maximal 4). Beliebig oft kaufbar.", "shop.heart.none": "Starte ein Spiel, um es zu nutzen", "shop.heart.full": "MAX"}};
   Object.keys(S8).forEach((l) => Object.assign(BB.I18n.dict[l], S8[l]));
-  const S6 = {"it": {"res.lost1": "Cliente perso · perdi un cuore ♥", "res.lost2": "Cliente perso · perdi un cuore ♥", "tut.hud.lives": "Cuori: ogni cliente che scappa o birra sbagliata ti costa un cuore. I cuori NON si rigenerano passando di livello.", "upg.heart.n": "Quarto cuore", "upg.heart.d": "+1 cuore permanente (acquisto unico)", "fail.video": "Guarda un video: riprova il livello con tutti i cuori", "fail.save": "Concludi e salva il punteggio in classifica", "fail.over": "Serie conclusa", "fail.note": "Con il video la serie continua. Se concludi, riparti da zero.", "ser.pending": "La tua serie in corso ({n} pt) entra in classifica quando la concludi, a partita persa."}, "en": {"res.lost1": "Customer lost · you lose a heart ♥", "res.lost2": "Customer lost · you lose a heart ♥", "tut.hud.lives": "Hearts: every customer who leaves or wrong beer costs you a heart. Hearts do NOT refill between levels.", "upg.heart.n": "Fourth heart", "upg.heart.d": "+1 permanent heart (one-time purchase)", "fail.video": "Watch a video: retry the level with all hearts", "fail.save": "Finish and save your score to the leaderboard", "fail.over": "Streak over", "fail.note": "With the video your streak goes on. If you finish, you start from zero.", "ser.pending": "Your current streak ({n} pts) reaches the leaderboard when you finish it, after a game over."}, "fr": {"res.lost1": "Client perdu · tu perds un cœur ♥", "res.lost2": "Client perdu · tu perds un cœur ♥", "tut.hud.lives": "Cœurs : chaque client qui part ou bière ratée te coûte un cœur. Les cœurs ne se rechargent PAS entre les niveaux.", "upg.heart.n": "Quatrième cœur", "upg.heart.d": "+1 cœur permanent (achat unique)", "fail.video": "Regarde une vidéo : refais le niveau avec tous les cœurs", "fail.save": "Terminer et enregistrer le score au classement", "fail.over": "Série terminée", "fail.note": "Avec la vidéo, ta série continue. Si tu termines, tu repars de zéro.", "ser.pending": "Ta série en cours ({n} pts) entre au classement quand tu la termines, après une défaite."}, "de": {"res.lost1": "Gast verloren · du verlierst ein Herz ♥", "res.lost2": "Gast verloren · du verlierst ein Herz ♥", "tut.hud.lives": "Herzen: Jeder Gast, der geht, oder falsch gezapfte Bier kostet ein Herz. Die Herzen füllen sich beim Levelwechsel NICHT auf.", "upg.heart.n": "Viertes Herz", "upg.heart.d": "+1 dauerhaftes Herz (einmaliger Kauf)", "fail.video": "Video ansehen: Level mit allen Herzen wiederholen", "fail.save": "Beenden und Punkte in die Rangliste eintragen", "fail.over": "Serie beendet", "fail.note": "Mit dem Video geht deine Serie weiter. Beendest du sie, startest du bei null.", "ser.pending": "Deine laufende Serie ({n} Pkt) kommt in die Rangliste, wenn du sie nach einem Game Over beendest."}};
+  const S9 = {"it": {"rec.btn": "Record", "rec.title": "I tuoi record", "rec.desc": "La classifica online è in arrivo. Intanto batti il tuo record e sfida un amico: gli mandi un link con il tuo punteggio e vedi se ti supera.", "rec.bestServed": "Più clienti in una serie", "rec.challenge": "Sfida un amico", "rec.empty": "Concludi una serie per fissare il tuo primo record.", "rec.anon": "Un barman"}, "en": {"rec.btn": "Records", "rec.title": "Your records", "rec.desc": "The online leaderboard is coming. For now, beat your own record and challenge a friend: send them a link with your score and see if they top it.", "rec.bestServed": "Most customers in a streak", "rec.challenge": "Challenge a friend", "rec.empty": "Finish a streak to set your first record.", "rec.anon": "A bartender"}, "fr": {"rec.btn": "Records", "rec.title": "Tes records", "rec.desc": "Le classement en ligne arrive. En attendant, bats ton record et défie un ami : envoie-lui un lien avec ton score et vois s'il te dépasse.", "rec.bestServed": "Plus de clients dans une série", "rec.challenge": "Défier un ami", "rec.empty": "Termine une série pour fixer ton premier record.", "rec.anon": "Un barman"}, "de": {"rec.btn": "Rekorde", "rec.title": "Deine Rekorde", "rec.desc": "Die Online-Rangliste kommt noch. Schlag bis dahin deinen Rekord und fordere einen Freund heraus: Schick ihm einen Link mit deinem Punktestand und schau, ob er dich übertrifft.", "rec.bestServed": "Meiste Gäste in einer Serie", "rec.challenge": "Freund herausfordern", "rec.empty": "Beende eine Serie, um deinen ersten Rekord aufzustellen.", "rec.anon": "Ein Barkeeper"}};
+  Object.keys(S9).forEach((l) => Object.assign(BB.I18n.dict[l], S9[l]));
+  const S6 = {"it": {"res.lost1": "Cliente perso · perdi un cuore ♥", "res.lost2": "Cliente perso · perdi un cuore ♥", "tut.hud.lives": "Cuori: ogni cliente che scappa o birra sbagliata ti costa un cuore. I cuori NON si rigenerano passando di livello.", "upg.heart.n": "Quarto cuore", "upg.heart.d": "+1 cuore permanente (acquisto unico)", "fail.video": "Guarda un video: riprova il livello con tutti i cuori", "fail.save": "Concludi e salva il record", "fail.over": "Serie conclusa", "fail.note": "Con il video la serie continua. Se concludi, riparti da zero.", "ser.pending": "La tua serie in corso ({n} pt) diventa un record se la concludi e supera il tuo migliore."}, "en": {"res.lost1": "Customer lost · you lose a heart ♥", "res.lost2": "Customer lost · you lose a heart ♥", "tut.hud.lives": "Hearts: every customer who leaves or wrong beer costs you a heart. Hearts do NOT refill between levels.", "upg.heart.n": "Fourth heart", "upg.heart.d": "+1 permanent heart (one-time purchase)", "fail.video": "Watch a video: retry the level with all hearts", "fail.save": "Finish and save your record", "fail.over": "Streak over", "fail.note": "With the video your streak goes on. If you finish, you start from zero.", "ser.pending": "Your current streak ({n} pts) becomes a record if you finish it and it beats your best."}, "fr": {"res.lost1": "Client perdu · tu perds un cœur ♥", "res.lost2": "Client perdu · tu perds un cœur ♥", "tut.hud.lives": "Cœurs : chaque client qui part ou bière ratée te coûte un cœur. Les cœurs ne se rechargent PAS entre les niveaux.", "upg.heart.n": "Quatrième cœur", "upg.heart.d": "+1 cœur permanent (achat unique)", "fail.video": "Regarde une vidéo : refais le niveau avec tous les cœurs", "fail.save": "Terminer et enregistrer le record", "fail.over": "Série terminée", "fail.note": "Avec la vidéo, ta série continue. Si tu termines, tu repars de zéro.", "ser.pending": "Ta série en cours ({n} pts) devient un record si tu la termines et dépasses ton meilleur score."}, "de": {"res.lost1": "Gast verloren · du verlierst ein Herz ♥", "res.lost2": "Gast verloren · du verlierst ein Herz ♥", "tut.hud.lives": "Herzen: Jeder Gast, der geht, oder falsch gezapfte Bier kostet ein Herz. Die Herzen füllen sich beim Levelwechsel NICHT auf.", "upg.heart.n": "Viertes Herz", "upg.heart.d": "+1 dauerhaftes Herz (einmaliger Kauf)", "fail.video": "Video ansehen: Level mit allen Herzen wiederholen", "fail.save": "Beenden und Rekord speichern", "fail.over": "Serie beendet", "fail.note": "Mit dem Video geht deine Serie weiter. Beendest du sie, startest du bei null.", "ser.pending": "Deine laufende Serie ({n} Pkt) wird zum Rekord, wenn du sie beendest und deine Bestmarke schlägst."}};
   Object.keys(S6).forEach((l) => Object.assign(BB.I18n.dict[l], S6[l]));
-  const DISC = {"it": "Se giochi online: il nickname e il punteggio che invii sono pubblici nella classifica. Non inserire dati personali.", "en": "If you play online: the nickname and score you submit are public on the leaderboard. Do not enter personal data.", "fr": "Si tu joues en ligne : le pseudo et le score envoyés sont publics dans le classement. N'indique aucune donnée personnelle.", "de": "Wenn du online spielst: Nickname und Punktestand sind in der Rangliste öffentlich. Gib keine persönlichen Daten an."};
-  Object.keys(DISC).forEach((l) => { BB.I18n.dict[l]['tut.disc.b'] += ' ' + DISC[l]; });
 })(typeof globalThis !== 'undefined' ? globalThis : this);
 
 /* ---- game.js ---- */
@@ -3620,41 +3571,10 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
     // ---------- classifica online (punteggio della serie) ----------
     const fmtN = (n) => { try { return Number(n).toLocaleString(BB.I18n.lang === 'en' ? 'en-US' : BB.I18n.lang); } catch (e) { return String(n); } };
     const LB = () => game._lb();
-    let boardScope = 'all', boardReq = 0, boardMe = null;
     const cleanNick = (v) => String(v || '').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^A-Za-z0-9 ._-]/g, '').replace(/\s+/g, ' ').trim().slice(0, 14);
     const nickOk = (v) => /^[A-Za-z0-9 ._-]{3,14}$/.test(v);
-    function askNick(prefill) {
-      return new Promise((res) => {
-        $('dialogPanel').innerHTML = '<h2>' + esc(T('ser.nickT')) + '</h2><p>' + esc(T('ser.nickHint')) + '</p><input class="nickIn" id="nickIn" maxlength="14" autocomplete="off" autocapitalize="off" spellcheck="false" value="' + esc(prefill || '') + '"><div class="live" id="nickErr" style="color:var(--bad)"></div><div class="stack"><button class="btn primary" id="nickOk">' + esc(T('ser.nickSend')) + '</button><button class="btn" id="nickNo">' + esc(T('cancel')) + '</button></div>';
-        $('scrDialog').hidden = false;
-        const done = (v) => { $('scrDialog').hidden = true; res(v); };
-        $('nickOk').onclick = () => { click(); const v = cleanNick($('nickIn').value); if (!nickOk(v)) { $('nickErr').textContent = T('ser.badNick'); return; } LB().nick = v; save.save(); done(v); };
-        $('nickNo').onclick = () => { click(); done(null); };
-      });
-    }
-    // invia la serie in classifica (chiede il nickname la prima volta); scrive l'esito in `box`
-    async function submitRun(snap, box, auto) {
-      if (!box || !snap || snap.served < 1 || snap.score < 1) return;
-      const lb = LB();
-      const go = async () => {
-        box.innerHTML = '<div class="live" style="text-align:center">' + esc(T('ser.sending')) + '</div>';
-        const r = await BB.Online.submit({ nick: lb.nick, mode: 'normal', board: 'free', day: null, score: snap.score, served: snap.served, duration: Math.max(snap.secs, snap.served * 5), version: '9.1' });
-        let txt;
-        if (r && r.ok) { txt = T('ser.rank', { r: r.rank, t: r.total }); lastRank = { r: r.rank, t: r.total }; }
-        else if (r && r.error === 'nick') { lb.nick = ''; save.save(); ask(); return; }
-        else if (r && r.error === 'offline') txt = T('ser.queued');
-        else txt = T('ser.offline');
-        box.innerHTML = '<div class="live" style="text-align:center">' + esc(txt) + '</div>';
-      };
-      const ask = () => {
-        box.innerHTML = '<button class="btn">✎ ' + esc(T('ser.nickSend')) + '</button>';
-        box.firstChild.onclick = async () => { click(); const v = await askNick(cleanNick(player.name)); if (v) go(); };
-      };
-      if (nickOk(lb.nick || '')) go(); else if (auto) { ask(); askNick(cleanNick(player.name)).then((v) => { if (v) go(); }); } else ask();
-    }
     // ---------- condivisione e sfide ----------
     const baseUrl = () => (/^https?:$/.test(location.protocol) ? location.origin + location.pathname : 'https://christiancolnago.github.io/appgame/');
-    let lastRank = null;
     function makeCard(info) {
       const W = 1080, H = 1350, cv = document.createElement('canvas'); cv.width = W; cv.height = H; const c = cv.getContext('2d');
       const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#2a1a0c'); g.addColorStop(1, '#0b0704'); c.fillStyle = g; c.fillRect(0, 0, W, H);
@@ -3672,15 +3592,15 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       c.fillStyle = '#e8dcc4'; c.font = '600 40px system-ui, sans-serif'; c.fillText(T('ser.pts').toUpperCase(), W / 2, 905);
       c.fillStyle = '#fff'; c.font = '700 64px system-ui, sans-serif'; c.fillText(info.nick || '', W / 2, 1000);
       c.fillStyle = '#e8dcc4'; c.font = '500 38px system-ui, sans-serif';
-      const lines = [T('card.served', { n: info.served })]; if (info.rank) lines.push(T('card.rank', { r: info.rank, t: info.total })); if (info.fav) lines.push(T('card.fav', { s: info.fav }));
+      const lines = [T('card.served', { n: info.served })]; if (info.fav) lines.push(T('card.fav', { s: info.fav }));
       lines.forEach((t, i) => c.fillText(t, W / 2, 1060 + i * 50));
       c.fillStyle = '#f3c967'; c.font = '700 44px system-ui, sans-serif'; c.fillText(T('card.cta'), W / 2, 1245);
       c.fillStyle = 'rgba(232,220,196,.7)'; c.font = '500 30px system-ui, sans-serif'; c.fillText(baseUrl().replace(/^https?:\/\//, ''), W / 2, 1290);
       return cv;
     }
-    async function shareResult(score, served, rank, total) {
-      const lb = LB(), fav = game.favStyle(), info = { nick: lb.nick, score, served, rank, total, fav: fav ? BB.STYLES[fav].name : '' };
-      const cv = makeCard(info), url = baseUrl() + '?s=' + score + '&n=' + encodeURIComponent(lb.nick || ''), text = T('share.text', { n: fmtN(score), nick: lb.nick || '' });
+    async function shareResult(score, served) {
+      const fav = game.favStyle(), nick = myName(), info = { nick, score, served, fav: fav ? BB.STYLES[fav].name : '' };
+      const cv = makeCard(info), url = baseUrl() + '?s=' + score + '&n=' + encodeURIComponent(nick), text = T('share.text', { n: fmtN(score), nick });
       const blob = await new Promise((r) => { try { cv.toBlob(r, 'image/png'); } catch (e) { r(null); } });
       const file = blob && typeof File === 'function' ? new File([blob], 'the-publican.png', { type: 'image/png' }) : null;
       try {
@@ -3691,12 +3611,12 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       try { await navigator.clipboard.writeText(text + ' ' + url); } catch (e) {}
       return 'copied';
     }
-    async function doShare(btn, score, served, rank, total) { btn.disabled = true; const r = await shareResult(score, served, rank, total); btn.disabled = false; if (r === 'copied') toast(T('share.copied'), 3500); }
+    async function doShare(btn, score, served) { btn.disabled = true; const r = await shareResult(score, served); btn.disabled = false; if (r === 'copied') toast(T('share.copied'), 3500); }
     // sfida ricevuta da un link (?s=punti&n=nickname)
     (function readChallenge() {
       try {
         const q = new URLSearchParams(location.search), sc = parseInt(q.get('s'), 10), nk = cleanNick(q.get('n'));
-        if (sc > 0 && sc < 1000000 && nickOk(nk)) { LB().chal = { n: nk, s: sc }; save.save(); }
+        if (sc > 0 && sc < 1000000 && nk.length >= 1) { LB().chal = { n: nk, s: sc }; save.save(); }
         if (q.has('s') || q.has('n')) history.replaceState(null, '', location.pathname);
       } catch (e) {}
     })();
@@ -3707,35 +3627,21 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
     }
     $('btnCol').onclick = () => { click(); openTips(Math.max(1, save.data.session ? save.data.session.level : save.data.progress.level || 1)); };
 
-    function openBoard() { renderBoard(); show('scrBoard'); loadBoard(); }
+    // ---------- i tuoi record (la classifica online è in sospeso: restano il record personale e la sfida a un amico) ----------
+    const myName = () => cleanNick(player.name) || T('rec.anon');
+    function openBoard() { renderBoard(); show('scrBoard'); }
     function renderBoard() {
-      const seg = (arr, cur) => '<div class="bseg">' + arr.map((a) => '<button class="btn" data-s="' + a[0] + '" aria-pressed="' + (cur === a[0]) + '">' + a[1] + '</button>').join('') + '</div>';
-      const lb = LB();
-      $('boardPanel').innerHTML = '<h2>🏆 ' + T('ser.board') + '</h2><p>' + esc(T('ser.desc')) + '</p>' +
-        '<div class="tipStats"><span>' + T('ser.best') + '</span><span>' + fmtN(lb.best) + ' pt</span><span>' + T('ser.run') + '</span><span>' + fmtN(lb.run.score) + ' pt</span></div>' +
-        (lb.run.score > 0 ? '<div class="tip">' + esc(T('ser.pending', { n: fmtN(lb.run.score) })) + '</div>' : '') + seg([['all', T('ser.scopeAll')], ['week', T('ser.scopeWeek')]], boardScope) +
-        '<div id="boardList" class="stack" style="gap:6px"><div class="live" style="text-align:center">' + esc(T('ser.loading')) + '</div></div>' +
-        (lb.best > 0 && lb.nick ? '<button class="btn" id="boardShare">📤 ' + T('share.btn') + '</button>' : '') + '<div class="row2"><button class="btn" id="boardNick">✎ ' + T('ser.edit') + (lb.nick ? ' (' + esc(lb.nick) + ')' : '') + '</button><button class="btn primary" id="boardBack">' + T('bt.back') + '</button></div>';
-      if ($('boardShare')) $('boardShare').onclick = () => { click(); doShare($('boardShare'), lb.best, lb.bestServed, boardMe && boardMe.r, boardMe && boardMe.t); };
-      document.querySelectorAll('#boardPanel [data-s]').forEach((b) => { b.onclick = () => { click(); boardScope = b.dataset.s; renderBoard(); loadBoard(); }; });
+      const lb = LB(), ms = BB.Meta.stats(save), fav = game.favStyle();
+      $('boardPanel').innerHTML = '<h2>🏆 ' + T('rec.title') + '</h2><p>' + esc(T('rec.desc')) + '</p>' +
+        '<div class="serBig">' + fmtN(lb.best) + '<small>' + T('ser.best') + '</small></div>' +
+        '<div class="tipStats"><span>' + T('rec.bestServed') + '</span><span>' + fmtN(lb.bestServed || 0) + '</span><span>' + T('ser.run') + '</span><span>' + fmtN(lb.run.score) + ' pt</span><span>' + T('col.served') + '</span><span>' + fmtN(ms.served) + '</span><span>' + T('col.perfect') + '</span><span>' + fmtN(ms.perfect) + '</span><span>' + T('col.combo') + '</span><span>×' + ms.bestCombo + '</span>' + (fav ? '<span>' + T('col.fav') + '</span><span>' + esc(BB.STYLES[fav].name) + '</span>' : '') + '</div>' +
+        (LB().chal && LB().chal.s > 0 && lb.best < LB().chal.s ? '<div class="tip">' + esc(T('chal.banner', { nick: LB().chal.n, n: fmtN(LB().chal.s) })) + '</div>' : '') +
+        (lb.best > 0 ? '<button class="btn primary" id="boardShare">📤 ' + T('rec.challenge') + '</button>' : '<div class="live" style="text-align:center">' + esc(T('rec.empty')) + '</div>') +
+        '<button class="btn" id="boardBack">' + T('bt.back') + '</button>';
+      if ($('boardShare')) $('boardShare').onclick = () => { click(); doShare($('boardShare'), lb.best, lb.bestServed || 0); };
       $('boardBack').onclick = () => { click(); showHome(); };
-      $('boardNick').onclick = async () => { click(); const v = await askNick(LB().nick || cleanNick(player.name)); if (v) { renderBoard(); loadBoard(); } };
     }
-    async function loadBoard() {
-      const my = ++boardReq; let r;
-      try { r = await BB.Online.board('normal', boardScope, 50); } catch (e) { r = null; }
-      if (my !== boardReq || !$('boardList')) return;
-      if (!r) { $('boardList').innerHTML = '<div class="live" style="text-align:center">' + esc(T('ser.offline')) + '</div>'; return; }
-      if (boardScope === 'all' && r.me) boardMe = { r: r.me.r, t: r.total };
-      if (!r.rows.length) { $('boardList').innerHTML = '<div class="live" style="text-align:center">' + esc(T('ser.empty')) + '</div>'; return; }
-      const row = (x) => '<div class="brow' + (x.me ? ' me' : '') + (x.r <= 3 ? ' top' + x.r : '') + '"><b>#' + x.r + '</b><span class="bn">' + esc(x.n) + '</span><span class="bs">' + fmtN(x.s) + '<small>' + x.v + ' ' + esc(T('ser.servedShort')) + '</small></span></div>';
-      let h = r.rows.map(row).join('');
-      if (r.me && !r.rows.some((x) => x.me)) h += '<div class="live" style="text-align:center">⋯</div>' + row({ r: r.me.r, n: r.me.n, s: r.me.s, v: r.me.v, me: true });
-      if (r.me && r.next) h += '<div class="tip ok">' + esc(T('ser.next', { n: fmtN(r.next.s - r.me.s + 1), name: r.next.n })) + '</div>';
-      else if (r.me && r.me.r === 1) h += '<div class="tip ok">' + esc(T('ser.top')) + '</div>';
-      $('boardList').innerHTML = h;
-    }
-    $('btnBoard').onclick = () => { click(); BB.Online.flush(); openBoard(); };
+    $('btnBoard').onclick = () => { click(); openBoard(); };
 
     function openShop(from) { shopFrom = from; renderShop(); show('scrShop'); }
     function closeShop() { if (shopFrom === 'victory' && game.state === 'victory') renderVictory(game.victory); else showHome(); }
@@ -4177,12 +4083,11 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       if (rec) lb.best = snap.score; lb.bestServed = Math.max(lb.bestServed || 0, snap.served); save.save();
       $('failPanel').innerHTML = '<h2>' + T('fail.over') + '</h2><div class="serBig">' + fmtN(snap.score) + '<small>' + T('ser.runEnd') + ' · ' + snap.served + ' ' + T('ser.servedShort') + '</small></div>' +
         (rec ? '<div class="recBadge">' + T('ser.newRec') + '</div>' : prevBest > 0 ? '<div class="live" style="text-align:center">' + esc(T('ser.toBest', { n: fmtN(prevBest - snap.score + 1) })) + '</div>' : '') +
-        chalLine(snap.score) + '<div id="runBoxF"></div><button class="btn" id="fShare">📤 ' + T('share.btn') + '</button><button class="btn primary" id="fRestart">' + T('fail.retry') + '</button><button class="btn" id="fBoard">🏆 ' + T('ser.board') + '</button><button class="btn ghost" id="fHome">' + T('home') + '</button>';
-      lastRank = null; $('fShare').onclick = () => { click(); doShare($('fShare'), snap.score, snap.served, lastRank && lastRank.r, lastRank && lastRank.t); };
+        chalLine(snap.score) + '<button class="btn" id="fShare">📤 ' + T('rec.challenge') + '</button><button class="btn primary" id="fRestart">' + T('fail.retry') + '</button><button class="btn" id="fBoard">🏆 ' + T('rec.title') + '</button><button class="btn ghost" id="fHome">' + T('home') + '</button>';
+      $('fShare').onclick = () => { click(); doShare($('fShare'), snap.score, snap.served); };
       $('fRestart').onclick = () => { click(); hideAll(); game.restartLevel(); };
-      $('fBoard').onclick = () => { click(); BB.Online.flush(); openBoard(); };
+      $('fBoard').onclick = () => { click(); openBoard(); };
       $('fHome').onclick = () => { click(); game.goHome(); showHome(); };
-      submitRun(snap, $('runBoxF'), true);
     }
     game.on('levelfail', (e) => { if (e && e.timeout) setTimeout(() => { if (game.state === 'levelfail') renderFail(); }, 800); /* altrimenti lo mostra renderResult dopo il verdetto */ });
 
@@ -4196,11 +4101,10 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       $('victoryPanel').innerHTML = '<h2>' + (v.bonus ? T('vic.bonusTitle') : T('vic.title', { n: v.level })) + '</h2>' + starsHtml(v.stars) +
         '<div class="score">' + v.avgScore + '<small>' + T('vic.avg') + '</small></div>' +
         '<div class="coins">' + T('vic.coins', { n: v.coins }) + '</div>' + unl +
-        (LB().run.score > 0 ? '<div class="live" style="text-align:center">' + esc(T('ser.runNow', { n: fmtN(LB().run.score), s: LB().run.served })) + '</div><div id="runBoxV"></div>' : '') +
+        (LB().run.score > 0 ? '<div class="live" style="text-align:center">' + esc(T('ser.runNow', { n: fmtN(LB().run.score), s: LB().run.served })) + '</div>' : '') +
         '<button class="btn" id="vDouble">' + T('vic.double') + ' · +' + (v.dbl || v.coins) + ' ◉</button><div class="live" id="vMsg" style="text-align:center"></div>' +
         '<button class="btn primary" id="vNext">' + T('continue') + '</button><button class="btn" id="vTips">🍺 ' + T('bt.btn') + '</button><button class="btn" id="vShop">🛒 ' + T('vic.shop') + '</button><button class="btn ghost" id="vHome">' + T('home') + '</button>';
       show('scrVictory'); confetti($('scrVictory'));
-      if ($('runBoxV')) submitRun(game.peekRun(), $('runBoxV'));
       $('vShop').onclick = () => { click(); openShop('victory'); };
       $('vTips').onclick = () => { click(); openTips(v.level + 1); };
       $('vNext').onclick = async () => {
