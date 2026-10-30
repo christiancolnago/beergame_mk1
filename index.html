@@ -22,8 +22,9 @@ body{overscroll-behavior:none;-webkit-tap-highlight-color:transparent;margin:0;b
 [hidden]:not([hidden=until-found i]){display:none!important}
 button{touch-action:manipulation}
 @supports (height:100dvh){#app{height:100dvh}}
-#hud{padding-top:calc(8px + env(safe-area-inset-top,0px))}
-#controls{padding-bottom:calc(12px + env(safe-area-inset-bottom,0px))}
+/* margini di sicurezza (tacca, barra di stato, barra dei gesti): su Android l'app usa le variabili di Capacitor, sul web/iPhone env() */
+:root{--sat:var(--safe-area-inset-top, env(safe-area-inset-top,0px));--sab:var(--safe-area-inset-bottom, env(safe-area-inset-bottom,0px));--sal:var(--safe-area-inset-left, env(safe-area-inset-left,0px));--sar:var(--safe-area-inset-right, env(safe-area-inset-right,0px))}
+
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -49,7 +50,7 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; }
 button:focus-visible, input:focus-visible { outline: 3px solid var(--amber); outline-offset: 2px; }
 
 /* HUD */
-#hud { position: absolute; left: 0; right: 0; top: 0; padding: 8px 12px 0; pointer-events: none; display: flex; flex-direction: column; gap: 6px; }
+#hud { position: absolute; left: 0; right: 0; top: 0; padding: calc(8px + var(--sat)) calc(12px + var(--sar)) 0 calc(12px + var(--sal)); pointer-events: none; display: flex; flex-direction: column; gap: 6px; }
 #bar { display: flex; align-items: center; gap: 10px; font-family: var(--ui); font-weight: 600; font-size: 17px; letter-spacing: .03em; }
 #bar .grow { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .chip { background: rgba(0,0,0,.5); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; }
@@ -65,7 +66,7 @@ button:focus-visible, input:focus-visible { outline: 3px solid var(--amber); out
 #oTime i { display: block; height: 100%; background: var(--good); width: 100%; }
 
 /* comandi */
-#controls { position: absolute; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; padding: 0 14px 12px; gap: 6px; }
+#controls { position: absolute; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; padding: 0 calc(14px + var(--sar)) calc(12px + var(--sab)) calc(14px + var(--sal)); gap: 6px; }
 #hint { font-family: var(--ui); font-weight: 600; font-size: 17px; letter-spacing: .02em; text-align: center; text-shadow: 0 2px 4px rgba(0,0,0,.8); min-height: 22px; padding: 0 8px; }
 #hint.warn { color: var(--amber); } #hint.bad { color: #ff9a85; }
 #row { display: flex; align-items: center; justify-content: space-between; width: 100%; gap: 10px; }
@@ -136,7 +137,7 @@ body.keg #kegBtn{display:block} body.keg #row,body.keg #picker,body.keg #tiltStr
 @media (prefers-reduced-motion: reduce) { .pick.bad { animation: none; } }
 
 /* schermate e pannelli */
-.screen { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px 16px; background: rgba(8,10,9,.78); backdrop-filter: blur(3px); overflow-y: auto; touch-action: pan-y; }
+.screen { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: calc(20px + var(--sat)) calc(16px + var(--sar)) calc(20px + var(--sab)) calc(16px + var(--sal)); background: rgba(8,10,9,.78); backdrop-filter: blur(3px); overflow-y: auto; touch-action: pan-y; }
 .screen.solid { background: radial-gradient(120% 80% at 50% 0%, #2b3a33 0%, #101a16 60%); }
 .panel { width: 100%; max-width: 380px; background: linear-gradient(180deg, var(--panel-2), var(--panel)); border: 1px solid var(--brass-dark); border-radius: 18px; padding: 18px 18px 16px; box-shadow: 0 14px 40px rgba(0,0,0,.6); display: flex; flex-direction: column; gap: 12px; }
 .chip#barInfo { white-space: pre-line; line-height: 1.15; text-align: center; font-size: 14px; }
@@ -214,7 +215,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
 .prof .pn{flex:1;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .prof .pe{color:var(--amber);font-size:18px}
 .langSeg button{min-height:36px;font-size:14px;letter-spacing:.06em}
-#scrAvatar{justify-content:flex-start;overflow:hidden;padding:10px 16px}
+#scrAvatar{justify-content:flex-start;overflow:hidden;padding:calc(10px + var(--sat)) calc(16px + var(--sar)) calc(10px + var(--sab)) calc(16px + var(--sal))}
 #scrAvatar .panel{margin:0 auto;gap:10px;flex:1;min-height:0;max-height:100%;overflow:hidden}
 #avScroll{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;touch-action:pan-y;display:flex;flex-direction:column;gap:10px;padding-right:2px}
 .avTop{display:flex;justify-content:center}
@@ -334,9 +335,11 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
         <div class="seg" id="axisSeg"><button data-axis="auto" data-i="axis.auto">Auto</button><button data-axis="roll" data-i="axis.roll">Laterale</button><button data-axis="pitch" data-i="axis.pitch">Avanti/indietro</button></div>
       </div>
       <div class="live" id="sensState">Sensore: non ancora avviato</div>
+      <div class="live" id="verInfo" style="opacity:.6"></div>
       <div class="live"><span data-i="set.live">Inclinazione in tempo reale:</span> <b id="liveTilt">0°</b></div>
       <div class="row2"><button class="btn" id="btnCal2" data-i="set.cal">Calibra posizione</button><button class="btn" id="btnTestSensor" data-i="set.enable">Attiva sensore</button></div>
       <button class="btn" id="btnRestore" data-i="set.restore">Ripristina acquisti</button>
+      <button class="btn" id="btnPrivacy" data-i="set.privacy" hidden>Preferenze privacy e pubblicità</button>
       <div id="debugBox" class="stack" hidden>
         <div class="badge" data-i="debug.only">Solo debug</div>
         <button class="btn" id="btnDbgAds">[TEST] attiva/disattiva flag senza pubblicità</button>
@@ -2094,6 +2097,8 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
   Object.keys(S8).forEach((l) => Object.assign(BB.I18n.dict[l], S8[l]));
   const S9 = {"it": {"rec.btn": "Record", "rec.title": "I tuoi record", "rec.desc": "La classifica online è in arrivo. Intanto batti il tuo record e sfida un amico: gli mandi un link con il tuo punteggio e vedi se ti supera.", "rec.bestServed": "Più clienti in una serie", "rec.challenge": "Sfida un amico", "rec.empty": "Concludi una serie per fissare il tuo primo record.", "rec.anon": "Un barman"}, "en": {"rec.btn": "Records", "rec.title": "Your records", "rec.desc": "The online leaderboard is coming. For now, beat your own record and challenge a friend: send them a link with your score and see if they top it.", "rec.bestServed": "Most customers in a streak", "rec.challenge": "Challenge a friend", "rec.empty": "Finish a streak to set your first record.", "rec.anon": "A bartender"}, "fr": {"rec.btn": "Records", "rec.title": "Tes records", "rec.desc": "Le classement en ligne arrive. En attendant, bats ton record et défie un ami : envoie-lui un lien avec ton score et vois s'il te dépasse.", "rec.bestServed": "Plus de clients dans une série", "rec.challenge": "Défier un ami", "rec.empty": "Termine une série pour fixer ton premier record.", "rec.anon": "Un barman"}, "de": {"rec.btn": "Rekorde", "rec.title": "Deine Rekorde", "rec.desc": "Die Online-Rangliste kommt noch. Schlag bis dahin deinen Rekord und fordere einen Freund heraus: Schick ihm einen Link mit deinem Punktestand und schau, ob er dich übertrifft.", "rec.bestServed": "Meiste Gäste in einer Serie", "rec.challenge": "Freund herausfordern", "rec.empty": "Beende eine Serie, um deinen ersten Rekord aufzustellen.", "rec.anon": "Ein Barkeeper"}};
   Object.keys(S9).forEach((l) => Object.assign(BB.I18n.dict[l], S9[l]));
+  const S10 = {"it": {"set.privacy": "Preferenze privacy e pubblicità", "priv.none": "Nessuna opzione disponibile al momento."}, "en": {"set.privacy": "Privacy and ads preferences", "priv.none": "No options available right now."}, "fr": {"set.privacy": "Préférences de confidentialité et publicité", "priv.none": "Aucune option disponible pour le moment."}, "de": {"set.privacy": "Datenschutz- und Werbeeinstellungen", "priv.none": "Derzeit keine Optionen verfügbar."}};
+  Object.keys(S10).forEach((l) => Object.assign(BB.I18n.dict[l], S10[l]));
   const S6 = {"it": {"res.lost1": "Cliente perso · perdi un cuore ♥", "res.lost2": "Cliente perso · perdi un cuore ♥", "tut.hud.lives": "Cuori: ogni cliente che scappa o birra sbagliata ti costa un cuore. I cuori NON si rigenerano passando di livello.", "upg.heart.n": "Quarto cuore", "upg.heart.d": "+1 cuore permanente (acquisto unico)", "fail.video": "Guarda un video: riprova il livello con tutti i cuori", "fail.save": "Concludi e salva il record", "fail.over": "Serie conclusa", "fail.note": "Con il video la serie continua. Se concludi, riparti da zero.", "ser.pending": "La tua serie in corso ({n} pt) diventa un record se la concludi e supera il tuo migliore."}, "en": {"res.lost1": "Customer lost · you lose a heart ♥", "res.lost2": "Customer lost · you lose a heart ♥", "tut.hud.lives": "Hearts: every customer who leaves or wrong beer costs you a heart. Hearts do NOT refill between levels.", "upg.heart.n": "Fourth heart", "upg.heart.d": "+1 permanent heart (one-time purchase)", "fail.video": "Watch a video: retry the level with all hearts", "fail.save": "Finish and save your record", "fail.over": "Streak over", "fail.note": "With the video your streak goes on. If you finish, you start from zero.", "ser.pending": "Your current streak ({n} pts) becomes a record if you finish it and it beats your best."}, "fr": {"res.lost1": "Client perdu · tu perds un cœur ♥", "res.lost2": "Client perdu · tu perds un cœur ♥", "tut.hud.lives": "Cœurs : chaque client qui part ou bière ratée te coûte un cœur. Les cœurs ne se rechargent PAS entre les niveaux.", "upg.heart.n": "Quatrième cœur", "upg.heart.d": "+1 cœur permanent (achat unique)", "fail.video": "Regarde une vidéo : refais le niveau avec tous les cœurs", "fail.save": "Terminer et enregistrer le record", "fail.over": "Série terminée", "fail.note": "Avec la vidéo, ta série continue. Si tu termines, tu repars de zéro.", "ser.pending": "Ta série en cours ({n} pts) devient un record si tu la termines et dépasses ton meilleur score."}, "de": {"res.lost1": "Gast verloren · du verlierst ein Herz ♥", "res.lost2": "Gast verloren · du verlierst ein Herz ♥", "tut.hud.lives": "Herzen: Jeder Gast, der geht, oder falsch gezapfte Bier kostet ein Herz. Die Herzen füllen sich beim Levelwechsel NICHT auf.", "upg.heart.n": "Viertes Herz", "upg.heart.d": "+1 dauerhaftes Herz (einmaliger Kauf)", "fail.video": "Video ansehen: Level mit allen Herzen wiederholen", "fail.save": "Beenden und Rekord speichern", "fail.over": "Serie beendet", "fail.note": "Mit dem Video geht deine Serie weiter. Beendest du sie, startest du bei null.", "ser.pending": "Deine laufende Serie ({n} Pkt) wird zum Rekord, wenn du sie beendest und deine Bestmarke schlägst."}};
   Object.keys(S6).forEach((l) => Object.assign(BB.I18n.dict[l], S6[l]));
 })(typeof globalThis !== 'undefined' ? globalThis : this);
@@ -3377,9 +3382,15 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
     BB.I18n.set(settings.lang || BB.I18n.detect());
     const T = (k, v) => BB.I18n.t(k, v);
     const kindOf = (st) => (st.kind ? st.name + ' · ' + st.kind : st.name);
-    const provider = new BB.TestProvider();
+    // App nativa (Android/iOS): provider reale con AdMob e acquisti dello store. Sul web resta il provider di prova.
+    const provider = BB.nativeProvider || new BB.TestProvider();
     const monet = new BB.MonetizationManager(provider, save);
     const game = new BB.Game(save, monet);
+    if (BB.nativeProvider) {
+      const syncOwned = () => { try { if (provider.ownsRemoveAds && provider.ownsRemoveAds() && !save.data.purchases.adsRemoved) { save.data.purchases.adsRemoved = true; save.save(); if (typeof showHome === 'function' && game.state === 'home') showHome(); } } catch (e) {} };
+      provider.onOwnedChange = syncOwned;
+      provider.initialize().then(() => { syncOwned(); try { if (game.state === 'home') showHome(); } catch (e) {} }).catch(() => {});
+    }
     const audio = new BB.AudioManager(settings);
     const sensors = new BB.Sensors(g, settings);
     const renderer = new BB.Renderer($('cv'));
@@ -3518,6 +3529,8 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       if (has) $('homeStats').textContent = T('home.stats', { l: save.data.session ? save.data.session.level : p.level, c: p.coins });
       { const ch = LB().chal, el = $('homeChal'); const on = ch && ch.s > 0 && LB().best < ch.s; el.hidden = !on; if (on) el.textContent = T('chal.banner', { nick: ch.n, n: fmtN(ch.s) }); }
       $('btnAds').hidden = monet.adsRemoved;
+      { const pr = provider.priceRemoveAds && provider.priceRemoveAds(); if (pr) $('btnAds').textContent = T('removeAds').replace(/·.*$/, '· ' + pr); }
+      $('btnPrivacy').hidden = !(provider.showPrivacyOptions);
       $('homeBadge').textContent = monet.isTestMode ? T('badge.test') : '';
       $('homeBadge').hidden = !monet.isTestMode;
       $('hud').hidden = true; $('controls').hidden = true; $('tiltStrip').hidden = true;
@@ -3574,7 +3587,8 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
     const cleanNick = (v) => String(v || '').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^A-Za-z0-9 ._-]/g, '').replace(/\s+/g, ' ').trim().slice(0, 14);
     const nickOk = (v) => /^[A-Za-z0-9 ._-]{3,14}$/.test(v);
     // ---------- condivisione e sfide ----------
-    const baseUrl = () => (/^https?:$/.test(location.protocol) ? location.origin + location.pathname : 'https://christiancolnago.github.io/appgame/');
+    const WEB_URL = 'https://christiancolnago.github.io/beergame/';
+    const baseUrl = () => ((!BB.nativeProvider && /^https?:$/.test(location.protocol)) ? location.origin + location.pathname : WEB_URL);
     function makeCard(info) {
       const W = 1080, H = 1350, cv = document.createElement('canvas'); cv.width = W; cv.height = H; const c = cv.getContext('2d');
       const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#2a1a0c'); g.addColorStop(1, '#0b0704'); c.fillStyle = g; c.fillRect(0, 0, W, H);
@@ -3794,7 +3808,8 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       settingsFrom = from; setSwitch($('swSfx'), settings.sfx); setSwitch($('swMusic'), settings.music); setSwitch($('swHints'), settings.hints);
       $('sens').value = settings.sens; $('sensVal').textContent = settings.sens.toFixed(2).replace(/0$/, '') + '×';
       document.querySelectorAll('#axisSeg button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.axis === settings.axis)));
-      $('debugBox').hidden = !debug; applyMode(); buildLangSegs(); show('scrSettings');
+      $('verInfo').textContent = 'v' + ((g.BB_NATIVE_CONFIG && g.BB_NATIVE_CONFIG.versionName) || 'web');
+      $('btnPrivacy').hidden = !provider.showPrivacyOptions; $('debugBox').hidden = !debug; applyMode(); buildLangSegs(); show('scrSettings');
     }
     $('btnSettings').onclick = () => { click(); openSettings('home'); };
     $('btnPauseSettings').onclick = () => { click(); openSettings('pause'); };
@@ -3811,6 +3826,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       const r = await monet.restore();
       toast(T(r.status === 'restored' ? 'rest.ok' : r.status === 'none' ? 'rest.none' : r.status === 'unavailable' ? 'rest.noStore' : 'rest.failed'), 3000);
     };
+    $('btnPrivacy').onclick = async () => { click(); try { const r = provider.showPrivacyOptions ? await provider.showPrivacyOptions() : { status: 'unavailable' }; if (r.status !== 'shown') toast(T('priv.none'), 2600); } catch (e) { toast(T('priv.none'), 2600); } };
     $('btnDbgAds').onclick = () => { save.data.purchases.adsRemoved = !save.data.purchases.adsRemoved; save.save(); toast('[TEST] flag senza pubblicità: ' + save.data.purchases.adsRemoved, 2600); };
 
     // ---------- Pausa ----------
@@ -4176,7 +4192,7 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
 
 try { BB.start(); } catch (e) { document.body.insertAdjacentHTML("beforeend", "<pre style=\"position:fixed;inset:0;margin:0;padding:16px;background:#200;color:#fbb;z-index:99;white-space:pre-wrap\">Errore di avvio: " + String(e && e.stack || e).replace(/</g, "&lt;") + "</pre>"); throw e; }
 
-try{ if('serviceWorker' in navigator && location.protocol==='https:'){ window.addEventListener('load',function(){ navigator.serviceWorker.register('sw.js').catch(function(){}); }); } }catch(e){}
+try{ if('serviceWorker' in navigator && location.protocol==='https:' && !(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform())){ window.addEventListener('load',function(){ navigator.serviceWorker.register('sw.js').catch(function(){}); }); } }catch(e){}
 </script>
 
 </body></html>
